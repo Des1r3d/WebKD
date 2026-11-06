@@ -1,0 +1,9 @@
+# SyncHub Rules for AI Agents
+
+1. **Đọc `CONTEXT.md` trước mọi tác vụ.** Tuyệt đối KHÔNG tự ý thêm/đổi tên bảng, cột, enum, hoặc công thức nghiệp vụ ngoài `CONTEXT.md`.
+2. **Tiền tệ:** Luôn dùng số nguyên `Int` (VND). Không dùng `Float` cho số tiền. Mọi phép chia hóa đơn phải qua `server/src/services/splitBill.ts` (Largest Remainder + assert tổng).
+3. **An toàn đồng thời (Concurrency):**
+   - Khóa slot (`BR-SLT-01`, `BR-SLT-02`) bắt buộc cập nhật nguyên tử trong transaction với điều kiện `status = 'AVAILABLE' OR (status = 'LOCKED' AND locked_until < now())`.
+   - Giải ngân/hoàn tiền Escrow (`BR-ESC-03`) bắt buộc dùng `idempotency_key` duy nhất và kiểm tra `WHERE status = 'HELD'`.
+4. **Giao diện (UI/UX):** Khi có `design.md`, đọc `design.md` trước khi sửa UI; không làm thay đổi logic/copy/nghiệp vụ khi redesign.
+5. **Kiểm thử:** Mọi thay đổi ở `server/src/services/{slotLock,splitBill,escrow,reputation,promo,recommend}.ts` phải đi kèm unit test tương ứng và giữ trạng thái Pass.

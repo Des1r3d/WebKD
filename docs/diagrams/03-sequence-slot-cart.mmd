@@ -1,0 +1,49 @@
+sequenceDiagram
+  autonumber
+  actor Host as Host (Trưởng nhóm)
+  actor Member as Member (Thành viên)
+  participant API as Express Server + Socket.io
+  participant DB as PostgreSQL (Prisma)
+
+  rect rgb(235, 245, 255)
+    Note over Host,DB: Pha 1: Khóa Slot nguyên tử chống Race Condition (BR-SLT-01, BR-SLT-02)
+    Host->>API: POST /api/slots/:id/lock
+    Member->>API: POST /api/slots/:id/lock (đồng thời cùng mili-giây)
+    API->>DB: UPDATE slots SET status='LOCKED', locked_until=now()+10m<br/>WHERE id=$id AND (status='AVAILABLE' OR locked_until < now())
+    DB-->>API: rowCount = 1 (Host thắng)
+    API-->>Host: 200 OK (locked_until = +10m)
+    API->>DB: UPDATE slots ... (Request của Member)
+    DB-->>API: rowCount = 0 (Đã bị khóa)
+    API-->>Member: 409 Conflict (SLOT_TAKEN)
+  end
+
+  rect rgb(240, 255, 240)
+    Note over Host,DB: Pha 2: Giỏ hàng Nhóm Realtime & Khóa phòng tức thì (BR-INT-01, BR-INT-04)
+    Host->>API: POST /api/lobbies (slot_id)
+    API->>DB: INSERT group_lobbies (status='OPEN')
+    API-->>Host: 201 Created (invite_code)
+    Member->>API: Socket emit "lobby:join" { lobbyId }
+    Member->>API: Socket emit "cart:add" { lobbyId, menuItemId, qty }
+    API->>DB: Check lobby.status === 'OPEN' -> INSERT cart_items
+    API-->>Host: Broadcast "cart:updated" (items, subtotal)
+    API-->>Member: Broadcast "cart:updated" (items, subtotal)
+
+    Host->>API: POST /api/lobbies/:id/lock (Chốt đơn)
+    API->>DB: UPDATE group_lobbies SET status='LOCKED', locked_at=now()
+    API-->>Host: Broadcast "lobby:locked"
+    API-->>Member: Broadcast "lobby:locked" (Disable nút thêm món ngay lập tức)
+    Member->>API: Socket emit "cart:add" (Cố tình thêm sau khi khóa)
+    API-->>Member: 403 Forbidden (LOBBY_LOCKED)
+  end
+
+  rect rgb(255, 248, 235)
+    Note over Host,DB: Pha 3: Chia Bill (Largest Remainder) & Giải ngân Idempotent (BR-INT-02, BR-ESC-02/03)
+    Host->>API: POST /api/lobbies/:id/split
+    API->>DB: Lưu split_bills (Assert Σtotal_i === GrandTotal) + status='AWAITING_PAYMENT'
+    API-->>Member: Broadcast "bill:ready" (VietQR từng người)
+    Member->>API: POST /api/payments/webhook-mock (splitBillId)
+    API->>DB: UPDATE split_bills='PAID' + INSERT escrow_transactions (HOLD)
+    Host->>API: POST /api/lobbies/:id/checkin
+    API->>DB: INSERT escrow_transactions (RELEASE VENUE -8%, RELEASE FNB -12%)<br/>UNIQUE(idempotency_key = "release:{lobby}:{provider}")
+    API-->>Host: Broadcast "escrow:released" (COMPLETED)
+  end

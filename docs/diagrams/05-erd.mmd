@@ -1,0 +1,170 @@
+erDiagram
+  users {
+    uuid id PK
+    string email UK
+    string password_hash
+    string full_name
+    string phone
+    enum role "HOST|MEMBER|PROVIDER|ADMIN"
+    int reputation_score "Default 100"
+    enum status "ACTIVE|FLAGGED|BANNED"
+    datetime created_at
+  }
+
+  providers {
+    uuid id PK
+    uuid owner_id FK
+    enum type "VENUE|FNB"
+    string category
+    string name
+    string address
+    float lat
+    float lng
+    string open_hours
+    string bank_code
+    string bank_account
+    float commission_rate "VENUE 0.08 | FNB 0.12"
+  }
+
+  slots {
+    uuid id PK
+    uuid provider_id FK
+    datetime start_at "UK(provider_id, start_at)"
+    datetime end_at
+    int price "VND"
+    enum status "AVAILABLE|LOCKED|BOOKED"
+    uuid locked_by FK
+    datetime locked_until
+  }
+
+  menu_items {
+    uuid id PK
+    uuid provider_id FK
+    string name
+    int price "VND"
+    string image_url
+    boolean is_available
+    int order_count
+  }
+
+  group_lobbies {
+    uuid id PK
+    uuid host_id FK
+    uuid slot_id UK
+    uuid fnb_provider_id FK
+    string invite_code UK
+    enum status "OPEN|LOCKED|AWAITING_PAYMENT|PAID|COMPLETED|DISPUTED|CANCELLED"
+    datetime deadline_at
+    int ship_fee "VND"
+    uuid voucher_id FK
+    datetime locked_at
+  }
+
+  lobby_members {
+    uuid lobby_id PK,FK
+    uuid user_id PK,FK
+    int deposit_required "VND"
+    int deposit_paid "VND"
+    enum status "JOINED|LEFT|NO_SHOW|CHECKED_IN"
+  }
+
+  cart_items {
+    uuid id PK
+    uuid lobby_id FK
+    uuid user_id FK
+    uuid menu_item_id FK
+    int qty
+    int unit_price_snapshot "VND"
+  }
+
+  vouchers {
+    uuid id PK
+    string code UK
+    enum scope "VENUE|FNB|CROSS"
+    enum discount_type "PERCENT|FIXED"
+    int value
+    int max_discount "VND"
+    int min_order "VND"
+    int max_distance_m "Default 1000m"
+    datetime valid_from
+    datetime valid_to
+    int usage_limit
+    int used_count
+  }
+
+  split_bills {
+    uuid id PK
+    uuid lobby_id FK
+    uuid user_id FK
+    int slot_share "VND"
+    int food_amount "VND"
+    int ship_share "VND"
+    int discount_share "VND"
+    int deposit_offset "VND"
+    int total "VND"
+    string vietqr_url
+    enum status "PENDING|PAID|REFUNDED"
+  }
+
+  escrow_transactions {
+    uuid id PK
+    uuid lobby_id FK
+    uuid split_bill_id FK
+    enum type "HOLD|RELEASE|REFUND|PENALTY"
+    int amount "VND"
+    int platform_fee "VND"
+    int net_amount "VND"
+    uuid payee_provider_id FK
+    enum status "HELD|RELEASED|REFUNDED|FROZEN"
+    string idempotency_key UK
+  }
+
+  disputes {
+    uuid id PK
+    uuid lobby_id FK
+    uuid reporter_id FK
+    uuid target_provider_id FK
+    string reason
+    string_array evidence_urls
+    enum status "OPEN|RESOLVED|REJECTED"
+    int refund_amount "VND"
+    uuid resolved_by FK
+  }
+
+  audit_logs {
+    uuid id PK
+    uuid actor_id FK
+    string action
+    string entity
+    string entity_id
+    json before
+    json after
+    datetime created_at
+  }
+
+  users ||--o{ providers : "owns"
+  users ||--o{ slots : "locks"
+  users ||--o{ group_lobbies : "hosts"
+  users ||--o{ lobby_members : "joins"
+  users ||--o{ cart_items : "orders"
+  users ||--o{ split_bills : "pays"
+  users ||--o{ disputes : "reports/resolves"
+  users ||--o{ audit_logs : "triggers"
+
+  providers ||--o{ slots : "provides"
+  providers ||--o{ menu_items : "serves"
+  providers ||--o{ group_lobbies : "supplies_fnb"
+  providers ||--o{ escrow_transactions : "receives"
+  providers ||--o{ disputes : "targeted_in"
+
+  slots ||--o| group_lobbies : "bound_to"
+  vouchers ||--o{ group_lobbies : "applied_to"
+  menu_items ||--o{ cart_items : "referenced_in"
+
+  group_lobbies ||--o{ lobby_members : "has"
+  group_lobbies ||--o{ cart_items : "contains"
+  group_lobbies ||--o{ split_bills : "generates"
+  group_lobbies ||--o{ escrow_transactions : "holds_funds"
+  group_lobbies ||--o{ disputes : "has"
+
+  split_bills ||--o{ escrow_transactions : "backed_by"

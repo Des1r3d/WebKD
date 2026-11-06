@@ -1,0 +1,359 @@
+// SyncHub — Prisma Schema (12 Tables Locked — context-v1)
+// Money fields: Int (VND, no decimals)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  HOST
+  MEMBER
+  PROVIDER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  FLAGGED
+  BANNED
+}
+
+enum ProviderType {
+  VENUE
+  FNB
+}
+
+enum SlotStatus {
+  AVAILABLE
+  LOCKED
+  BOOKED
+}
+
+enum LobbyStatus {
+  OPEN
+  LOCKED
+  AWAITING_PAYMENT
+  PAID
+  COMPLETED
+  DISPUTED
+  CANCELLED
+}
+
+enum LobbyMemberStatus {
+  JOINED
+  LEFT
+  NO_SHOW
+  CHECKED_IN
+}
+
+enum VoucherScope {
+  VENUE
+  FNB
+  CROSS
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum SplitBillStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+enum EscrowTxType {
+  HOLD
+  RELEASE
+  REFUND
+  PENALTY
+}
+
+enum EscrowStatus {
+  HELD
+  RELEASED
+  REFUNDED
+  FROZEN
+}
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+// ==========================================
+// 12 MODELS (LOCKED)
+// ==========================================
+
+/// 1. users — Tài khoản người dùng & điểm uy tín (BR-REP-01..03)
+model User {
+  id               String     @id @default(uuid())
+  email            String     @unique
+  password_hash    String
+  full_name        String
+  phone            String
+  role             Role       @default(MEMBER)
+  reputation_score Int        @default(100)
+  status           UserStatus @default(ACTIVE)
+  created_at       DateTime   @default(now())
+
+  providers          Provider[]
+  locked_slots       Slot[]         @relation("SlotLockedBy")
+  hosted_lobbies     GroupLobby[]   @relation("LobbyHost")
+  lobby_memberships  LobbyMember[]
+  cart_items         CartItem[]
+  split_bills        SplitBill[]
+  reported_disputes  Dispute[]      @relation("DisputeReporter")
+  resolved_disputes  Dispute[]      @relation("DisputeResolver")
+  audit_logs         AuditLog[]
+
+  @@index([role, status])
+  @@map("users")
+}
+
+/// 2. providers — Chủ sân (VENUE) và Quán ăn/nước (FNB)
+model Provider {
+  id              String       @id @default(uuid())
+  owner_id        String
+  type            ProviderType
+  category        String       // badminton, study_room, football, milk_tea, coffee, snack
+  name            String
+  address         String
+  lat             Float
+  lng             Float
+  open_hours      String       @default("07:00-22:00")
+  bank_code       String       @default("MB")
+  bank_account    String       @default("0123456789")
+  commission_rate Float        @default(0.08) // VENUE=0.08, FNB=0.12
+  created_at      DateTime     @default(now())
+
+  owner               User                @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  slots               Slot[]
+  menu_items          MenuItem[]
+  fnb_lobbies         GroupLobby[]        @relation("LobbyFnbProvider")
+  escrow_payouts      EscrowTransaction[]
+  targeted_disputes   Dispute[]
+
+  @@index([type, category])
+  @@index([lat, lng])
+  @@map("providers")
+}
+
+/// 3. slots — Khung giờ đặt sân/phòng học (BR-SLT-01, BR-SLT-02)
+model Slot {
+  id           String     @id @default(uuid())
+  provider_id  String
+  start_at     DateTime
+  end_at       DateTime
+  price        Int        // VND
+  status       SlotStatus @default(AVAILABLE)
+  locked_by    String?
+  locked_until DateTime?
+
+  provider     Provider    @relation(fields: [provider_id], references: [id], onDelete: Cascade)
+  locker       User?       @relation("SlotLockedBy", fields: [locked_by], references: [id], onDelete: SetNull)
+  lobby        GroupLobby?
+
+  @@unique([provider_id, start_at])
+  @@index([status, locked_until])
+  @@map("slots")
+}
+
+/// 4. menu_items — Thực đơn đồ uống/ăn nhẹ của FNB Provider
+model MenuItem {
+  id           String   @id @default(uuid())
+  provider_id  String
+  name         String
+  price        Int      // VND
+  image_url    String?
+  is_available Boolean  @default(true)
+  order_count  Int      @default(0)
+
+  provider     Provider   @relation(fields: [provider_id], references: [id], onDelete: Cascade)
+  cart_items   CartItem[]
+
+  @@index([provider_id, is_available])
+  @@map("menu_items")
+}
+
+/// 5. group_lobbies — Phòng ghép kèo tích hợp BookSlot + GroupOrder (BR-INT-01..05)
+model GroupLobby {
+  id              String      @id @default(uuid())
+  host_id         String
+  slot_id         String      @unique
+  fnb_provider_id String?
+  invite_code     String      @unique
+  status          LobbyStatus @default(OPEN)
+  deadline_at     DateTime
+  ship_fee        Int         @default(15000) // VND
+  voucher_id      String?
+  locked_at       DateTime?
+  created_at      DateTime    @default(now())
+
+  host                User                @relation("LobbyHost", fields: [host_id], references: [id])
+  slot                Slot                @relation(fields: [slot_id], references: [id])
+  fnb_provider        Provider?           @relation("LobbyFnbProvider", fields: [fnb_provider_id], references: [id])
+  voucher             Voucher?            @relation(fields: [voucher_id], references: [id])
+  members             LobbyMember[]
+  cart_items          CartItem[]
+  split_bills         SplitBill[]
+  escrow_transactions EscrowTransaction[]
+  disputes            Dispute[]
+
+  @@index([host_id, status])
+  @@map("group_lobbies")
+}
+
+/// 6. lobby_members — Thành viên tham gia phòng & tiền cọc uy tín (BR-REP-01..03)
+model LobbyMember {
+  lobby_id         String
+  user_id          String
+  deposit_required Int               @default(0) // VND
+  deposit_paid     Int               @default(0) // VND
+  status           LobbyMemberStatus @default(JOINED)
+  joined_at        DateTime          @default(now())
+
+  lobby            GroupLobby @relation(fields: [lobby_id], references: [id], onDelete: Cascade)
+  user             User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([lobby_id, user_id])
+  @@index([user_id])
+  @@map("lobby_members")
+}
+
+/// 7. cart_items — Giỏ hàng gọi món chung trong phòng (BR-INT-01, BR-INT-04)
+model CartItem {
+  id                  String   @id @default(uuid())
+  lobby_id            String
+  user_id             String
+  menu_item_id        String
+  qty                 Int
+  unit_price_snapshot Int      // VND tại thời điểm đặt
+  created_at          DateTime @default(now())
+
+  lobby               GroupLobby @relation(fields: [lobby_id], references: [id], onDelete: Cascade)
+  user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  menu_item           MenuItem   @relation(fields: [menu_item_id], references: [id])
+
+  @@index([lobby_id, user_id])
+  @@map("cart_items")
+}
+
+/// 8. vouchers — Mã khuyến mãi đơn lẻ & chéo (BR-INT-05)
+model Voucher {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  scope          VoucherScope
+  discount_type  DiscountType
+  value          Int          // % hoặc VND
+  max_discount   Int          // VND
+  min_order      Int          @default(0)    // VND
+  max_distance_m Int          @default(1000) // mét (cho CROSS voucher)
+  valid_from     DateTime
+  valid_to       DateTime
+  usage_limit    Int          @default(100)
+  used_count     Int          @default(0)
+
+  lobbies        GroupLobby[]
+
+  @@map("vouchers")
+}
+
+/// 9. split_bills — Hóa đơn chia tiền từng thành viên & VietQR (BR-INT-02)
+model SplitBill {
+  id             String          @id @default(uuid())
+  lobby_id       String
+  user_id        String
+  slot_share     Int             // VND
+  food_amount    Int             // VND
+  ship_share     Int             // VND
+  discount_share Int             // VND
+  deposit_offset Int             @default(0) // VND
+  total          Int             // VND phải thanh toán
+  vietqr_url     String
+  status         SplitBillStatus @default(PENDING)
+  paid_at        DateTime?
+
+  lobby               GroupLobby          @relation(fields: [lobby_id], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  escrow_transactions EscrowTransaction[]
+
+  @@unique([lobby_id, user_id])
+  @@index([status])
+  @@map("split_bills")
+}
+
+/// 10. escrow_transactions — Sổ cái giữ/giải ngân/hoàn/phạt tiền (BR-ESC-01..04)
+model EscrowTransaction {
+  id                String       @id @default(uuid())
+  lobby_id          String
+  split_bill_id     String?
+  type              EscrowTxType
+  amount            Int          // VND tổng giao dịch
+  platform_fee      Int          @default(0) // VND hoa hồng nền tảng
+  net_amount        Int          @default(0) // VND thực nhận của provider
+  payee_provider_id String?
+  status            EscrowStatus @default(HELD)
+  idempotency_key   String       @unique
+  created_at        DateTime     @default(now())
+
+  lobby             GroupLobby @relation(fields: [lobby_id], references: [id], onDelete: Cascade)
+  split_bill        SplitBill? @relation(fields: [split_bill_id], references: [id])
+  payee_provider    Provider?  @relation(fields: [payee_provider_id], references: [id])
+
+  @@index([lobby_id, type, status])
+  @@map("escrow_transactions")
+}
+
+/// 11. disputes — Khiếu nại dịch vụ & hoàn tiền (BR-ESC-04, BR-DSP-01)
+model Dispute {
+  id                 String        @id @default(uuid())
+  lobby_id           String
+  reporter_id        String
+  target_provider_id String
+  reason             String
+  evidence_urls      String[]
+  status             DisputeStatus @default(OPEN)
+  refund_amount      Int           @default(0) // VND
+  resolved_by        String?
+  resolved_at        DateTime?
+  created_at         DateTime      @default(now())
+
+  lobby              GroupLobby @relation(fields: [lobby_id], references: [id], onDelete: Cascade)
+  reporter           User       @relation("DisputeReporter", fields: [reporter_id], references: [id])
+  target_provider    Provider   @relation(fields: [target_provider_id], references: [id])
+  resolver           User?      @relation("DisputeResolver", fields: [resolved_by], references: [id])
+
+  @@index([status])
+  @@index([lobby_id])
+  @@map("disputes")
+}
+
+/// 12. audit_logs — Nhật ký kiểm toán hệ thống & biến động uy tín (BR-DSP-01, BR-REP-02/03)
+model AuditLog {
+  id         String   @id @default(uuid())
+  actor_id   String?
+  action     String   // VD: REPUTATION_CHANGE, DISPUTE_RESOLVE, ESCROW_RELEASE
+  entity     String   // users, disputes, escrow_transactions
+  entity_id  String
+  before     Json?
+  after      Json?
+  created_at DateTime @default(now())
+
+  actor      User?    @relation(fields: [actor_id], references: [id], onDelete: SetNull)
+
+  @@index([entity, entity_id])
+  @@index([created_at])
+  @@map("audit_logs")
+}
