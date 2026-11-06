@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="bpmn-flow-title bpmn-flow-desc" id="d-02-bpmn-integrated-root">
+        <title id="bpmn-flow-title">Quy trình BPMN 4 làn bơi tích hợp BookSlot và GroupOrder</title>
+        <desc id="bpmn-flow-desc">Luồng nghiệp vụ xuyên suốt 4 làn bơi (HOST, MEMBER, SYNCHUB ESCROW, PROVIDER) gồm 9 bước từ khóa slot 10 phút đến giải ngân đa bên.</desc>
+        <defs>
+      <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Serif:ital@0;1&amp;family=Noto+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@400&amp;family=Noto+Sans+TC:wght@400;500;600&amp;family=Noto+Serif+TC:wght@400&amp;display=swap');
+      #d-02-bpmn-integrated-root { --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --color-soft:   #5a6580;
+      --color-accent: #bf4520;
+      --color-link:   #2e5aa8;
+      --font-sans:    'Geist', system-ui, sans-serif;
+      --font-serif:   'Instrument Serif', 'Noto Serif', serif;
+      --font-mono:    'Geist Mono', ui-monospace, monospace; }
+      #d-02-bpmn-integrated-root { font-family: var(--font-sans); color: var(--color-ink); }
+      #d-02-bpmn-integrated-root .diagram-container { width: 100%; overflow-x: auto; }
+      #d-02-bpmn-integrated-root .diagram-container { overflow-x: visible; }</style>
+          <marker id="d-02-bpmn-integrated-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+          </marker>
+          <marker id="d-02-bpmn-integrated-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#bf4520"/>
+          </marker>
+          <marker id="d-02-bpmn-integrated-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+          </marker>
+        </defs>
+
+        <!-- 1. Paper Background -->
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <!-- 2. Swimlane Grid (4 Horizontal Lanes, x=40..1240, y=40..624) -->
+        <!-- Outer frame -->
+        <rect x="40" y="40" width="1200" height="584" rx="8" fill="#2d3142" stroke="#2d3142" stroke-width="1" fill-opacity="0.02" stroke-opacity="0.16"/>
+        <!-- Left header column divider (x=184) -->
+        <line x1="184" y1="40" x2="184" y2="624" stroke="#2d3142" stroke-width="1" stroke-opacity="0.16"/>
+        <!-- Lane dividers: y=184, y=328, y=480 -->
+        <line x1="40" y1="184" x2="1240" y2="184" stroke="#2d3142" stroke-width="1" stroke-opacity="0.14"/>
+        <line x1="40" y1="328" x2="1240" y2="328" stroke="#2d3142" stroke-width="1" stroke-opacity="0.14"/>
+        <line x1="40" y1="480" x2="1240" y2="480" stroke="#2d3142" stroke-width="1" stroke-opacity="0.14"/>
+
+        <!-- Lane Labels (Left Column x=112) -->
+        <text x="112" y="108" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LANE 1 · HOST</text>
+        <text x="112" y="124" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">TRƯỞNG NHÓM</text>
+
+        <text x="112" y="252" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LANE 2 · MEMBER</text>
+        <text x="112" y="268" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">THÀNH VIÊN</text>
+
+        <text x="112" y="400" fill="#bf4520" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LANE 3 · SYNCHUB</text>
+        <text x="112" y="416" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">CORE &amp; ESCROW</text>
+
+        <text x="112" y="548" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LANE 4 · PROVIDER</text>
+        <text x="112" y="564" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">VENUE &amp; FNB</text>
+
+        <!-- 3. Orthogonal Connectors (drawn before nodes) -->
+        <!-- N1 (x=216..396, y=76..148) -> N2 (x=216..396, y=368..440) -->
+        <line x1="306" y1="148" x2="306" y2="368" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow-link)"/>
+        <rect x="314" y="244" width="68" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="348" y="254" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOCK 10M</text>
+
+        <!-- N2 (x=396, y=404) -> N3 (x=436..616, y=220..292) -->
+        <path d="M 396,404 H 416 Q 424,404 424,396 V 264 Q 424,256 432,256 H 436" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow)"/>
+
+        <!-- N3 (x=616, y=256) -> N4 (x=648..828, y=220..292) -->
+        <line x1="616" y1="256" x2="648" y2="256" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow)"/>
+
+        <!-- N4 (x=738, y=220) -> N5 (x=648..828, y=76..148) -->
+        <line x1="738" y1="220" x2="738" y2="148" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow-link)"/>
+
+        <!-- N5 (x=828, y=112) -> N6 (x=648..828, y=368..440) via right elbow x=852 -->
+        <path d="M 828,112 H 844 Q 852,112 852,120 V 396 Q 852,404 844,404 H 828" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d-02-bpmn-integrated-arrow-accent)"/>
+
+        <!-- N6 (x=828, y=420) -> N7 (x=876..1044, y=220..292) -->
+        <path d="M 828,420 H 860 Q 868,420 868,412 V 264 Q 868,256 876,256" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d-02-bpmn-integrated-arrow-accent)"/>
+
+        <!-- N7 (x=960, y=292) -> N8 (x=876..1044, y=368..440) -->
+        <line x1="960" y1="292" x2="960" y2="368" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow-link)"/>
+        <rect x="968" y="322" width="64" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="1000" y="332" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">WEBHOOK</text>
+
+        <!-- N8 (x=960, y=440) -> N9 (x=876..1216, y=516..588) -->
+        <line x1="960" y1="440" x2="960" y2="516" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d-02-bpmn-integrated-arrow-accent)"/>
+        <rect x="968" y="468" width="68" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="1002" y="478" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RELEASE</text>
+
+        <!-- 4. Process Step Nodes (9 Nodes Total — within budget <= 9) -->
+        <!-- Node 1: HOST Chọn sân & Mở phòng -->
+        <rect x="216" y="76" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="216" y="76" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="224" y="82" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="246" y="91" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 01</text>
+        <text x="306" y="114" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chọn Sân &amp; Mở Phòng</text>
+        <text x="306" y="132" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-SLT-01 · Sinh QR mời</text>
+
+        <!-- Node 2: SYNCHUB Khóa Slot nguyên tử -->
+        <rect x="216" y="368" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="216" y="368" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="224" y="374" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="246" y="383" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 02</text>
+        <text x="306" y="406" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Khóa Slot Nguyên tử 10'</text>
+        <text x="306" y="424" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-SLT-02 · 409 nếu trùng</text>
+
+        <!-- Node 3: MEMBER Vào phòng & Kiểm cọc -->
+        <rect x="436" y="220" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="436" y="220" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="444" y="226" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="466" y="235" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 03</text>
+        <text x="526" y="258" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quét QR &amp; Kiểm Cọc</text>
+        <text x="526" y="276" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-REP-01 · A:0% B:30% C:100%</text>
+
+        <!-- Node 4: MEMBER Giỏ hàng Realtime -->
+        <rect x="648" y="220" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="648" y="220" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="656" y="226" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="678" y="235" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 04</text>
+        <text x="738" y="258" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gọi Nước Chung Realtime</text>
+        <text x="738" y="276" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Socket cart:updated (&lt;1s)</text>
+
+        <!-- Node 5: HOST Áp mã CROSS & Chốt đơn -->
+        <rect x="648" y="76" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="648" y="76" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="656" y="82" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="678" y="91" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 05</text>
+        <text x="738" y="114" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Áp Mã CROSS &amp; Khóa Giỏ</text>
+        <text x="738" y="132" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-INT-04/05 · ≤1000m</text>
+
+        <!-- Node 6: SYNCHUB Chia Bill Largest Remainder (FOCAL CORAL 1) -->
+        <rect x="648" y="368" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="648" y="368" width="180" height="72" rx="6" fill="#bf4520" stroke="#bf4520" stroke-width="1.5" fill-opacity="0.08"/>
+        <rect x="656" y="374" width="44" height="12" rx="2" fill="none" stroke="#bf4520" stroke-width="0.8" stroke-opacity="0.5"/>
+        <text x="678" y="383" fill="#bf4520" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 06</text>
+        <text x="738" y="406" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Chia Bill &amp; Sinh VietQR</text>
+        <text x="738" y="424" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-INT-02 · Largest Remainder</text>
+
+        <!-- Node 7: MEMBER Thanh toán QR -->
+        <rect x="876" y="220" width="180" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="876" y="220" width="180" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="884" y="226" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="906" y="235" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 07</text>
+        <text x="966" y="258" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quét VietQR Cá nhân</text>
+        <text x="966" y="276" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-ESC-01 · Chuyển khoản</text>
+
+        <!-- Node 8: SYNCHUB Escrow HOLD & Check-in (FOCAL CORAL 2) -->
+        <rect x="876" y="368" width="336" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="876" y="368" width="336" height="72" rx="6" fill="#bf4520" stroke="#bf4520" stroke-width="1.5" fill-opacity="0.08"/>
+        <rect x="884" y="374" width="44" height="12" rx="2" fill="none" stroke="#bf4520" stroke-width="0.8" stroke-opacity="0.5"/>
+        <text x="906" y="383" fill="#bf4520" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 08</text>
+        <text x="1044" y="406" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Giữ tiền Escrow HOLD &amp; Đối soát Check-in</text>
+        <text x="1044" y="424" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-ESC-03/04 · Đóng băng FROZEN nếu có Dispute</text>
+
+        <!-- Node 9: PROVIDER Nhận giải ngân đa bên -->
+        <rect x="876" y="516" width="336" height="72" rx="6" fill="#f5f5f5"/>
+        <rect x="876" y="516" width="336" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="884" y="522" width="44" height="12" rx="2" fill="none" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.4"/>
+        <text x="906" y="531" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 09</text>
+        <text x="1044" y="554" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Giải ngân Đa bên &amp; Cập nhật Điểm Uy tín</text>
+        <text x="1044" y="572" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">VENUE nhận 92% · FNB nhận 88% · Check-in +2 / No-show -15</text>
+
+        <!-- 5. Horizontal Bottom Legend Strip (y=652..688) -->
+        <line x1="40" y1="648" x2="1240" y2="648" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
+        <rect x="40" y="664" width="12" height="12" rx="2" fill="#bf4520" stroke="#bf4520" stroke-width="1.5" fill-opacity="0.08"/>
+        <text x="60" y="674" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Nút xử lý tài chính lõi (SplitBill &amp; Escrow Hold/Release)</text>
+
+        <line x1="420" y1="670" x2="452" y2="670" stroke="#bf4520" stroke-width="1.4" marker-end="url(#d-02-bpmn-integrated-arrow-accent)"/>
+        <text x="460" y="674" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Chuyển giao luồng tiền / Chốt hóa đơn</text>
+
+        <line x1="720" y1="670" x2="752" y2="670" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#d-02-bpmn-integrated-arrow-link)"/>
+        <text x="760" y="674" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Tương tác API / Webhook giữa các làn bơi</text>
+      </svg>

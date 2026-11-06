@@ -243,13 +243,13 @@ Mười lăm luật nghiệp vụ dưới đây là xương sống của hệ th
 
 ## 2.3 Bộ Sơ đồ Phân tích & Thiết kế Hệ thống (UML & BPMN)
 
-Toàn bộ sơ đồ nguồn được lưu tại `docs/diagrams/*.mmd` và kết xuất ra ảnh độ phân giải cao tại `docs/diagrams/*.png`:
+Toàn bộ 5 sơ đồ được thiết kế theo chuẩn Editorial Design System (`/diagram-design`, bảng màu `default` đạt độ tương phản WCAG AA, lưới `4px`, đường nối vuông góc bo góc `r=8`), lưu trữ đầy đủ 3 định dạng tại `docs/diagrams/*.{html,svg,png}` (cùng tệp nguồn `.mmd`):
 
-1. **Sơ đồ Use Case Tổng thể (`docs/diagrams/01-use-case.png`):** Thể hiện 4 tác nhân (`HOST`, `MEMBER`, `PROVIDER`, `ADMIN`) và mối quan hệ `<<include>>` / `<<extend>>` giữa 12 Use Cases.
-2. **Sơ đồ Quy trình Nghiệp vụ Tích hợp BPMN (`docs/diagrams/02-bpmn-integrated.png`):** Thể hiện luồng bơi (Swimlanes) xuyên suốt từ lúc `HOST` tìm sân, giữ slot 10 phút, mở phòng, `MEMBER` vào phòng đặt nước, chia bill VietQR, giữ tiền `Escrow` đến khi Check-in và giải ngân cho 2 đối tác `VENUE` & `FNB`.
-3. **Sơ đồ Tuần tự — Khóa Slot Nguyên tử & Giỏ hàng Realtime (`docs/diagrams/03-sequence-slot-cart.png`):** Minh họa cơ chế chống Race Condition (`BR-SLT-01/02`) và đồng bộ WebSocket (`BR-INT-01/04`).
-4. **Sơ đồ Máy trạng thái — Vòng đời Phòng & Ví Escrow (`docs/diagrams/04-state-machine.png`):** Biểu diễn các trạng thái và điều kiện chuyển tiếp của `GroupLobby` và `EscrowTransaction`.
-5. **Sơ đồ Thực thể Liên kết — ERD 12 Bảng (`docs/diagrams/05-erd.png`):** Mô hình hóa đầy đủ 12 bảng dữ liệu vật lý, khóa chính (PK), khóa ngoại (FK) và các ràng buộc duy nhất (`UNIQUE`).
+1. **Sơ đồ Use Case & Bản đồ Năng lực (`docs/diagrams/01-use-case.{html,svg,png}`):** Thể hiện 4 tác nhân (`HOST`, `MEMBER`, `PROVIDER`, `ADMIN`) trong vùng RBAC và mối quan hệ `<<include>>` / `<<extend>>` giữa 5 cụm năng lực bao hàm toàn bộ 12 Use Cases (`UC01` – `UC12`).
+2. **Sơ đồ Quy trình Nghiệp vụ Tích hợp BPMN (`docs/diagrams/02-bpmn-integrated.{html,svg,png}`):** Thể hiện 4 làn bơi ngang (Swimlanes: `HOST`, `MEMBER`, `SYNCHUB CORE & ESCROW`, `PROVIDER`) xuyên suốt 9 bước từ lúc giữ slot 10 phút, mở phòng QR, gọi nước chung, chia bill Largest Remainder, giữ tiền `Escrow` đến khi Check-in và giải ngân đa bên.
+3. **Sơ đồ Tuần tự — Khóa Slot Nguyên tử & Giỏ hàng Realtime (`docs/diagrams/03-sequence-slot-cart.{html,svg,png}`):** Gồm 4 lifelines (`HOST`, `MEMBER`, `Express + Socket.io`, `PostgreSQL 16`), 1 khung `ALT` biểu diễn tranh chấp khóa slot đồng thời (`200 OK` vs `409 Conflict`), thanh kích hoạt (activation bars) và 12 thông điệp cốt lõi.
+4. **Sơ đồ Máy trạng thái — Vòng đời Phòng & Ví Escrow (`docs/diagrams/04-state-machine.{html,svg,png}`):** Áp dụng mẫu *Lifecycle Phase Map* chia thành 3 dải (`Primary Happy-Path`, `Dispute Band`, `Cancel Band`) hợp nhất vòng đời `GroupLobby` và trạng thái tương ứng của `EscrowStatus` (`[HELD]`, `[FROZEN]`, `[RELEASED]`, `[REFUNDED]`).
+5. **Sơ đồ Thực thể Liên kết — ERD 12 Bảng (`docs/diagrams/05-erd.{html,svg,png}`):** Phân vùng 12 bảng vật lý (`detail=faithful`) thành 3 miền (`Identity & Supply`, `Lobby & GroupOrder`, `Escrow & Governance`), đánh dấu rõ khóa chính (`# PK`), khóa ngoại (`→ FK`), ràng buộc `UNIQUE` và kiểu tiền `Int (VND)`.
 
 ---
 

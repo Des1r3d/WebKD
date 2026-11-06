@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SyncHub — State Machine Lifecycle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #f5f5f5;
+      --color-ink:    #2d3142;
+      --color-muted:  #4f5d75;
+      --color-soft:   #5a6580;
+      --color-accent: #bf4520;
+      --color-link:   #2e5aa8;
+      --font-sans:    'Geist', system-ui, sans-serif;
+      --font-serif:   'Instrument Serif', 'Noto Serif', serif;
+      --font-mono:    'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">LIFECYCLE PHASE MAP (STATE MACHINE) · SYNCHUB</p>
+    <h1>Vòng đời Phòng Ghép kèo (GroupLobby) &amp; Trạng thái Ví Trung gian (Escrow)</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="state-map-title state-map-desc">
+        <title id="state-map-title">Sơ đồ Máy trạng thái GroupLobby và EscrowStatus</title>
+        <desc id="state-map-desc">Bản đồ chuyển trạng thái của Phòng ghép kèo qua 7 trạng thái (OPEN, LOCKED, AWAITING_PAYMENT, PAID, DISPUTED, COMPLETED, CANCELLED) kèm ánh xạ trạng thái ví Escrow (HELD, FROZEN, RELEASED, REFUNDED).</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#bf4520"/>
+          </marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+          </marker>
+        </defs>
+
+        <!-- 1. Paper Background -->
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+        <!-- 2. Lifecycle Bands (3 Zones: Primary Flow, Exception/Dispute, Terminal Outcomes) -->
+        <!-- Band 1: Primary Progression (y=56..228) -->
+        <rect x="40" y="56" width="880" height="172" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <rect x="56" y="60" width="224" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="168" y="69" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">PRIMARY HAPPY-PATH PROGRESSION</text>
+
+        <!-- Band 2: Dispute & Escrow Freeze Band (y=264..392) -->
+        <rect x="40" y="264" width="880" height="128" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <rect x="52" y="268" width="112" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="108" y="277" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DISPUTE BAND</text>
+
+        <!-- Band 3: Cancellation & Refund Band (y=416..516) -->
+        <rect x="40" y="416" width="880" height="100" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <rect x="52" y="420" width="112" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="108" y="429" fill="#5a6580" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CANCEL BAND</text>
+
+        <!-- 3. Connectors (9 transitions — within budget <= 12) -->
+        <!-- T1: Start dot (cx=68, cy=144) -> S1 OPEN (x=100, y=144) -->
+        <line x1="74" y1="144" x2="100" y2="144" stroke="#2d3142" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- T2: S1 OPEN (x=236, y=144) -> S2 LOCKED (x=284, y=144) -->
+        <line x1="236" y1="144" x2="284" y2="144" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <rect x="240" y="122" width="40" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="260" y="131" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOCK</text>
+
+        <!-- T3: S2 LOCKED (x=420, y=144) -> S3 AWAITING_PAYMENT (x=468, y=144) -->
+        <line x1="420" y1="144" x2="468" y2="144" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <rect x="424" y="122" width="40" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="444" y="131" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SPLIT</text>
+
+        <!-- T4: S3 AWAITING_PAYMENT (x=616, y=144) -> S4 PAID / HELD (x=664, y=144) -->
+        <line x1="616" y1="144" x2="664" y2="144" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <rect x="620" y="122" width="40" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="640" y="131" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">HOLD</text>
+
+        <!-- T5: S4 PAID / HELD (x=800, y=144) -> S6 COMPLETED / RELEASED (x=744, y=328? Wait: put S6 at x=744, y=296..364 or keep S6 on top right? Let's place S5 DISPUTED at (468, 296) and S6 COMPLETED at (724, 296)!) -->
+        <!-- Let's trace: S4 PAID is at (664..824, y=108..180). From S4 bottom (x=768, y=180) straight down to S6 COMPLETED (x=700..860, y=296..368) at x=780! -->
+        <line x1="780" y1="180" x2="780" y2="296" stroke="#bf4520" stroke-width="1.5" marker-end="url(#arrow-accent)"/>
+        <rect x="790" y="230" width="92" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="836" y="240" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CHECK-IN</text>
+
+        <!-- T6: S4 PAID / HELD (x=700, y=180) -> S5 DISPUTED / FROZEN (x=468..628, y=296..368) -->
+        <path d="M 700,180 V 236 Q 700,244 692,244 H 556 Q 548,244 548,252 V 296" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <rect x="576" y="224" width="96" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="624" y="233" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DISPUTE OPEN</text>
+
+        <!-- T7: S5 DISPUTED / FROZEN (x=628, y=332) -> S6 COMPLETED / RELEASED (x=700, y=332) -->
+        <line x1="628" y1="332" x2="700" y2="332" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <rect x="632" y="310" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="664" y="319" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RESOLVE</text>
+
+        <!-- T8: S1 OPEN (x=168, y=180) -> S7 CANCELLED / REFUNDED (x=284..468, y=440..500) -->
+        <path d="M 168,180 V 462 Q 168,470 176,470 H 284" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <rect x="176" y="324" width="92" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="222" y="334" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">10M TIMEOUT</text>
+
+        <!-- T9: S3 AWAITING_PAYMENT (x=520, y=180) -> S7 CANCELLED / REFUNDED (x=428, y=440) -->
+        <path d="M 520,180 V 224 Q 520,232 512,232 H 436 Q 428,232 428,240 V 440" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <rect x="296" y="324" width="124" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="358" y="334" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BR-INT-03 CANCEL</text>
+
+        <!-- T10: S6 COMPLETED (x=860, y=332) -> End dot 1 (cx=896, cy=332) -->
+        <line x1="860" y1="332" x2="888" y2="332" stroke="#2d3142" stroke-width="1.2"/>
+        <!-- T11: S7 CANCELLED (x=492, y=488) -> End dot 2 (cx=600, cy=488) -->
+        <line x1="492" y1="488" x2="592" y2="488" stroke="#4f5d75" stroke-width="1.2"/>
+
+        <!-- 4. Start & End Dots -->
+        <circle cx="68" cy="144" r="6" fill="#2d3142"/>
+        <circle cx="896" cy="332" r="8" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.5"/>
+        <circle cx="896" cy="332" r="4.5" fill="#2d3142"/>
+        <circle cx="600" cy="488" r="8" fill="#f5f5f5" stroke="#4f5d75" stroke-width="1.5"/>
+        <circle cx="600" cy="488" r="4.5" fill="#4f5d75"/>
+
+        <!-- 5. State Nodes (7 States Total — within budget <= 9) -->
+        <!-- S1: OPEN (x=100, y=108, w=136, h=72) -->
+        <rect x="100" y="108" width="136" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="100" y="108" width="136" height="72" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="108" y="114" width="44" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+        <text x="130" y="123" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LOBBY</text>
+        <text x="168" y="146" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">OPEN</text>
+        <text x="168" y="164" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Slot: LOCKED (10m)</text>
+
+        <!-- S2: LOCKED (x=284, y=108, w=136, h=72) -->
+        <rect x="284" y="108" width="136" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="284" y="108" width="136" height="72" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="292" y="114" width="44" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+        <text x="314" y="123" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LOBBY</text>
+        <text x="352" y="146" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">LOCKED</text>
+        <text x="352" y="164" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-INT-04: Freeze Cart</text>
+
+        <!-- S3: AWAITING_PAYMENT (x=468, y=108, w=148, h=72) -->
+        <rect x="468" y="108" width="148" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="468" y="108" width="148" height="72" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="476" y="114" width="44" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+        <text x="498" y="123" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BILL</text>
+        <text x="542" y="146" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">AWAITING_PAYMENT</text>
+        <text x="542" y="164" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">VietQR Pending</text>
+
+        <!-- S4: PAID (FOCAL CORAL 1: Escrow HELD) (x=664, y=108, w=160, h=72) -->
+        <rect x="664" y="108" width="160" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="664" y="108" width="160" height="72" rx="8" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.5"/>
+        <rect x="672" y="114" width="56" height="12" rx="2" fill="none" stroke="rgba(191,69,32,0.5)" stroke-width="0.8"/>
+        <text x="700" y="123" fill="#bf4520" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ESCROW</text>
+        <text x="744" y="146" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">PAID · [HELD]</text>
+        <text x="744" y="164" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Slot: BOOKED (BR-ESC-01)</text>
+
+        <!-- S5: DISPUTED (Escrow FROZEN) (x=468, y=296, w=160, h=72) -->
+        <rect x="468" y="296" width="160" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="468" y="296" width="160" height="72" rx="8" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <rect x="476" y="302" width="56" height="12" rx="2" fill="none" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+        <text x="504" y="311" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DISPUTE</text>
+        <text x="548" y="334" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">DISPUTED · [FROZEN]</text>
+        <text x="548" y="352" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-ESC-04 · Wait Admin</text>
+
+        <!-- S6: COMPLETED (FOCAL CORAL 2: Escrow RELEASED) (x=700, y=296, w=160, h=72) -->
+        <rect x="700" y="296" width="160" height="72" rx="8" fill="#f5f5f5"/>
+        <rect x="700" y="296" width="160" height="72" rx="8" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.5"/>
+        <rect x="708" y="302" width="60" height="12" rx="2" fill="none" stroke="rgba(191,69,32,0.5)" stroke-width="0.8"/>
+        <text x="738" y="311" fill="#bf4520" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PAYOUT</text>
+        <text x="780" y="334" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">COMPLETED · [RELEASED]</text>
+        <text x="780" y="352" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-ESC-02/03 Idempotent</text>
+
+        <!-- S7: CANCELLED (Escrow REFUNDED) (x=284, y=440, w=208, h=64) -->
+        <rect x="284" y="440" width="208" height="64" rx="8" fill="#f5f5f5"/>
+        <rect x="284" y="440" width="208" height="64" rx="8" fill="#ffffff" stroke="#4f5d75" stroke-width="1"/>
+        <rect x="292" y="446" width="60" height="12" rx="2" fill="none" stroke="rgba(79,93,117,0.4)" stroke-width="0.8"/>
+        <text x="322" y="455" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">TERMINAL</text>
+        <text x="388" y="476" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">CANCELLED · [REFUNDED]</text>
+        <text x="388" y="494" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BR-INT-03: Hủy FNB &amp; Hoàn tiền</text>
+
+        <!-- 6. Horizontal Bottom Legend Strip (y=540..576) -->
+        <line x1="40" y1="536" x2="920" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+        <rect x="40" y="552" width="12" height="12" rx="2" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.5"/>
+        <text x="60" y="562" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Trạng thái giữ &amp; giải ngân tiền trung gian ([HELD] / [RELEASED])</text>
+
+        <line x1="436" y1="558" x2="468" y2="558" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <text x="476" y="562" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Chuyển trạng thái chính (Happy Path)</text>
+
+        <line x1="696" y1="558" x2="728" y2="558" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+        <text x="736" y="562" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Nhánh ngoại lệ / Hủy / Khiếu nại</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
