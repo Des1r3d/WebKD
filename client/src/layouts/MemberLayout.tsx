@@ -2,7 +2,7 @@
 
 const nav = [
   { to: '/', label: 'Khám phá' },
-  { to: '/wallet', label: 'Ví' },
+  { to: '/wallet', label: 'Ví & Escrow' },
   { to: '/disputes', label: 'Khiếu nại' },
   { to: '/profile', label: 'Hồ sơ' },
 ];

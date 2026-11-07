@@ -18,8 +18,7 @@ export type BadgeKind = keyof typeof T;
 export function Badge({ kind, className }: { kind: BadgeKind; className?: string }) {
   const [label, tone] = T[kind];
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full border border-border-default bg-bg-subtle px-2 py-0.5 text-xs font-medium', C[tone], className)}>
-      <span aria-hidden className="size-1.5 rounded-full bg-current" />
+    <span className={cn('inline-flex items-center rounded-full border border-border-default bg-bg-surface px-2 py-0.5 text-xs font-medium', C[tone], className)}>
       {label}
     </span>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Calculator, Lock, LogOut as LeaveIcon, Send, Sparkles, Tag } from 'lucide-react';
+import { Calculator, Lock, LogOut as LeaveIcon, Send, Sparkles, Tag, Users } from 'lucide-react';
 import type { Socket } from 'socket.io-client';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
@@ -14,6 +14,7 @@ import {
   Countdown,
   MemberAvatar,
   MoneyText,
+  PageHeader,
   QRCard,
 } from '../ui';
 
@@ -109,7 +110,7 @@ export default function Lobby() {
 
   if (error || !detail) {
     return (
-      <Card className="space-y-3 border-status-disputed/40 p-6 text-center" role="alert">
+      <Card className="space-y-3 border-status-disputed p-6 text-center" role="alert">
         <p className="text-sm font-semibold text-status-disputed">{error || 'Phòng không tồn tại'}</p>
         <Link to="/" className="text-xs font-semibold text-primary hover:underline">← Về trang khám phá</Link>
       </Card>
@@ -195,140 +196,67 @@ export default function Lobby() {
 
   return (
     <div className="space-y-6">
-      {/* Header phòng */}
-      <Card className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs font-bold text-primary">MÃ PHÒNG: {lobby.invite_code}</span>
-            <Badge kind={lobby.status} />
-            {voucher && (
-              <span className="rounded-full bg-accent-light px-2 py-0.5 text-xs font-semibold text-accent">
-                Voucher: {voucher.code}
+      <PageHeader
+        title={slot?.provider?.name ?? `Phòng #${lobby.invite_code}`}
+        description={
+          <span className="flex flex-col gap-2">
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="font-mono text-xs font-semibold text-primary">MÃ PHÒNG: {lobby.invite_code}</span>
+              <span>Khung giờ: {new Date(slot.start_at).toLocaleString('vi-VN')}</span>
+              <span>Giá sân: <MoneyText amount={slot.price} /></span>
+            </span>
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-baseline gap-1.5">
+                <span className="text-[11px] text-text-muted">Hạn chốt kèo</span>
+                <Countdown until={lobby.deadline_at} className="text-sm" />
               </span>
+              <Badge kind={lobby.status} />
+              {voucher && <span className="rounded-full bg-accent-light px-2.5 py-1 text-xs font-semibold text-accent">Voucher {voucher.code}</span>}
+            </span>
+          </span>
+        }
+        actions={
+          <>
+            {!isMember && isOpen && (
+              <Button size="sm" onClick={() => nav(`/join/${lobby.invite_code}`)}>Tham gia phòng</Button>
             )}
-          </div>
-          <h1 className="text-xl font-bold">{slot?.provider?.name}</h1>
-          <p className="text-xs text-text-secondary">
-            Khung giờ: {new Date(slot.start_at).toLocaleString('vi-VN')} · Giá sân: <MoneyText amount={slot.price} />
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="text-right text-xs text-text-secondary">
-            <div>Hạn chốt kèo:</div>
-            <Countdown until={lobby.deadline_at} />
-          </div>
-
-          {!isMember && isOpen && (
-            <Button size="sm" onClick={() => nav(`/join/${lobby.invite_code}`)}>Tham gia phòng</Button>
-          )}
-
-          {isHost && isOpen && (
-            <Button size="sm" variant="outline" loading={busyAction} onClick={onLockLobby} iconStart={<Lock className="size-3.5" aria-hidden />}>
-              Khóa giỏ hàng (BR-INT-04)
-            </Button>
-          )}
-
-          {isHost && (
-            <Button size="sm" loading={busyAction} onClick={onSplitBill} iconStart={<Calculator className="size-3.5" aria-hidden />}>
-              Chốt & Chia Bill
-            </Button>
-          )}
-
-          {!isOpen && (
-            <Link
-              to={`/lobby/${lobby.invite_code}/split`}
-              className="rounded-md bg-primary px-3 py-2 text-xs font-semibold text-text-inverted hover:bg-primary-hover"
-            >
-              Xem bảng chia bill →
-            </Link>
-          )}
-
-          {!isHost && isMember && isOpen && (
-            <Button size="sm" variant="ghost" onClick={onLeave} iconStart={<LeaveIcon className="size-3.5" aria-hidden />}>
-              Rời phòng
-            </Button>
-          )}
-        </div>
-      </Card>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Cột trái: Thành viên + QR Mời + Chat */}
-        <div className="space-y-6">
-          <Card className="space-y-3">
-            <h2 className="text-base font-semibold">Thành viên ({members.length})</h2>
-            <div className="space-y-3">
-              {members.map((m: any) => (
-                <div key={m.user_id} className="flex items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-3">
-                    <MemberAvatar
-                      name={m.full_name}
-                      host={m.user_id === lobby.host_id}
-                      score={m.reputation_score}
-                    />
-                    <div>
-                      <p className="font-semibold">{m.full_name}</p>
-                      <p className="text-text-muted">
-                        Uy tín: {m.reputation_score}đ · {m.status}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-text-muted">Đã cọc: </span>
-                    <MoneyText amount={m.deposit_paid || 0} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <QRCard
-            title={`Mời bạn vào phòng #${lobby.invite_code}`}
-            imageUrl={qrImgUrl}
-            copyText={inviteUrl}
-            copyLabel="Sao chép link mời"
-            hint="Bạn bè quét mã để kiểm tra uy tín (BR-REP-01) và vào phòng."
-          />
-
-          <Card className="space-y-3">
-            <h2 className="text-base font-semibold">Trò chuyện trong phòng</h2>
-            <div className="max-h-56 space-y-1 overflow-y-auto rounded-md border border-border-default p-2">
-              {chatList.length === 0 ? (
-                <ChatBubble kind="system" text="Bắt đầu thảo luận chọn nước & chốt kèo" />
-              ) : (
-                chatList.map((m) => (
-                  <ChatBubble
-                    key={m.id}
-                    kind={m.userId === user?.id ? 'me' : 'other'}
-                    name={m.fullName}
-                    text={m.text}
-                    time={new Date(m.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
-                  />
-                ))
-              )}
-            </div>
-            <form onSubmit={onSendChat} className="flex gap-2">
-              <input
-                type="text"
-                value={chatText}
-                onChange={(e) => setChatText(e.target.value)}
-                placeholder="Nhắn cho cả nhóm..."
-                className="h-9 flex-1 rounded-md border border-border-default bg-bg-surface px-3 text-xs focus:border-primary focus:outline-none"
-              />
-              <Button type="submit" size="sm" iconStart={<Send className="size-3.5" aria-hidden />}>
-                Gửi
+            {isHost && isOpen && (
+              <Button size="sm" variant="outline" loading={busyAction} onClick={onLockLobby} iconStart={<Lock className="size-3.5" aria-hidden />}>
+                Khóa giỏ hàng (BR-INT-04)
               </Button>
-            </form>
-          </Card>
-        </div>
+            )}
+            {isHost && (
+              <Button size="sm" loading={busyAction} onClick={onSplitBill} iconStart={<Calculator className="size-3.5" aria-hidden />}>
+                Chốt &amp; Chia Bill
+              </Button>
+            )}
+            {!isOpen && (
+              <Link
+                to={`/lobby/${lobby.invite_code}/split`}
+                className="inline-flex h-8 items-center rounded-md bg-primary px-3 text-xs font-semibold text-text-inverted hover:bg-primary-hover"
+              >
+                Xem bảng chia bill
+              </Link>
+            )}
+            {!isHost && isMember && isOpen && (
+              <Button size="sm" variant="ghost" onClick={onLeave} iconStart={<LeaveIcon className="size-3.5" aria-hidden />}>
+                Rời phòng
+              </Button>
+            )}
+          </>
+        }
+      />
 
-        {/* Cột phải (2 cols): Giỏ hàng chung + Voucher + Gợi ý F&B */}
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        {/* Cột chính: Giỏ hàng chung + Gợi ý F&B */}
+        <div className="min-w-0 space-y-6">
           <Card className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold">Giỏ hàng GroupOrder (Realtime)</h2>
-              <div className="text-xs text-text-secondary">
-                Tổng đồ uống: <MoneyText amount={foodSubtotal} /> · Ship: <MoneyText amount={lobby.ship_fee} />
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-base font-semibold">Giỏ hàng GroupOrder</h2>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-text-secondary">
+                <span>Tổng đồ uống: <MoneyText amount={foodSubtotal} /></span>
+                <span>Ship: <MoneyText amount={lobby.ship_fee} /></span>
+                <span>Món: {cart_items.length}</span>
               </div>
             </div>
 
@@ -339,9 +267,9 @@ export default function Lobby() {
             )}
 
             {cart_items.length === 0 ? (
-              <p className="py-4 text-center text-xs text-text-muted">
-                Chưa có món nào trong giỏ. Chọn món từ các quán gợi ý bên dưới!
-              </p>
+              <div className="rounded-xl border border-dashed border-border-strong px-4 py-8 text-center text-xs text-text-secondary">
+                Chưa có món nào trong giỏ. Chọn món từ các quán gợi ý bên dưới.
+              </div>
             ) : (
               <div className="divide-y divide-border-default">
                 {cart_items.map((item: any) => (
@@ -359,7 +287,6 @@ export default function Lobby() {
               </div>
             )}
 
-            {/* Khung nhập Voucher */}
             <div className="border-t border-border-default pt-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Tag className="size-4 text-accent" aria-hidden />
@@ -368,7 +295,8 @@ export default function Lobby() {
                   value={voucherCode}
                   onChange={(e) => setVoucherCode(e.target.value)}
                   placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)"
-                  className="h-8 flex-1 rounded-md border border-border-default bg-bg-surface px-3 text-xs uppercase"
+                  aria-label="Mã voucher"
+                  className="h-9 min-w-[200px] flex-1 rounded-md border border-border-default bg-bg-surface px-3 text-xs uppercase text-text-primary placeholder:normal-case placeholder:text-text-muted focus:border-primary focus:outline-none"
                 />
                 <Button size="sm" variant="secondary" onClick={() => onApplyVoucher(voucherCode)}>
                   Áp dụng
@@ -378,29 +306,30 @@ export default function Lobby() {
             </div>
           </Card>
 
-          {/* Gợi ý F&B thông minh quanh sân */}
           <section className="space-y-3">
-            <h2 className="flex items-center gap-2 text-base font-semibold">
-              <Sparkles className="size-4 text-accent" aria-hidden />
-              Quán F&B gợi ý quanh sân (Rule-based Scoring — WBS-4.2)
-            </h2>
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-base font-semibold">
+                <Sparkles className="size-4 text-accent" aria-hidden />
+                Quán F&amp;B gợi ý quanh sân
+              </h2>
+              <span className="text-[11px] text-text-muted">Rule-based scoring · WBS-4.2</span>
+            </div>
 
             {recommendations.length === 0 ? (
-              <Card className="p-6 text-center text-xs text-text-secondary">Không có quán gợi ý trong bán kính 3km.</Card>
+              <Card className="p-6 text-center text-xs text-text-secondary">Không có quán gợi ý trong bán kính 3 km.</Card>
             ) : (
               <div className="space-y-3">
                 {recommendations.slice(0, 5).map((rec, idx) => (
                   <Card key={rec.provider_id} className="space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="rounded bg-primary-light px-1.5 py-0.5 font-mono text-xs font-bold text-primary">
-                            #{idx + 1} · Score {rec.score}
-                          </span>
-                          <h3 className="font-semibold">{rec.name}</h3>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-md bg-primary-light px-1.5 py-0.5 font-mono text-xs font-bold text-primary">#{idx + 1}</span>
+                          <h3 className="min-w-0 font-semibold">{rec.name}</h3>
+                          <span className="rounded-full bg-bg-subtle px-2 py-0.5 font-mono text-[11px] font-semibold text-text-secondary">Score {rec.score}</span>
                         </div>
-                        <p className="text-xs text-text-secondary">{rec.address}</p>
-                        <div className="mt-1 flex flex-wrap gap-1.5">
+                        <p className="mt-0.5 text-xs text-text-secondary">{rec.address}</p>
+                        <div className="mt-1.5 flex flex-wrap gap-1.5">
                           {rec.reasons.map((r: string) => (
                             <span key={r} className="rounded-full bg-bg-subtle px-2 py-0.5 text-[11px] text-text-secondary">
                               {r}
@@ -427,13 +356,13 @@ export default function Lobby() {
                       {rec.popular_items.map((item: any) => (
                         <div
                           key={item.id}
-                          className="flex flex-col justify-between gap-2 rounded-lg border border-border-default p-2.5 text-xs"
+                          className="flex flex-col justify-between gap-2 rounded-lg border border-border-default p-3 text-xs"
                         >
-                          <div>
-                            <p className="font-semibold line-clamp-1">{item.name}</p>
+                          <div className="min-w-0">
+                            <p className="truncate font-semibold">{item.name}</p>
                             <p className="text-text-muted">{item.order_count} lượt đặt</p>
                           </div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between gap-2">
                             <MoneyText amount={item.price} />
                             <Button size="sm" disabled={!isOpen} onClick={() => onAddItem(item.id)}>
                               + Thêm
@@ -448,6 +377,75 @@ export default function Lobby() {
             )}
           </section>
         </div>
+
+        {/* Cột phụ: Thành viên + QR + Chat */}
+        <aside className="space-y-4">
+          <Card className="space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="flex items-center gap-2 text-base font-semibold">
+                <Users className="size-4 text-primary" aria-hidden /> Thành viên
+              </h2>
+              <span className="rounded-full bg-bg-subtle px-2 py-0.5 font-mono text-xs font-semibold text-text-secondary">{members.length}</span>
+            </div>
+            <div className="divide-y divide-border-default">
+              {members.map((m: any) => (
+                <div key={m.user_id} className="flex items-center justify-between gap-2 py-2.5 text-xs">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <MemberAvatar name={m.full_name} host={m.user_id === lobby.host_id} score={m.reputation_score} />
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold">{m.full_name}</p>
+                      <p className="text-text-muted">Uy tín {m.reputation_score}đ · {m.status === 'JOINED' ? 'Đã tham gia' : m.status === 'LEFT' ? 'Đã rời' : m.status}</p>
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <span className="block text-[11px] text-text-muted">Đã cọc</span>
+                    <MoneyText amount={m.deposit_paid || 0} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <QRCard
+            title={`Mời bạn vào phòng #${lobby.invite_code}`}
+            imageUrl={qrImgUrl}
+            copyText={inviteUrl}
+            copyLabel="Sao chép link mời"
+            hint="Bạn bè quét mã để kiểm tra uy tín (BR-REP-01) và vào phòng."
+          />
+
+          <Card className="space-y-3">
+            <h2 className="text-base font-semibold">Trò chuyện trong phòng</h2>
+            <div className="max-h-60 space-y-1 overflow-y-auto rounded-md border border-border-default p-2">
+              {chatList.length === 0 ? (
+                <ChatBubble kind="system" text="Bắt đầu thảo luận chọn nước & chốt kèo" />
+              ) : (
+                chatList.map((m) => (
+                  <ChatBubble
+                    key={m.id}
+                    kind={m.userId === user?.id ? 'me' : 'other'}
+                    name={m.fullName}
+                    text={m.text}
+                    time={new Date(m.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                  />
+                ))
+              )}
+            </div>
+            <form onSubmit={onSendChat} className="flex gap-2">
+              <input
+                type="text"
+                value={chatText}
+                onChange={(e) => setChatText(e.target.value)}
+                placeholder="Nhắn cho cả nhóm..."
+                aria-label="Tin nhắn"
+                className="h-9 min-w-0 flex-1 rounded-md border border-border-default bg-bg-surface px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-primary focus:outline-none"
+              />
+              <Button type="submit" size="sm" iconStart={<Send className="size-3.5" aria-hidden />}>
+                Gửi
+              </Button>
+            </form>
+          </Card>
+        </aside>
       </div>
     </div>
   );

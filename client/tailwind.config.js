@@ -22,7 +22,12 @@ export default {
           app: "var(--color-bg-app)",
           surface: "var(--color-bg-surface)",
           subtle: "var(--color-bg-subtle)",
+          sidebar: "var(--color-bg-sidebar)",
+          "sidebar-active": "var(--color-bg-sidebar-active)",
+          inverse: "var(--color-bg-inverse)",
         },
+        overlay: "var(--color-overlay)",
+        scrim: "var(--color-scrim)",
         border: {
           default: "var(--color-border-default)",
           strong: "var(--color-border-strong)",

@@ -1,5 +1,6 @@
-/* hallmark: theme: Emerald Pulse (Court & Crisp) · genre: modern-minimal · floor: compliant */
+/* hallmark: theme: Emerald Pulse (Court & Crisp) · genre: modern-minimal · floor: compliant · redesign: full · scope: app */
 /* critique: Clean athletic & financial reliability tokens; mobile-first; tabular figures for currency */
+/* redesign: sidebar workbench shell, wider content measure, category imagery, fixed reputation badge overlap */
 
 :root {
   /* Brand Core */
@@ -17,6 +18,11 @@
   --color-bg-app: #f8fafc;
   --color-bg-surface: #ffffff;
   --color-bg-subtle: #f1f5f9;
+  --color-bg-sidebar: #ffffff;
+  --color-bg-sidebar-active: #ecfdf5;
+  --color-bg-inverse: #0f172a;
+  --color-overlay: rgba(15, 23, 42, 0.55);
+  --color-scrim: rgba(15, 23, 42, 0.42);
 
   /* Borders */
   --color-border-default: #e2e8f0;
@@ -59,4 +65,10 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
+
+  /* Shell geometry */
+  --sidebar-width: 264px;
+  --topbar-height: 64px;
+  --content-max: 1240px;
+  --measure: 68ch;
 }

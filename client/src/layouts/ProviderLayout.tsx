@@ -1,3 +1,3 @@
 ﻿import { Shell } from './Shell';
 
-export const ProviderLayout = () => <Shell brand="SyncHub Provider" nav={[{ to: '/provider', label: 'Tổng quan' }]} />;
+export const ProviderLayout = () => <Shell brand="SyncHub" nav={[{ to: '/provider', label: 'Portal đối tác' }]} />;

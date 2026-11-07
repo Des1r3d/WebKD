@@ -1,4 +1,4 @@
-﻿import { useEffect, useId, type ReactNode } from 'react';
+import { useEffect, useId, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 
 export function Modal({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: ReactNode }) {
@@ -11,7 +11,7 @@ export function Modal({ open, onClose, title, children }: { open: boolean; onClo
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-text-primary/40 p-4 backdrop-blur-sm sm:items-center" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-4 backdrop-blur-sm sm:items-center" onClick={onClose}>
       <div
         role="dialog" aria-modal="true" aria-labelledby={id}
         className="w-full max-w-md rounded-xl bg-bg-surface p-6 shadow-lg"

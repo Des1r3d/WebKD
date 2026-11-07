@@ -1,4 +1,4 @@
-﻿import { Minus, Plus } from 'lucide-react';
+﻿import { Minus, Plus, UtensilsCrossed } from 'lucide-react';
 import { MoneyText } from './MoneyText';
 
 interface Props {
@@ -13,10 +13,12 @@ export function CartRow({ name, owner, unitPrice, qty, imageUrl, disabled, onInc
       {imageUrl ? (
         <img src={imageUrl} alt="" className="size-12 rounded-md object-cover" />
       ) : (
-        <span aria-hidden className="size-12 rounded-md bg-accent-light" />
+        <span aria-hidden className="grid size-12 shrink-0 place-items-center rounded-md bg-accent-light text-accent">
+          <UtensilsCrossed className="size-5" />
+        </span>
       )}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-base font-semibold">{name}</p>
+        <p className="line-clamp-2 text-sm font-semibold leading-snug">{name}</p>
         <p className="truncate text-xs font-medium text-text-secondary">{owner}</p>
         <MoneyText amount={unitPrice} />
       </div>

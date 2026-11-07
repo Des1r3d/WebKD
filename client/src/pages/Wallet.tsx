@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Wallet as WalletIcon } from 'lucide-react';
+import { ArrowUpRight, Coins, Lock, ReceiptText, Undo2, Wallet as WalletIcon } from 'lucide-react';
 import { api } from '../lib/api';
-import { Badge, Card, MoneyText } from '../ui';
+import { Badge, Card, EmptyState, MoneyText, PageHeader, StatCard } from '../ui';
+
+const TX_TONE: Record<string, string> = {
+  HOLD: 'bg-bg-subtle text-text-secondary',
+  RELEASE: 'bg-primary-light text-primary',
+  PENALTY: 'bg-accent-light text-accent',
+  REFUND: 'bg-bg-subtle text-status-awaiting',
+};
 
 export default function Wallet() {
   const [lobbies, setLobbies] = useState<any[]>([]);
@@ -23,7 +30,7 @@ export default function Wallet() {
 
   if (error) {
     return (
-      <Card className="border-status-disputed/40 p-6 text-center text-sm font-semibold text-status-disputed" role="alert">
+      <Card className="border-status-disputed p-6 text-center text-sm font-semibold text-status-disputed" role="alert">
         {error}
       </Card>
     );
@@ -37,92 +44,90 @@ export default function Wallet() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <WalletIcon className="size-6 text-primary" aria-hidden />
-        <div>
-          <h1 className="text-2xl font-bold">Ví & Sổ cái Trung Gian Escrow</h1>
-          <p className="text-sm text-text-secondary">
-            Theo dõi dòng tiền tạm giữ (HOLD), giải ngân đa bên (RELEASE), phạt cọc (PENALTY) và hoàn tiền (REFUND).
-          </p>
+      <PageHeader
+        title="Ví & sổ cái Escrow"
+        description="Theo dõi dòng tiền tạm giữ (HOLD), giải ngân đa bên (RELEASE), phạt cọc (PENALTY) và hoàn tiền (REFUND)."
+        actions={
+          <span className="inline-flex items-center gap-2 rounded-full border border-border-default bg-bg-surface px-3 py-1.5 text-xs font-semibold text-text-secondary">
+            <WalletIcon className="size-4 text-primary" aria-hidden /> {lobbies.length} phòng tham gia
+          </span>
+        }
+      />
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Đang tạm giữ (HELD)" value={<MoneyText amount={sumByStatus('HELD')} />} icon={<Lock className="size-4" aria-hidden />} tone="warning" />
+        <StatCard label="Đã giải ngân (RELEASED)" value={<MoneyText amount={sumByStatus('RELEASED')} />} icon={<ArrowUpRight className="size-4" aria-hidden />} tone="positive" />
+        <StatCard label="Đóng băng khiếu nại (FROZEN)" value={<MoneyText amount={sumByStatus('FROZEN')} />} icon={<Coins className="size-4" aria-hidden />} tone="danger" />
+        <StatCard label="Đã hoàn tiền (REFUNDED)" value={<MoneyText amount={sumByStatus('REFUNDED')} />} icon={<Undo2 className="size-4" aria-hidden />} tone="default" />
+      </div>
+
+      <section className="space-y-3">
+        <div className="flex items-end justify-between gap-2">
+          <h2 className="text-base font-semibold">Phòng ghép kèo của bạn</h2>
+          <span className="text-xs text-text-secondary">{lobbies.length} phòng</span>
         </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-4">
-        <Card className="space-y-1">
-          <p className="text-xs text-text-secondary">Đang tạm giữ (HELD)</p>
-          <p className="text-lg font-bold"><MoneyText amount={sumByStatus('HELD')} /></p>
-        </Card>
-        <Card className="space-y-1">
-          <p className="text-xs text-text-secondary">Đã giải ngân (RELEASED)</p>
-          <p className="text-lg font-bold"><MoneyText amount={sumByStatus('RELEASED')} /></p>
-        </Card>
-        <Card className="space-y-1">
-          <p className="text-xs text-text-secondary">Đóng băng khiếu nại (FROZEN)</p>
-          <p className="text-lg font-bold"><MoneyText amount={sumByStatus('FROZEN')} /></p>
-        </Card>
-        <Card className="space-y-1">
-          <p className="text-xs text-text-secondary">Đã hoàn tiền (REFUNDED)</p>
-          <p className="text-lg font-bold"><MoneyText amount={sumByStatus('REFUNDED')} /></p>
-        </Card>
-      </div>
-
-      <Card className="space-y-3">
-        <h2 className="text-base font-semibold">Phòng ghép kèo của bạn ({lobbies.length})</h2>
         {lobbies.length === 0 ? (
-          <p className="text-xs text-text-muted">Bạn chưa tham gia phòng nào.</p>
+          <EmptyState
+            icon={<WalletIcon className="size-5" />}
+            title="Bạn chưa tham gia phòng nào"
+            description="Khám phá sân quanh Làng Đại Học, khoá slot và mở phòng ghép kèo để bắt đầu."
+            action={<Link to="/" className="text-xs font-semibold text-primary hover:underline">Khám phá địa điểm</Link>}
+          />
         ) : (
-          <div className="divide-y divide-border-default">
+          <div className="grid gap-3 sm:grid-cols-2">
             {lobbies.map((l) => (
-              <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-xs">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-primary">#{l.invite_code}</span>
-                    <Badge kind={l.status} />
+              <Card key={l.id} className="flex flex-col gap-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <span className="font-mono text-xs font-bold text-primary">#{l.invite_code}</span>
+                    <p className="mt-0.5 truncate text-sm font-semibold">{l.slot?.provider?.name}</p>
                   </div>
-                  <p className="font-semibold">{l.slot?.provider?.name}</p>
+                  <Badge kind={l.status} />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Link to={`/lobby/${l.invite_code}`} className="font-semibold text-primary hover:underline">
-                    Mở phòng
-                  </Link>
-                  <span>·</span>
-                  <Link to={`/lobby/${l.invite_code}/split`} className="font-semibold text-primary hover:underline">
-                    Chia bill & Escrow
-                  </Link>
+                <div className="mt-auto flex flex-wrap items-center gap-3 text-xs font-semibold">
+                  <Link to={`/lobby/${l.invite_code}`} className="text-primary hover:underline">Mở phòng</Link>
+                  <Link to={`/lobby/${l.invite_code}/split`} className="text-text-secondary hover:text-primary">Chia bill &amp; Escrow</Link>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         )}
-      </Card>
+      </section>
 
       <Card className="overflow-x-auto">
-        <h2 className="mb-3 text-base font-semibold">Lịch sử giao dịch Escrow ({allTxs.length})</h2>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="text-base font-semibold">Lịch sử giao dịch Escrow</h2>
+          <span className="text-xs text-text-secondary">{allTxs.length} giao dịch</span>
+        </div>
         {allTxs.length === 0 ? (
-          <p className="text-xs text-text-muted">Chưa phát sinh giao dịch nào.</p>
+          <EmptyState icon={<ReceiptText className="size-5" />} title="Chưa phát sinh giao dịch nào" description="Giao dịch sẽ xuất hiện khi phòng bắt đầu giữ tiền cọc và giải ngân." />
         ) : (
-          <table className="w-full text-left text-xs">
+          <table className="w-full min-w-[760px] text-left text-xs">
             <thead>
               <tr className="border-b border-border-default text-text-secondary">
-                <th className="py-2 pr-2">Phòng</th>
-                <th className="py-2 px-2">Loại</th>
-                <th className="py-2 px-2">Idempotency Key</th>
-                <th className="py-2 px-2 text-right">Tổng tiền</th>
-                <th className="py-2 px-2 text-right">Phí nền tảng</th>
-                <th className="py-2 px-2 text-right">Thực nhận</th>
-                <th className="py-2 pl-2 text-right">Trạng thái</th>
+                <th className="py-2 pr-2 font-medium">Phòng</th>
+                <th className="px-2 py-2 font-medium">Loại</th>
+                <th className="px-2 py-2 font-medium">Idempotency key</th>
+                <th className="px-2 py-2 text-right font-medium">Tổng tiền</th>
+                <th className="px-2 py-2 text-right font-medium">Phí nền tảng</th>
+                <th className="px-2 py-2 text-right font-medium">Thực nhận</th>
+                <th className="py-2 pl-2 text-right font-medium">Trạng thái</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-default">
               {allTxs.map((tx: any) => (
                 <tr key={tx.id}>
-                  <td className="py-2 pr-2 font-mono font-semibold">#{tx.invite_code}</td>
-                  <td className="py-2 px-2 font-semibold">{tx.type}</td>
-                  <td className="py-2 px-2 font-mono text-[11px] text-text-muted">{tx.idempotency_key}</td>
-                  <td className="py-2 px-2 text-right"><MoneyText amount={tx.amount} /></td>
-                  <td className="py-2 px-2 text-right"><MoneyText amount={tx.platform_fee} /></td>
-                  <td className="py-2 px-2 text-right"><MoneyText amount={tx.net_amount} /></td>
-                  <td className="py-2 pl-2 text-right font-semibold">{tx.status}</td>
+                  <td className="py-2.5 pr-2 font-mono font-semibold">#{tx.invite_code}</td>
+                  <td className="px-2 py-2.5">
+                    <span className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${TX_TONE[tx.type] ?? 'bg-bg-subtle text-text-secondary'}`}>
+                      {tx.type}
+                    </span>
+                  </td>
+                  <td className="max-w-[220px] truncate px-2 py-2.5 font-mono text-[11px] text-text-muted">{tx.idempotency_key}</td>
+                  <td className="px-2 py-2.5 text-right"><MoneyText amount={tx.amount} /></td>
+                  <td className="px-2 py-2.5 text-right"><MoneyText amount={tx.platform_fee} /></td>
+                  <td className="px-2 py-2.5 text-right"><MoneyText amount={tx.net_amount} /></td>
+                  <td className="py-2.5 pl-2 text-right font-semibold">{tx.status}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,3 +1,3 @@
 ﻿import { Shell } from './Shell';
 
-export const AdminLayout = () => <Shell brand="SyncHub Admin" nav={[{ to: '/admin', label: 'Tổng quan' }]} />;
+export const AdminLayout = () => <Shell brand="SyncHub" nav={[{ to: '/admin', label: 'Quản trị' }]} />;
