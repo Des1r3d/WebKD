@@ -16,8 +16,13 @@ import bcrypt from 'bcrypt';
 
 export const prisma = new PrismaClient();
 
-export async function seed() {
-  console.log('🌱 [SyncHub Seed] Bắt đầu khởi tạo dữ liệu mẫu...');
+let cachedPasswordHash: string | null = null;
+
+export async function seed(opts?: { silent?: boolean; fast?: boolean }) {
+  const log = (...args: any[]) => {
+    if (!opts?.silent) console.log(...args);
+  };
+  log('🌱 [SyncHub Seed] Bắt đầu khởi tạo dữ liệu mẫu...');
 
   // 1. Xóa dữ liệu cũ theo thứ tự quan hệ khóa ngoại (ngược chiều FK)
   await prisma.auditLog.deleteMany({});
@@ -33,10 +38,10 @@ export async function seed() {
   await prisma.provider.deleteMany({});
   await prisma.user.deleteMany({});
 
-  console.log('  🧹 Đã dọn sạch dữ liệu cũ');
+  log('  🧹 Đã dọn sạch dữ liệu cũ');
 
   // Mật khẩu chung: Password123!
-  const passwordHash = await bcrypt.hash('Password123!', 10);
+  const passwordHash = cachedPasswordHash || (cachedPasswordHash = await bcrypt.hash('Password123!', 10));
 
   // ==========================================
   // 1. TẠO 8 USERS MẪU ĐỦ 4 ROLES & 3 HẠNG UY TÍN
@@ -124,10 +129,8 @@ export async function seed() {
     },
   ];
 
-  for (const u of usersData) {
-    await prisma.user.create({ data: u });
-  }
-  console.log(`  👤 Đã tạo ${usersData.length} người dùng mẫu`);
+  await prisma.user.createMany({ data: usersData });
+  log(`  👤 Đã tạo ${usersData.length} người dùng mẫu`);
 
   // ==========================================
   // 2. TẠO 10 SÂN/PHÒNG HỌC (VENUE) QUANH LÀNG ĐH
@@ -276,10 +279,8 @@ export async function seed() {
     },
   ];
 
-  for (const v of venuesData) {
-    await prisma.provider.create({ data: v });
-  }
-  console.log(`  🏟️  Đã tạo ${venuesData.length} sân/phòng học (VENUE)`);
+  await prisma.provider.createMany({ data: venuesData });
+  log(`  🏟️  Đã tạo ${venuesData.length} sân/phòng học (VENUE)`);
 
   // ==========================================
   // 3. TẠO 15 QUÁN ĂN/UỐNG (FNB) QUANH LÀNG ĐH
@@ -498,10 +499,8 @@ export async function seed() {
     },
   ];
 
-  for (const f of fnbData) {
-    await prisma.provider.create({ data: f });
-  }
-  console.log(`  🧋 Đã tạo ${fnbData.length} quán ăn/uống (FNB)`);
+  await prisma.provider.createMany({ data: fnbData });
+  log(`  🧋 Đã tạo ${fnbData.length} quán ăn/uống (FNB)`);
 
   // ==========================================
   // 4. TẠO MENU ITEMS CHO CÁC QUÁN FNB
@@ -685,10 +684,8 @@ export async function seed() {
     },
   ];
 
-  for (const m of menuItemsData) {
-    await prisma.menuItem.create({ data: m });
-  }
-  console.log(`  📋 Đã tạo ${menuItemsData.length} món trong thực đơn FNB`);
+  await prisma.menuItem.createMany({ data: menuItemsData });
+  log(`  📋 Đã tạo ${menuItemsData.length} món trong thực đơn FNB`);
 
   // ==========================================
   // 5. TẠO SLOTS TRONG 7 NGÀY TỚI CHO 10 VENUES
@@ -780,7 +777,8 @@ export async function seed() {
     { startH: 19, endH: 21, priceOffset: 30000 },
   ];
 
-  for (let dayOffset = 1; dayOffset <= 7; dayOffset++) {
+  const maxDays = opts?.fast ? 1 : 7;
+  for (let dayOffset = 1; dayOffset <= maxDays; dayOffset++) {
     const targetDate = new Date(today.getTime() + dayOffset * 24 * 3600 * 1000);
 
     for (const venue of venuesData) {
@@ -807,10 +805,8 @@ export async function seed() {
     }
   }
 
-  for (const s of slotsToCreate) {
-    await prisma.slot.create({ data: s });
-  }
-  console.log(`  ⏰ Đã tạo ${slotsToCreate.length} khung giờ slot trong 7 ngày tới cho 10 sân`);
+  await prisma.slot.createMany({ data: slotsToCreate });
+  log(`  ⏰ Đã tạo ${slotsToCreate.length} khung giờ slot trong ${maxDays} ngày tới cho 10 sân`);
 
   // ==========================================
   // 6. TẠO VOUCHERS (VENUE / FNB / CROSS) (BR-INT-05)
@@ -877,10 +873,8 @@ export async function seed() {
     },
   ];
 
-  for (const v of vouchersData) {
-    await prisma.voucher.create({ data: v });
-  }
-  console.log(`  🎟️  Đã tạo ${vouchersData.length} mã voucher (có mã CROSS và FNB)`);
+  await prisma.voucher.createMany({ data: vouchersData });
+  log(`  🎟️  Đã tạo ${vouchersData.length} mã voucher (có mã CROSS và FNB)`);
 
   // ==========================================
   // 7. TẠO 1 GROUP LOBBY MẪU (CHUẨN TEST VECTOR BR-INT-02)
@@ -938,9 +932,7 @@ export async function seed() {
     },
   ];
 
-  for (const mb of membersData) {
-    await prisma.lobbyMember.create({ data: mb });
-  }
+  await prisma.lobbyMember.createMany({ data: membersData });
 
   // Giỏ hàng cá nhân đúng ca 5.2 trong CONTEXT.md:
   // A: 25.000 (Trà đào cam sả)
@@ -974,10 +966,8 @@ export async function seed() {
     },
   ];
 
-  for (const c of cartItemsData) {
-    await prisma.cartItem.create({ data: c });
-  }
-  console.log(`  👥 Đã tạo Group Lobby mẫu (SYNC01) kèm 4 thành viên và giỏ hàng chuẩn 100k`);
+  await prisma.cartItem.createMany({ data: cartItemsData });
+  log(`  👥 Đã tạo Group Lobby mẫu (SYNC01) kèm 4 thành viên và giỏ hàng chuẩn 100k`);
 
   // ==========================================
   // 8. TẠO PHÒNG MẪU ĐÃ HOÀN THÀNH (lob-00-prev) ĐỂ SEED 2 KỊCH BẢN WBS-5.2
@@ -1137,7 +1127,7 @@ export async function seed() {
     ],
   });
 
-  console.log('✅ [SyncHub Seed] Hoàn thành khởi tạo dữ liệu mẫu thành công!');
+  log('✅ [SyncHub Seed] Hoàn thành khởi tạo dữ liệu mẫu thành công!');
 }
 
 // Chạy trực tiếp nếu file được thực thi độc lập

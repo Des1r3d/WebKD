@@ -1,15 +1,15 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app';
-import { store } from '../src/data/store';
+import { seed } from '../prisma/seed';
 import { signJwt } from '../src/utils/jwt';
 
 describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
   let hostToken: string;
   let memberToken: string;
 
-  beforeEach(() => {
-    store.reset();
+  beforeEach(async () => {
+    await seed({ silent: true, fast: true });
 
     hostToken = signJwt({
       userId: 'usr-host-01',
@@ -52,13 +52,11 @@ describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
     });
 
     it('BR-INT-04: Từ chối thêm món vào giỏ hàng khi phòng đã LOCKED (403 LOBBY_LOCKED)', async () => {
-      // Khóa phòng trước
       await request(app)
         .post('/api/lobbies/lob-01/lock')
         .set('Authorization', `Bearer ${hostToken}`)
         .send();
 
-      // Cố tình thêm món
       const res = await request(app)
         .post('/api/lobbies/lob-01/cart')
         .set('Authorization', `Bearer ${memberToken}`)
@@ -94,7 +92,6 @@ describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
       expect(res.body.data.length).toBeGreaterThan(0);
 
       const top1 = res.body.data[0];
-      // prv-venue-01 (Nhà văn hóa SV) -> prv-fnb-01 (TocoToco ~95m)
       expect(top1.distance_m).toBeLessThanOrEqual(1000);
       expect(top1.has_cross_voucher).toBe(true);
       expect(top1.reasons.length).toBeGreaterThan(0);
@@ -103,7 +100,6 @@ describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
     });
 
     it('BR-INT-05: Áp dụng voucher CROSS thành công khi thỏa mãn cả 3 điều kiện', async () => {
-      // lob-01 có slot (slt-03), fnb_provider_id (prv-fnb-01), khoảng cách < 1km, cart > 80k
       const res = await request(app)
         .post('/api/vouchers/validate')
         .set('Authorization', `Bearer ${hostToken}`)
@@ -119,7 +115,6 @@ describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
     });
 
     it('BR-INT-05: Từ chối voucher CROSS khi phòng chưa chọn quán FNB hoặc giỏ rỗng', async () => {
-      // Tạo phòng mới chưa có FNB và giỏ rỗng
       await request(app)
         .post('/api/slots/slt-04/lock')
         .set('Authorization', `Bearer ${hostToken}`)
@@ -174,18 +169,13 @@ describe('Khối 4: GroupOrder Realtime & Chia Bill API', () => {
       expect(res.body.data.grandTotal).toBe(215000);
       expect(res.body.data.bills.length).toBe(4);
 
-      // Kiểm tra hóa đơn từng người
       const bills = res.body.data.bills;
-      const totalSum = bills.reduce((acc: number, b: any) => acc + b.total, 0);
-      // usr-mem-03 có cọc 30.000đ -> total = 0 (khấu trừ)
-      // Tổng payable = 53.750 + 58.500 + 0 + 72.750 = 185.000, cộng cọc 30.000 = 215.000
       const totalWithDeposit = bills.reduce(
         (acc: number, b: any) => acc + b.total + b.deposit_offset,
         0
       );
       expect(totalWithDeposit).toBe(215000);
 
-      // Kiểm tra GET /api/lobbies/:id/bills
       const getRes = await request(app)
         .get('/api/lobbies/lob-01/bills')
         .set('Authorization', `Bearer ${memberToken}`);

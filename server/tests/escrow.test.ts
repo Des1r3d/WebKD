@@ -1,17 +1,18 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
+import { Role, SlotStatus, LobbyStatus, EscrowStatus } from '@prisma/client';
 import { app } from '../src/app';
-import { store } from '../src/data/store';
+import { prisma } from '../src/prisma';
+import { seed } from '../prisma/seed';
 import { signJwt } from '../src/utils/jwt';
-import { Role, SlotStatus, LobbyStatus, LobbyMemberStatus, EscrowStatus } from '@prisma/client';
 
 describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, BR-REP-02..03)', () => {
   let hostToken: string;
   let memberToken: string;
   let adminToken: string;
 
-  beforeEach(() => {
-    store.reset();
+  beforeEach(async () => {
+    await seed({ silent: true, fast: true });
     hostToken = signJwt({
       userId: 'usr-host-01',
       email: 'dat.dt@synchub.vn',
@@ -31,16 +32,14 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
 
   describe('1. Webhook Giả Lập & Giữ Tiền Escrow (BR-ESC-01)', () => {
     it('thanh toán split bill -> cập nhật PAID và tạo Escrow HELD với idempotency key', async () => {
-      // 1. Chốt chia bill cho phòng lob-01 trước
       await request(app)
         .post('/api/lobbies/lob-01/split')
         .set('Authorization', `Bearer ${hostToken}`)
         .expect(200);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
       expect(bills.length).toBe(4);
 
-      // 2. Giả lập webhook nhận tiền cho bill của Host
       const hostBill = bills.find((b) => b.user_id === 'usr-host-01')!;
       const res = await request(app)
         .post('/api/payments/webhook-mock')
@@ -54,7 +53,6 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
       expect(res.body.data.escrowHoldTx.idempotency_key).toBe(`hold:lob-01:${hostBill.id}`);
       expect(res.body.data.allPaid).toBe(false);
 
-      // Kiểm tra GET /api/escrow/lob-01
       const escrowRes = await request(app)
         .get('/api/escrow/lob-01')
         .set('Authorization', `Bearer ${hostToken}`)
@@ -69,7 +67,7 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
         .set('Authorization', `Bearer ${hostToken}`)
         .expect(200);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
 
       for (const b of bills) {
         await request(app)
@@ -79,23 +77,22 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
           .expect(200);
       }
 
-      const lobby = store.getLobbyById('lob-01');
+      const lobby = await prisma.groupLobby.findUnique({ where: { id: 'lob-01' } });
       expect(lobby?.status).toBe(LobbyStatus.PAID);
 
-      const slot = store.getSlotById('slt-03');
+      const slot = await prisma.slot.findUnique({ where: { id: 'slt-03' } });
       expect(slot?.status).toBe(SlotStatus.BOOKED);
     });
   });
 
   describe('2. Check-in & Giải Ngân Đa Bên (BR-ESC-02 & BR-ESC-03 Gate)', () => {
     beforeEach(async () => {
-      // Chuẩn bị phòng lob-01 đã split và toàn bộ bill đã thanh toán
       await request(app)
         .post('/api/lobbies/lob-01/split')
         .set('Authorization', `Bearer ${hostToken}`)
         .expect(200);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
       for (const b of bills) {
         await request(app)
           .post('/api/payments/webhook-mock')
@@ -122,7 +119,6 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
       const txs = res.body.data.releasedTransactions;
       expect(txs.length).toBe(2);
 
-      // VENUE: Sân 120k -> Phí 8% = 9.600đ, Net = 110.400đ
       const venueTx = txs.find((t: any) => t.payee_provider_id === 'prv-venue-01');
       expect(venueTx).toBeDefined();
       expect(venueTx.amount).toBe(120000);
@@ -131,7 +127,6 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
       expect(venueTx.status).toBe(EscrowStatus.RELEASED);
       expect(venueTx.idempotency_key).toBe('release:lob-01:prv-venue-01');
 
-      // FNB: Food 100k + Ship 15k - Voucher 20k = 95k -> Phí 12% = 11.400đ, Net = 83.600đ
       const fnbTx = txs.find((t: any) => t.payee_provider_id === 'prv-fnb-01');
       expect(fnbTx).toBeDefined();
       expect(fnbTx.amount).toBe(95000);
@@ -140,20 +135,17 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
       expect(fnbTx.status).toBe(EscrowStatus.RELEASED);
       expect(fnbTx.idempotency_key).toBe('release:lob-01:prv-fnb-01');
 
-      // Phòng hoàn thành COMPLETED
-      const lobby = store.getLobbyById('lob-01');
+      const lobby = await prisma.groupLobby.findUnique({ where: { id: 'lob-01' } });
       expect(lobby?.status).toBe(LobbyStatus.COMPLETED);
     });
 
-    it('GATE BẮT BUỘC (BR-ESC-03): Gọi giải ngân lần 2 bị chặn với HTTP 409 IDEMPOTENCY_DUPLICATE_RELEASE', async () => {
-      // Lần 1: Thành công
+    it('GATE BẮT BUỘC (BR-ESC-03): Gọi giải ngân lần 2 bị chặn với HTTP 409 IDEMPOTENCY_DUPLICATE_RELEASE và DB chỉ có 1 giao dịch', async () => {
       await request(app)
         .post('/api/lobbies/lob-01/checkin')
         .set('Authorization', `Bearer ${hostToken}`)
         .send({})
         .expect(200);
 
-      // Lần 2: Bị chặn tuyệt đối!
       const duplicateRes = await request(app)
         .post('/api/lobbies/lob-01/checkin')
         .set('Authorization', `Bearer ${hostToken}`)
@@ -162,6 +154,11 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
 
       expect(duplicateRes.body.error).toBe('IDEMPOTENCY_DUPLICATE_RELEASE');
       expect(duplicateRes.body.message).toContain('BR-ESC-03');
+
+      const venueReleaseCount = await prisma.escrowTransaction.count({
+        where: { idempotency_key: 'release:lob-01:prv-venue-01' },
+      });
+      expect(venueReleaseCount).toBe(1);
     });
   });
 
@@ -172,7 +169,7 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
         .set('Authorization', `Bearer ${hostToken}`)
         .expect(200);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
       for (const b of bills) {
         await request(app)
           .post('/api/payments/webhook-mock')
@@ -182,9 +179,10 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
     });
 
     it('CHECKED_IN: cộng +2 điểm uy tín (tối đa 100đ)', async () => {
-      const userBBefore = store.getUserById('usr-mem-02')!.reputation_score; // 82đ
+      const userBBefore = (await prisma.user.findUnique({ where: { id: 'usr-mem-02' } }))!
+        .reputation_score;
 
-      const res = await request(app)
+      await request(app)
         .post('/api/lobbies/lob-01/checkin')
         .set('Authorization', `Bearer ${hostToken}`)
         .send({
@@ -192,15 +190,16 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
         })
         .expect(200);
 
-      const userBAfter = store.getUserById('usr-mem-02')!.reputation_score;
-      expect(userBAfter).toBe(userBBefore + 2); // 84đ
+      const userBAfter = (await prisma.user.findUnique({ where: { id: 'usr-mem-02' } }))!
+        .reputation_score;
+      expect(userBAfter).toBe(userBBefore + 2);
     });
 
     it('NO_SHOW (Bùng kèo): trừ 15 điểm uy tín và tịch thu tiền cọc PENALTY cho chủ sân', async () => {
-      // usr-mem-03 (Linh C, 64đ, đã đóng cọc 30.000đ)
-      const userCBefore = store.getUserById('usr-mem-03')!.reputation_score; // 64đ
+      const userCBefore = (await prisma.user.findUnique({ where: { id: 'usr-mem-03' } }))!
+        .reputation_score;
 
-      const res = await request(app)
+      await request(app)
         .post('/api/lobbies/lob-01/checkin')
         .set('Authorization', `Bearer ${hostToken}`)
         .send({
@@ -211,15 +210,13 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
         })
         .expect(200);
 
-      const userCAfter = store.getUserById('usr-mem-03')!.reputation_score;
-      expect(userCAfter).toBe(userCBefore - 15); // 64 - 15 = 49đ -> dưới 50đ!
-
-      // Dưới 50đ -> tự động chuyển sang FLAGGED
-      const userC = store.getUserById('usr-mem-03')!;
+      const userC = (await prisma.user.findUnique({ where: { id: 'usr-mem-03' } }))!;
+      expect(userC.reputation_score).toBe(userCBefore - 15);
       expect(userC.status).toBe('FLAGGED');
 
-      // Tịch thu cọc 30k -> Escrow PENALTY cho sân
-      const penaltyTx = store.getEscrowTransactionByIdempotencyKey('penalty:lob-01:usr-mem-03');
+      const penaltyTx = await prisma.escrowTransaction.findUnique({
+        where: { idempotency_key: 'penalty:lob-01:usr-mem-03' },
+      });
       expect(penaltyTx).toBeDefined();
       expect(penaltyTx?.amount).toBe(30000);
       expect(penaltyTx?.type).toBe('PENALTY');

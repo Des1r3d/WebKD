@@ -2,9 +2,10 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { Role } from '@prisma/client';
 import { app } from '../src/app';
+import { prisma } from '../src/prisma';
+import { seed } from '../prisma/seed';
 import { signJwt } from '../src/utils/jwt';
-import { store } from '../src/data/store';
-import { lockSlot, releaseSlot, expireOverdueSlots } from '../src/services/slotLock';
+import { expireOverdueSlots } from '../src/services/slotLock';
 
 describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)', () => {
   const hostToken = signJwt({
@@ -31,8 +32,8 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     role: Role.MEMBER,
   });
 
-  beforeEach(() => {
-    store.reset();
+  beforeEach(async () => {
+    await seed({ silent: true, fast: true });
   });
 
   // ==========================================
@@ -104,13 +105,14 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     });
 
     it('KHÓA SLOT TRÙNG: 20 request đồng thời -> ĐÚNG 1 THÀNH CÔNG (200), 19 THẤT BẠI (409 SLOT_TAKEN)', async () => {
-      // Slot slt-04 ban đầu ở trạng thái AVAILABLE
       const slotId = 'slt-04';
+      // 4 user hợp lệ trong DB để thỏa FK slots.locked_by -> users.id
+      const userPool = ['usr-host-01', 'usr-mem-02', 'usr-mem-03', 'usr-mem-04'];
 
-      // Tạo 20 token khác nhau gửi đồng thời
       const requests = Array.from({ length: 20 }, (_, idx) => {
+        const userId = userPool[idx % userPool.length];
         const token = signJwt({
-          userId: `usr-test-${idx}`,
+          userId,
           email: `test${idx}@synchub.vn`,
           role: Role.MEMBER,
         });
@@ -127,11 +129,8 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
 
       expect(successResponses.length).toBe(1);
       expect(conflictResponses.length).toBe(19);
-
-      // Request thắng có thông tin slot LOCKED
       expect(successResponses[0].body.slot.status).toBe('LOCKED');
 
-      // 19 request thua nhận mã lỗi chuẩn BR-SLT-02
       conflictResponses.forEach((res) => {
         expect(res.body.error).toBe('SLOT_TAKEN');
         expect(res.body.message).toContain('đã có người giữ');
@@ -139,12 +138,10 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     });
 
     it('Giải phóng slot (POST /api/slots/:id/release) trả về AVAILABLE', async () => {
-      // Khóa trước
       await request(app)
         .post('/api/slots/slt-02/lock')
         .set('Authorization', `Bearer ${hostToken}`);
 
-      // Giải phóng
       const res = await request(app)
         .post('/api/slots/slt-02/release')
         .set('Authorization', `Bearer ${hostToken}`);
@@ -156,12 +153,10 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     });
 
     it('Người dùng khác không được quyền giải phóng slot đang còn hạn của người khác', async () => {
-      // Host khóa slt-02
       await request(app)
         .post('/api/slots/slt-02/lock')
         .set('Authorization', `Bearer ${hostToken}`);
 
-      // Member B cố tình release
       const res = await request(app)
         .post('/api/slots/slt-02/release')
         .set('Authorization', `Bearer ${memberBToken}`);
@@ -171,16 +166,19 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     });
 
     it('Slot hết hạn 10 phút được tự động giải phóng bởi expiration job (BR-SLT-01)', async () => {
-      // Giả lập slot slt-05 bị khóa nhưng locked_until trong quá khứ
-      const slot = store.getSlotById('slt-05')!;
-      slot.status = 'LOCKED';
-      slot.locked_by = 'usr-host-01';
-      slot.locked_until = new Date(Date.now() - 5000); // Đã quá hạn 5s
+      await prisma.slot.update({
+        where: { id: 'slt-05' },
+        data: {
+          status: 'LOCKED',
+          locked_by: 'usr-host-01',
+          locked_until: new Date(Date.now() - 5000),
+        },
+      });
 
-      const expired = expireOverdueSlots();
+      const expired = await expireOverdueSlots();
       expect(expired.some((s) => s.id === 'slt-05')).toBe(true);
 
-      const refreshed = store.getSlotById('slt-05')!;
+      const refreshed = (await prisma.slot.findUnique({ where: { id: 'slt-05' } }))!;
       expect(refreshed.status).toBe('AVAILABLE');
       expect(refreshed.locked_by).toBeNull();
     });
@@ -191,7 +189,6 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
   // ==========================================
   describe('WBS-3.3: Quản lý Phòng Ghép Kèo & Phân Hạng Cọc Uy Tín (BR-REP-01)', () => {
     it('Tạo phòng ghép kèo thành công từ slot đã khóa (BR-INT-01)', async () => {
-      // Host khóa slt-02 trước
       await request(app)
         .post('/api/slots/slt-02/lock')
         .set('Authorization', `Bearer ${hostToken}`);
@@ -218,7 +215,7 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
         .post('/api/lobbies')
         .set('Authorization', `Bearer ${hostToken}`)
         .send({
-          slotId: 'slt-04', // AVAILABLE chưa khóa
+          slotId: 'slt-04',
         });
 
       expect(res.status).toBe(403);
@@ -237,17 +234,9 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
     });
 
     it('BR-REP-01: User Hạng B (Minh B, 82đ) vào phòng -> Yêu cầu cọc 30% (9.000đ)', async () => {
-      // Reset phòng lob-01 chỉ còn Host
-      (store as any).members = [
-        {
-          lobby_id: 'lob-01',
-          user_id: 'usr-host-01',
-          deposit_required: 0,
-          deposit_paid: 0,
-          status: 'JOINED',
-          joined_at: new Date(),
-        },
-      ];
+      await prisma.lobbyMember.deleteMany({
+        where: { lobby_id: 'lob-01', user_id: { not: 'usr-host-01' } },
+      });
 
       const res = await request(app)
         .post('/api/lobbies/lob-01/join')
@@ -255,7 +244,7 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
 
       expect(res.status).toBe(200);
       expect(res.body.data.reputation.tier).toBe('B');
-      expect(res.body.data.depositRequired).toBe(9000); // 30.000 * 30%
+      expect(res.body.data.depositRequired).toBe(9000);
       expect(res.body.data.depositPaid).toBe(9000);
     });
 
@@ -266,7 +255,7 @@ describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)'
 
       expect(res.status).toBe(200);
       expect(res.body.data.reputation.tier).toBe('C');
-      expect(res.body.data.depositRequired).toBe(30000); // 100% phần sân 30k
+      expect(res.body.data.depositRequired).toBe(30000);
       expect(res.body.data.depositPaid).toBe(30000);
     });
 

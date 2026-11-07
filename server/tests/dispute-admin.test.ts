@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import { app } from '../src/app';
-import { store } from '../src/data/store';
-import { signJwt } from '../src/utils/jwt';
 import { Role, DisputeStatus, EscrowStatus, UserStatus } from '@prisma/client';
+import { app } from '../src/app';
+import { prisma } from '../src/prisma';
+import { seed } from '../prisma/seed';
+import { signJwt } from '../src/utils/jwt';
 
 describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3)', () => {
   let hostToken: string;
@@ -11,8 +12,8 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
   let adminToken: string;
   let providerToken: string;
 
-  beforeEach(() => {
-    store.reset();
+  beforeEach(async () => {
+    await seed({ silent: true, fast: true });
     hostToken = signJwt({
       userId: 'usr-host-01',
       email: 'dat.dt@synchub.vn',
@@ -37,13 +38,12 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
 
   describe('1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04)', () => {
     it('gửi khiếu nại -> tạo dispute OPEN, đóng băng tiền Escrow của target provider và chuyển lobby sang DISPUTED', async () => {
-      // Chuẩn bị lobby lob-01 đã check-in release xong
       await request(app)
         .post('/api/lobbies/lob-01/split')
         .set('Authorization', `Bearer ${hostToken}`)
         .expect(200);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
       for (const b of bills) {
         await request(app)
           .post('/api/payments/webhook-mock')
@@ -56,7 +56,6 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
         .set('Authorization', `Bearer ${hostToken}`)
         .send({});
 
-      // Member gửi khiếu nại quán FNB prv-fnb-01 vì giao thiếu món
       const disputeRes = await request(app)
         .post('/api/disputes')
         .set('Authorization', `Bearer ${memberToken}`)
@@ -72,16 +71,17 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       expect(disputeRes.body.success).toBe(true);
       expect(disputeRes.body.data.dispute.status).toBe(DisputeStatus.OPEN);
 
-      // BR-ESC-04: Khoản tiền của prv-fnb-01 bị đóng băng FROZEN
-      const fnbTx = store.getEscrowTransactionByIdempotencyKey('release:lob-01:prv-fnb-01');
+      const fnbTx = await prisma.escrowTransaction.findUnique({
+        where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
+      });
       expect(fnbTx?.status).toBe(EscrowStatus.FROZEN);
 
-      // Khoản tiền của sân prv-venue-01 KHÔNG bị ảnh hưởng, vẫn RELEASED
-      const venueTx = store.getEscrowTransactionByIdempotencyKey('release:lob-01:prv-venue-01');
+      const venueTx = await prisma.escrowTransaction.findUnique({
+        where: { idempotency_key: 'release:lob-01:prv-venue-01' },
+      });
       expect(venueTx?.status).toBe(EscrowStatus.RELEASED);
 
-      // Lobby chuyển sang DISPUTED
-      const lobby = store.getLobbyById('lob-01');
+      const lobby = await prisma.groupLobby.findUnique({ where: { id: 'lob-01' } });
       expect(lobby?.status).toBe('DISPUTED');
     });
   });
@@ -90,12 +90,11 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
     let disputeId: string;
 
     beforeEach(async () => {
-      // Tạo dispute mẫu
       await request(app)
         .post('/api/lobbies/lob-01/split')
         .set('Authorization', `Bearer ${hostToken}`);
 
-      const bills = store.getSplitBillsByLobbyId('lob-01');
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
       for (const b of bills) {
         await request(app)
           .post('/api/payments/webhook-mock')
@@ -135,22 +134,23 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       expect(resolveRes.body.data.dispute.status).toBe(DisputeStatus.RESOLVED);
       expect(resolveRes.body.data.dispute.resolved_by).toBe('usr-adm-01');
 
-      // Có giao dịch REFUND trong Escrow
-      const refundTx = store.getEscrowTransactionByIdempotencyKey(`refund:lob-01:${disputeId}`);
+      const refundTx = await prisma.escrowTransaction.findUnique({
+        where: { idempotency_key: `refund:lob-01:${disputeId}` },
+      });
       expect(refundTx).toBeDefined();
       expect(refundTx?.amount).toBe(25000);
       expect(refundTx?.status).toBe(EscrowStatus.REFUNDED);
 
-      // Quán FNB được mở đóng băng và giảm trừ net_amount tương ứng
-      const fnbTx = store.getEscrowTransactionByIdempotencyKey('release:lob-01:prv-fnb-01');
+      const fnbTx = await prisma.escrowTransaction.findUnique({
+        where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
+      });
       expect(fnbTx?.status).toBe(EscrowStatus.RELEASED);
-      // Gốc 83.600đ - 25.000đ hoàn = 58.600đ
       expect(fnbTx?.net_amount).toBe(83600 - 25000);
 
-      // Kiểm tra audit log đã ghi nhận
-      const auditLogs = store.getAuditLogsByEntity('disputes', disputeId);
+      const auditLogs = await prisma.auditLog.findMany({
+        where: { entity: 'disputes', entity_id: disputeId, action: 'DISPUTE_RESOLVE' },
+      });
       expect(auditLogs.length).toBeGreaterThan(0);
-      expect(auditLogs[0].action).toBe('DISPUTE_RESOLVE');
     });
 
     it('người dùng thường không có quyền phân xử khiếu nại (chỉ ADMIN)', async () => {
@@ -164,7 +164,6 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
 
   describe('3. Provider Portal & Admin Dashboard (WBS-5.3)', () => {
     it('Provider có thể thêm slot mới và món mới', async () => {
-      // 1. Thêm slot
       const slotRes = await request(app)
         .post('/api/providers/prv-venue-01/slots')
         .set('Authorization', `Bearer ${providerToken}`)
@@ -178,7 +177,6 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       expect(slotRes.body.success).toBe(true);
       expect(slotRes.body.data.price).toBe(130000);
 
-      // 2. Thêm món
       const menuRes = await request(app)
         .post('/api/providers/prv-fnb-01/menu')
         .set('Authorization', `Bearer ${providerToken}`)
@@ -230,9 +228,10 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       expect(patchRes.body.data.status).toBe(UserStatus.ACTIVE);
       expect(patchRes.body.data.reputation_score).toBe(60);
 
-      const logs = store.getAuditLogsByEntity('users', 'usr-flag-05');
+      const logs = await prisma.auditLog.findMany({
+        where: { entity: 'users', entity_id: 'usr-flag-05', action: 'USER_STATUS_CHANGE' },
+      });
       expect(logs.length).toBeGreaterThan(0);
-      expect(logs[0].action).toBe('USER_STATUS_CHANGE');
     });
   });
 });
