@@ -15,6 +15,36 @@ import {
 
 export const lobbyRouter = Router();
 
+// Danh sách phòng của user hiện tại (hoặc tất cả nếu ADMIN)
+lobbyRouter.get(
+  '/',
+  authenticateJWT,
+  async (req: any, res) => {
+    try {
+      const { prisma } = await import('../prisma');
+      const userId = req.user?.userId;
+      const role = req.user?.role;
+      const lobbies = await prisma.groupLobby.findMany({
+        where:
+          role === Role.ADMIN
+            ? {}
+            : { OR: [{ host_id: userId }, { members: { some: { user_id: userId } } }] },
+        include: {
+          slot: { include: { provider: true } },
+          fnb_provider: true,
+          members: { include: { user: { select: { id: true, full_name: true, reputation_score: true } } } },
+          split_bills: true,
+          escrow_transactions: true,
+        },
+        orderBy: { created_at: 'desc' },
+      });
+      res.json({ success: true, data: lobbies });
+    } catch (error: any) {
+      res.status(500).json({ error: 'SERVER_ERROR', message: error.message });
+    }
+  }
+);
+
 // UC04: Mở phòng ghép kèo gắn với slot đã giữ (BR-INT-01)
 lobbyRouter.post(
   '/',

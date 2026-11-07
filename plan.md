@@ -280,42 +280,42 @@ Server là nguồn sự thật: mọi `cart:*` kiểm tra `lobby.status==='OPEN'
 ### Khối 2 — UI/UX & Base Project
 
 - [x] **WBS-2.0** Cài Hallmark & dựng Design System (mục 3.3): `design.md` + design tokens + theme đã chọn (Emerald Pulse) + bộ 10 core components + trang `/styleguide`
-- [ ] **WBS-2.1** Wireframe/prototype (sinh bằng `/hallmark`, theo `design.md`) các màn: Home+Map, Chi tiết sân, Lobby (members+cart+chat), Chia bill/QR, Ví, Khiếu nại, Provider portal, Admin dashboard — *Gate:* đặt sân → gọi nước ≤ 3 click *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-2.2** Monorepo client/server, Docker Postgres, JWT + RBAC middleware, trang Profile hiển thị điểm & hạng — *Gate:* 4 role truy cập đúng route *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-2.1** Wireframe/prototype (sinh bằng `/hallmark`, theo `design.md`) các màn: Home+Map, Chi tiết sân, Lobby (members+cart+chat), Chia bill/QR, Ví, Khiếu nại, Provider portal, Admin dashboard — *Gate:* đặt sân → gọi nước ≤ 3 click
+- [x] **WBS-2.2** Monorepo client/server, Docker Postgres, JWT + RBAC middleware, trang Profile hiển thị điểm & hạng — *Gate:* 4 role truy cập đúng route
 - [x] **WBS-2.3** `seed.ts`: 10 sân/phòng học + 15 quán quanh Làng ĐH Thủ Đức (tọa độ thật, ảnh), 8 user mẫu đủ 4 role & 3 hạng uy tín, slot 7 ngày tới, voucher CROSS — *Gate:* marker đúng vị trí trên map
 
 **DoD:** `npm run setup` (migrate + seed) & `npm run dev` chạy 1 lệnh · đăng nhập 4 role.
 
 ### Khối 3 — BookSlot & Phòng ghép kèo
 
-- [ ] **WBS-3.1** `GET /api/providers?type&lat&lng&radius&priceMin&priceMax&category` + Map Leaflet (icon khác nhau VENUE/FNB, lọc realtime) *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-3.2** `POST /api/slots/:id/lock`, `POST /api/slots/:id/release`, job hết hạn, đồng hồ đếm ngược 10' — *Gate:* 2 cửa sổ ẩn danh bấm cùng giây + test 20 request *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-3.3** `POST /api/lobbies`, `GET /api/lobbies/:code`, `POST /api/lobbies/:id/join` (check BR-REP-01 → yêu cầu cọc/chặn), invite link + QR, countdown chốt kèo — *Gate:* user hạng C thấy thông báo cọc, user FLAGGED bị chặn *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-3.1** `GET /api/providers?type&lat&lng&radius&priceMin&priceMax&category` + Map Leaflet (icon khác nhau VENUE/FNB, lọc realtime)
+- [x] **WBS-3.2** `POST /api/slots/:id/lock`, `POST /api/slots/:id/release`, job hết hạn, đồng hồ đếm ngược 10' — *Gate:* 2 cửa sổ ẩn danh bấm cùng giây + test 20 request
+- [x] **WBS-3.3** `POST /api/lobbies`, `GET /api/lobbies/:code`, `POST /api/lobbies/:id/join` (check BR-REP-01 → yêu cầu cọc/chặn), invite link + QR, countdown chốt kèo — *Gate:* user hạng C thấy thông báo cọc, user FLAGGED bị chặn
 
 **DoD:** test BR-SLT-01/02, BR-REP-01 Pass · `docs/report/ch3-bookslot.md`.
 
 ### Khối 4 — GroupOrder Realtime & Chia Bill ⭐
 
-- [ ] **WBS-4.1** Socket.io: cart add/update/remove, chat, notify; `POST /api/lobbies/:id/lock` emit `lobby:locked` — *Gate:* độ trễ điện thoại ↔ laptop < 1s; khóa phòng → nút thêm món disable tức thì *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-4.2** `GET /api/recommend?lobbyId` (mục 5.5) + `POST /api/vouchers/validate` (BR-INT-05) — *Gate:* đặt sân cầu lông → top 1 là quán nước ≤ 1 km có mã chéo *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-4.3** `POST /api/lobbies/:id/split` → `services/splitBill.ts` + VietQR URL từng người (`addInfo = SYNCHUB {lobby} {user}`) — *Gate:* tự bấm máy tính ca 5.3 + 3 ca biên (1 người, không ai gọi món, tổng lẻ không chia hết) *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-4.1** Socket.io: cart add/update/remove, chat, notify; `POST /api/lobbies/:id/lock` emit `lobby:locked` — *Gate:* độ trễ điện thoại ↔ laptop < 1s; khóa phòng → nút thêm món disable tức thì
+- [x] **WBS-4.2** `GET /api/recommend?lobbyId` (mục 5.5) + `POST /api/vouchers/validate` (BR-INT-05) — *Gate:* đặt sân cầu lông → top 1 là quán nước ≤ 1 km có mã chéo
+- [x] **WBS-4.3** `POST /api/lobbies/:id/split` → `services/splitBill.ts` + VietQR URL từng người (`addInfo = SYNCHUB {lobby} {user}`) — *Gate:* tự bấm máy tính ca 5.3 + 3 ca biên (1 người, không ai gọi món, tổng lẻ không chia hết)
 
 **DoD:** unit test splitBill ≥ 6 ca Pass · quét QR bằng app ngân hàng hiện đúng số tiền.
 
 ### Khối 5 — Escrow, Khiếu nại, Uy tín, Dashboard
 
-- [ ] **WBS-5.1** `POST /api/payments/webhook-mock` (nút "Giả lập đã nhận tiền") → HOLD; `POST /api/lobbies/:id/checkin` → RELEASE tách VENUE/FNB trừ hoa hồng — *Gate:* gọi release 2 lần → lần 2 bị chặn (BR-ESC-03) *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-5.2** `POST /api/disputes` (multer ảnh), `PATCH /api/admin/disputes/:id` (refund một phần/toàn phần), `services/reputation.ts`, đánh dấu no-show — *Seed 2 kịch bản:* (a) bùng kèo −15 điểm + mất cọc; (b) quán giao thiếu nước → Admin hoàn tiền từ Escrow *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-5.3** Provider portal (slot, menu, doanh thu) + Admin dashboard (Recharts doanh thu/đơn theo ngày, bảng `FLAGGED`, Audit Log) — *Gate:* số liệu query thật từ DB; mọi thao tác Admin có dòng `audit_logs` *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-5.1** `POST /api/payments/webhook-mock` (nút "Giả lập đã nhận tiền") → HOLD; `POST /api/lobbies/:id/checkin` → RELEASE tách VENUE/FNB trừ hoa hồng — *Gate:* gọi release 2 lần → lần 2 bị chặn (BR-ESC-03)
+- [x] **WBS-5.2** `POST /api/disputes` (multer ảnh), `PATCH /api/admin/disputes/:id` (refund một phần/toàn phần), `services/reputation.ts`, đánh dấu no-show — *Seed 2 kịch bản:* (a) bùng kèo −15 điểm + mất cọc; (b) quán giao thiếu nước → Admin hoàn tiền từ Escrow
+- [x] **WBS-5.3** Provider portal (slot, menu, doanh thu) + Admin dashboard (Recharts doanh thu/đơn theo ngày, bảng `FLAGGED`, Audit Log) — *Gate:* số liệu query thật từ DB; mọi thao tác Admin có dòng `audit_logs`
 
 **DoD:** luồng end-to-end trọn vẹn trên 2 thiết bị · `docs/report/ch4-impl.md`.
 
 ### Khối 6 — Kiểm thử, Báo cáo, Demo
 
-- [ ] **WBS-6.0** `/hallmark audit` toàn bộ màn hình, sửa lỗi còn lại, chạy kiểm tra responsive/overflow; chụp 9 ảnh UI cuối (`docs/screenshots/`) cho báo cáo *(demo in-memory — làm lại ở Khối 7)*
-- [ ] **WBS-6.1** 30 Test Case hộp đen (`docs/test-cases.md`: chia bill, voucher, khóa slot, cọc/uy tín, escrow, khiếu nại) + `postman/SyncHub.postman_collection.json` + 65/65 Vitest Pass *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-6.0** `/hallmark audit` toàn bộ màn hình, sửa lỗi còn lại, chạy kiểm tra responsive/overflow; chụp 9 ảnh UI cuối (`docs/screenshots/`) cho báo cáo
+- [x] **WBS-6.1** 30 Test Case hộp đen (`docs/test-cases.md`: chia bill, voucher, khóa slot, cọc/uy tín, escrow, khiếu nại) + `postman/SyncHub.postman_collection.json` + 65/65 Vitest Pass
 - [ ] **WBS-6.2** Ghép báo cáo Word theo mẫu Khoa HTTT (bìa, mục lục, Bảng phân công — Phần 3 brief, Ch.1–6, tài liệu tham khảo) → PDF; Slide 12–15 trang *(Hoàn thiện sau theo yêu cầu)*
-- [ ] **WBS-6.3** Kịch bản demo 10' (`docs/demo-script.md` cho 2 thiết bị: Host/Admin + Member quét QR), 10 câu hỏi vấn đáp + đáp án *(demo in-memory — làm lại ở Khối 7)*
+- [x] **WBS-6.3** Kịch bản demo 10' (`docs/demo-script.md` cho 2 thiết bị: Host/Admin + Member quét QR), 10 câu hỏi vấn đáp + đáp án
 - [x] Chuẩn hóa `.env.example` (`server/.env.example`, `client/.env.example`), cấu hình LAN proxy/CORS & kiểm tra `npm run build` sạch 100%
 
 **DoD:** checklist nộp LMS đủ D1–D6.
@@ -329,8 +329,8 @@ Server là nguồn sự thật: mọi `cart:*` kiểm tra `lobby.status==='OPEN'
 - [x] **R-1** Backend `store.*` → `prisma.*` (slotLock UPDATE…RETURNING, escrow idempotency_key UNIQUE + `$transaction`, audit trong transaction); xóa `server/src/data/`, `dist/` — *Gate:* không còn import `data/store`, restart giữ dữ liệu
 - [x] **R-2** Test trên DB thật: BR-SLT-01/02 (20 req → 1×200 + 19×409), BR-INT-02 (215.000/4 + biên), BR-ESC-03 (release 2 lần = 1 giao dịch)
 - [x] **R-3a** Frontend mới: `ui/` từ `design.md`, 4 layout (Public/Member/Provider/Admin), router + guard JWT, `/styleguide`
-- [ ] **R-3b** Features nối API thật: auth → discover → lobby realtime → bill/wallet → provider → admin; không mock, không role switcher — *Gate:* 2 user 2 trình duyệt đồng bộ cart <1s; tắt backend → UI báo lỗi; MEMBER vào `/admin` bị chặn
-- [ ] **R-4** Nghiệm thu lại Khối 3–5, cập nhật test-cases/Postman/ảnh/ch4-impl/demo-script, build sạch
+- [x] **R-3b** Features nối API thật: auth → discover → lobby realtime → bill/wallet → provider → admin; không mock, không role switcher — *Gate:* 2 user 2 trình duyệt đồng bộ cart <1s; tắt backend → UI báo lỗi; MEMBER vào `/admin` bị chặn
+- [x] **R-4** Nghiệm thu lại Khối 3–5, cập nhật test-cases/Postman/ảnh/ch4-impl/demo-script, build sạch
 
 ---
 

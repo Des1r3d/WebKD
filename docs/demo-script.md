@@ -12,57 +12,56 @@
    ```
    - Backend Express + Socket.io chạy tại `http://localhost:5000`
    - Frontend React + Vite chạy tại `http://localhost:5173` (hỗ trợ cả truy cập LAN cho điện thoại cùng Wi-Fi/Hotspot).
-2. **Thiết lập 2 thiết bị / cửa sổ:**
-   - **Thiết bị 1 (Laptop — Màn hình chiếu chính):** Đóng vai **Host Đào Tiến Đạt (Hạng A — 98đ)** và chuyển nhanh sang **Provider / Admin** qua thanh Role Switcher trên Header.
-   - **Thiết bị 2 (Điện thoại hoặc Cửa sổ Ẩn danh bên cạnh):** Đóng vai **Member Trần Quang Minh (Hạng B — 82đ)** và **User Phạm Gia Hưng (FLAGGED — 42đ)**.
-3. **Mở sẵn 1 tab Terminal:** Để chạy trực tiếp `npm run test` (`65/65 PASS` trong 1.4 giây) khi Hội đồng hỏi về kiểm thử Race Condition hoặc Chia Bill.
+2. **Thiết lập 2 thiết bị / cửa sổ (xác thực JWT thật qua `/login`):**
+   - **Thiết bị 1 (Laptop — Màn hình chiếu chính):** Đăng nhập tại `/login` với tài khoản **Host Đào Tiến Đạt (`dat.dt@synchub.vn` / `Password123!`, Hạng A — 98đ)**. Khi sang phần Portal/Quản trị, đăng xuất và đăng nhập tài khoản **Provider (`thang.venue@synchub.vn`)** hoặc **Admin (`admin@synchub.vn`)**.
+   - **Thiết bị 2 (Điện thoại hoặc Cửa sổ Ẩn danh bên cạnh):** Đăng nhập tài khoản **Member Trần Quang Minh (`minh.b@synchub.vn`, Hạng B — 82đ)**, **Lê Hoàng Linh (`linh.c@synchub.vn`, Hạng C — 64đ)** và **Phạm Gia Hưng (`hung.flag@synchub.vn`, FLAGGED — 42đ)**.
+3. **Mở sẵn 1 tab Terminal:** Để chạy trực tiếp `npm run test` (`65/65 PASS` trên PostgreSQL 16 thật) khi Hội đồng hỏi về kiểm thử Race Condition hoặc Chia Bill.
 
 ---
 
 ## PHẦN 2: KỊCH BẢN DEMO TRỰC TIẾP 10 PHÚT (THEO DÒNG THỜI GIAN)
 
 ### Phút 00:00 – 01:30 | Mở đầu: Bản đồ Làng ĐH & Tìm kiếm Đa tiêu chí (`UC02`)
-- **Thao tác (Thiết bị 1 - `/home`):**
-  1. Giới thiệu giao diện **Emerald Pulse** (chuẩn Hallmark) và thanh chỉ báo **Luồng ≤ 3 Click** trên Header.
+- **Thao tác (Thiết bị 1 - `/`):**
+  1. Giới thiệu giao diện **Emerald Pulse** (chuẩn Hallmark) và kiến trúc tách biệt 4 Layout (`PublicLayout`, `MemberLayout`, `ProviderLayout`, `AdminLayout`).
   2. Tương tác với bản đồ **Leaflet OpenStreetMap** tâm tại Nhà Văn Hóa Sinh Viên ĐHQG TP.HCM (`10.8752, 106.8007`).
-  3. Lọc nhanh theo bán kính `≤ 1.000m (Chuẩn CROSS)` và danh mục `Cầu lông`. Chỉ ra các địa điểm có nhãn **Voucher CROSS −15%**.
-  4. Bấm nút **"Click 1: Chọn & Khóa Slot"** tại *Sân Cầu Lông NVH Sinh Viên ĐHQG*.
+  3. Lọc nhanh theo bán kính `≤ 1 km` và danh mục `Cầu lông`.
+  4. Bấm **"Chọn khung giờ"** tại *Sân Cầu Lông NVH Sinh Viên ĐHQG* (`/venues/prv-venue-01`).
 
 ### Phút 01:30 – 03:30 | Click 1: Khóa Slot 10 Phút Chống Trùng & Cọc Uy tín (`UC03`, `UC04`, `UC05`)
-- **Thao tác (Thiết bị 1 & 2 - `/venue`):**
-  1. Tại màn hình Chi tiết sân, bấm **"Khóa Slot 10'"** ở khung giờ `19:00 – 20:00` (`120.000 ₫`).
-  2. Chỉ vào đồng hồ đếm ngược `10:00` (`BR-SLT-01`). Giải thích: Nếu 20 người bấm cùng lúc, chỉ 1 người nhận `200 OK`, 19 người nhận `409 SLOT_TAKEN` (`BR-SLT-02`).
-  3. Bấm **"Click 2: Vào Phòng & Gọi Nước"** → Chuyển sang phòng ghép kèo `#SYNC01` (`/lobby`).
-  4. Mở mục **Kiểm chứng Gate BR-REP-01**:
-     - Chuyển sang tài khoản **Hạng C (64đ)** → Bấm kiểm tra vào phòng → Hệ thống báo yêu cầu **cọc 100% phần sân (`30.000 ₫`)**.
-     - Chuyển sang tài khoản **FLAGGED (42đ)** → Bấm kiểm tra vào phòng → Hệ thống chặn đứng với lỗi **`403 REPUTATION_TOO_LOW`**.
+- **Thao tác (Thiết bị 1 & 2 - `/venues/prv-venue-01` & `/join/SYNC01`):**
+  1. Tại màn hình Chi tiết sân (`/venues/prv-venue-01`), bấm **"Khóa giữ chỗ 10 phút"** ở khung giờ trống (`120.000 ₫`).
+  2. Chỉ vào đồng hồ đếm ngược `10:00` (`BR-SLT-01`). Giải thích: Câu lệnh `prisma.slot.updateMany` nguyên tử trong PostgreSQL đảm bảo 20 người bấm cùng lúc chỉ 1 người nhận `200 OK`, 19 người nhận `409 SLOT_TAKEN` (`BR-SLT-02`).
+  3. Bấm **"Mở phòng ghép kèo"** (hoặc vào phòng mẫu `/lobby/SYNC01`).
+  4. Trên Thiết bị 2, mở link mời `/join/SYNC01` để kiểm chứng **Gate BR-REP-01**:
+     - Đăng nhập tài khoản **Hạng C (`linh.c@synchub.vn`, 64đ)** → Trang `/join/SYNC01` hiển thị yêu cầu **cọc 100% phần sân (`30.000 ₫`)**.
+     - Đăng nhập tài khoản **FLAGGED (`hung.flag@synchub.vn`, 42đ)** → Nút tham gia bị khóa và API trả về lỗi **`403 REPUTATION_TOO_LOW`**.
 
 ### Phút 03:30 – 06:00 | Click 2: Giỏ Hàng Chung Realtime, Gợi Ý F&B & Voucher Chéo (`UC06`, `UC07`)
-- **Thao tác (Thiết bị 1 & 2 - `/lobby`):**
-  1. Chỉ vào khối **Gợi ý Quán Top 1**: Hệ thống tự động tính `score` theo khoảng cách Haversine (`≤ 1km`), giờ mở cửa và lượt đặt để đề xuất quán trà sữa gần sân nhất (`BR-INT-05`).
-  2. Trên Thiết bị 1 và Thiết bị 2, bấm thêm món vào **Giỏ hàng chung** và gửi tin nhắn **Chat nhóm** → Chứng minh đồng bộ tức thì qua Socket.io (`< 1 giây`).
-  3. Áp mã giảm giá **`FNBLANGDH20K`** (giảm `20.000 ₫`) hoặc **`CROSSLANGDH15`** (`BR-INT-05`).
-  4. Host bấm nút **"Chốt Phòng (LOCKED)"** → Toàn bộ nút thêm/sửa món bị vô hiệu hóa ngay lập tức (`BR-INT-04`).
-  5. Bấm **"Click 3: Chốt & Chia Bill VietQR"** ở thanh tổng kết cuối trang.
+- **Thao tác (Thiết bị 1 & 2 - `/lobby/SYNC01`):**
+  1. Chỉ vào khối **Quán F&B gợi ý quanh sân**: Hệ thống tự động tính `score` theo khoảng cách Haversine (`≤ 1km`), giờ mở cửa và lượt đặt để đề xuất quán trà sữa gần sân nhất (`BR-INT-05`).
+  2. Trên Thiết bị 1 và Thiết bị 2, bấm **"+ Thêm"** món vào **Giỏ hàng GroupOrder** và gửi tin nhắn **Trò chuyện trong phòng** → Chứng minh ghi PostgreSQL trước rồi đồng bộ tức thì qua Socket.io (`< 1 giây`).
+  3. Áp mã giảm giá **`FNBLANGDH20K`** (giảm `20.000 ₫`) hoặc **`SYNCHUBCROSS15`** (`BR-INT-05`).
+  4. Host bấm nút **"Khóa giỏ hàng (BR-INT-04)"** → Toàn bộ nút thêm/sửa món bị vô hiệu hóa ngay lập tức trên cả 2 thiết bị.
+  5. Bấm **"Chốt & Chia Bill"** → Điều hướng sang `/lobby/SYNC01/split`.
 
 ### Phút 06:00 – 08:00 | Click 3: Chia Bill Largest Remainder & Quét Mã VietQR (`UC08`, `UC09`)
-- **Thao tác (Thiết bị 1 - `/split-bill`):**
+- **Thao tác (Thiết bị 1 - `/lobby/SYNC01/split`):**
   1. Trình chiếu bảng **Ca Kiểm Chứng Chuẩn Mục 5.2 `CONTEXT.md` (Tổng `215.000 ₫`)**:
      - Sân `120.000 ₫` chia đều 4 người (`30.000 ₫`/người).
      - Bạn C không uống nước (`food = 0 ₫`) → Không phải chịu phí ship, chỉ trả đúng `30.000 ₫` (đã khấu trừ cọc `deposit_offset = 30.000 ₫` → Cần chuyển thêm `0 ₫`).
      - A trả `53.750 ₫`, B trả `58.500 ₫`, D trả `72.750 ₫`. Tổng `Σ = 215.000 ₫` khớp tuyệt đối (`BR-INT-02`).
-  2. Bấm nút chuyển sang **"Ca biên lẻ 100.000₫ / 3 người"** → Chứng minh thuật toán **Largest Remainder**: Host nhận phần dư `+1 ₫` (`33.334 ₫`), 2 thành viên mỗi người `33.333 ₫`.
-  3. Dùng điện thoại mở app Ngân hàng quét thử mã **VietQR** bên phải → Hiện đúng số tiền và nội dung chuyển khoản `SYNCHUB SYNC01 ...`.
-  4. Bấm **"Webhook Giả Lập: Tất Cả PAID"** → Trạng thái chuyển sang `PAID · ĐÃ GIỮ TIỀN ESCROW` (`BR-ESC-01`).
+  2. Dùng điện thoại mở app Ngân hàng quét thử mã **VietQR** bên phải → Hiện đúng số tiền và nội dung chuyển khoản `SYNCHUB SYNC01 ...`.
+  3. Bấm **"Giả lập đã nhận tiền"** cho từng thành viên → Trạng thái chuyển sang `PAID` và ghi nhận giao dịch `HOLD` trong sổ cái Escrow (`BR-ESC-01`).
 
 ### Phút 08:00 – 10:00 | Giải ngân Escrow Đa bên, Chống Lặp & Phân xử Khiếu nại (`UC10`, `UC11`, `UC12`)
-- **Thao tác (Thiết bị 1 - `/wallet`, `/disputes`, `/admin`):**
-  1. Sang trang **Ví Escrow (`/wallet`)**:
-     - Thử bấm **"Báo vắng (−15đ)"** cho 1 thành viên để minh họa phạt bùng kèo (`BR-REP-02`), hoặc giữ `CHECKED_IN` để cộng `+2đ` (`BR-REP-03`).
-     - Bấm **"Check-in & Giải Ngân Đa Bên"** → Hệ thống tách dòng tiền: Chủ sân nhận `110.400 ₫` (trừ 8% hoa hồng = `9.600 ₫`), Quán nước nhận `83.600 ₫` (trừ 12% hoa hồng = `11.400 ₫`) (`BR-ESC-02`).
-     - **Bấm nút giải ngân lần thứ 2 liên tiếp** → Hệ thống bật cảnh báo đỏ chặn đứng nhờ khóa `idempotency_key` (`release:lob-01:prv-venue-01`) (`BR-ESC-03`).
-  2. Sang trang **Khiếu nại (`/disputes`)**: Minh họa đơn khiếu nại giao thiếu nước làm đóng băng khoản tiền `FROZEN` (`BR-ESC-04`) và Admin bấm duyệt hoàn tiền (`BR-DSP-01`).
-  3. Chuyển sang vai trò **ADMIN** trên Header → Mở **Admin Dashboard (`/admin`)**: Xem biểu đồ doanh thu GMV 7 ngày, danh sách tài khoản `FLAGGED` và bảng nhật ký bất biến **`audit_logs`**.
+- **Thao tác (Thiết bị 1 - `/lobby/SYNC01/split`, `/wallet`, `/disputes`, `/admin`):**
+  1. Ngay tại khối **Điểm danh Check-in & Giải ngân Escrow**:
+     - Chọn trạng thái `Có mặt (+2đ)` hoặc `Bùng kèo (-15đ, phạt cọc)` cho từng thành viên (`BR-REP-02/03`).
+     - Bấm **"Xác nhận Check-in & Giải ngân Escrow"** → Hệ thống chạy `prisma.$transaction` tách dòng tiền: Chủ sân nhận `110.400 ₫` (trừ 8% hoa hồng = `9.600 ₫`), Quán nước nhận `83.600 ₫` (trừ 12% hoa hồng = `11.400 ₫`) (`BR-ESC-02`).
+     - **Bấm nút giải ngân lần thứ 2 liên tiếp** → Hệ thống trả lỗi `409 IDEMPOTENCY_DUPLICATE_RELEASE` nhờ ràng buộc `UNIQUE(idempotency_key)` trong PostgreSQL (`BR-ESC-03`).
+  2. Sang trang **Khiếu nại (`/disputes`)**: Tạo đơn khiếu nại giao thiếu nước làm đóng băng khoản tiền `FROZEN` của quán F&B (`BR-ESC-04`).
+  3. Đăng nhập tài khoản **ADMIN (`admin@synchub.vn`)** → Mở **Admin Dashboard (`/admin`)**: Duyệt hoàn tiền khiếu nại (`BR-DSP-01`), khôi phục tài khoản `FLAGGED` và đối chiếu bảng nhật ký kiểm toán **`audit_logs`**.
 
 ---
 
