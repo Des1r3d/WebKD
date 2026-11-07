@@ -1,59 +1,41 @@
-/**
- * SyncHub API & Socket configuration
- * Hỗ trợ linh hoạt cả localhost lẫn truy cập qua mạng LAN (2 thiết bị: laptop + điện thoại)
- */
+﻿const BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? ''; // empty → Vite proxy
+const KEY = 'synchub.token';
 
-export const getApiBaseUrl = (): string => {
-  const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) {
-    return envUrl;
-  }
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return `http://${window.location.hostname}:5000`;
-  }
-  return 'http://localhost:5000';
+export const tokenStore = {
+  get: () => localStorage.getItem(KEY),
+  set: (t: string) => localStorage.setItem(KEY, t),
+  clear: () => localStorage.removeItem(KEY),
 };
 
-export const getSocketUrl = (): string => {
-  return getApiBaseUrl();
-};
-
-export async function fetchApi<T = any>(
-  path: string,
-  options: RequestInit = {},
-  token?: string
-): Promise<{ ok: boolean; status: number; data?: T; error?: any }> {
-  const baseUrl = getApiBaseUrl();
-  const url = path.startsWith('http') ? path : `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string>),
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  try {
-    const res = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    const json = await res.json().catch(() => null);
-
-    return {
-      ok: res.ok,
-      status: res.status,
-      data: json,
-      error: !res.ok ? json : undefined,
-    };
-  } catch (err: any) {
-    return {
-      ok: false,
-      status: 0,
-      error: { message: err?.message || 'Network request failed' },
-    };
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  constructor(status: number, message: string, code?: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
   }
 }
+
+export async function api<T>(path: string, init: Omit<RequestInit, 'body'> & { body?: unknown } = {}): Promise<T> {
+  const { body, headers, ...rest } = init;
+  const token = tokenStore.get();
+  const res = await fetch(`${BASE}${path}`, {
+    ...rest,
+    headers: {
+      ...(body !== undefined && { 'Content-Type': 'application/json' }),
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...headers,
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => undefined);
+  if (!res.ok) {
+    const e = data?.error;
+    throw new ApiError(res.status, (typeof e === 'string' ? e : e?.message) ?? data?.message ?? res.statusText, e?.code ?? data?.code);
+  }
+  return data as T;
+}
+
+export const getSocketUrl = () => BASE || undefined;

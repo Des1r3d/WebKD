@@ -1,6 +1,7 @@
-import { VoucherRecord } from '../data/initialData';
-import { store } from '../data/store';
+import { Voucher as VoucherRecord } from '@prisma/client';
+import { prisma } from '../prisma';
 import { haversineDistanceMeters } from '../utils/distance';
+import { findLobby } from './lobby';
 
 export interface ValidateVoucherResult {
   valid: boolean;
@@ -12,15 +13,17 @@ export interface ValidateVoucherResult {
 /**
  * BR-INT-05: Kiểm tra tính hợp lệ của voucher chéo (CROSS) và voucher đơn lẻ (VENUE / FNB)
  */
-export function validateVoucher(
+export async function validateVoucher(
   code: string,
   lobbyId: string
-): ValidateVoucherResult {
+): Promise<ValidateVoucherResult> {
   if (!code || !code.trim()) {
     return { valid: false, message: 'Vui lòng nhập mã voucher', discountAmount: 0 };
   }
 
-  const voucher = store.getVoucherByCode(code.trim());
+  const voucher = await prisma.voucher.findFirst({
+    where: { code: { equals: code.trim(), mode: 'insensitive' } },
+  });
   if (!voucher) {
     return { valid: false, message: 'Mã voucher không tồn tại', discountAmount: 0 };
   }
@@ -34,22 +37,22 @@ export function validateVoucher(
     return { valid: false, message: 'Mã voucher đã hết lượt sử dụng', discountAmount: 0 };
   }
 
-  const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+  const lobby = await findLobby(lobbyId);
   if (!lobby) {
     return { valid: false, message: 'Phòng không tồn tại', discountAmount: 0 };
   }
 
-  const slot = store.getSlotById(lobby.slot_id);
+  const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
   if (!slot) {
     return { valid: false, message: 'Không tìm thấy thông tin slot sân', discountAmount: 0 };
   }
 
-  const venueProvider = store.getProviderById(slot.provider_id);
+  const venueProvider = await prisma.provider.findUnique({ where: { id: slot.provider_id } });
   if (!venueProvider) {
     return { valid: false, message: 'Không tìm thấy thông tin chủ sân', discountAmount: 0 };
   }
 
-  const cartItems = store.getCartItemsRaw(lobby.id);
+  const cartItems = await prisma.cartItem.findMany({ where: { lobby_id: lobby.id } });
   const totalFood = cartItems.reduce((sum, item) => sum + item.qty * item.unit_price_snapshot, 0);
 
   let discountAmount = 0;
@@ -100,7 +103,7 @@ export function validateVoucher(
       };
     }
 
-    const fnbProvider = store.getProviderById(lobby.fnb_provider_id);
+    const fnbProvider = await prisma.provider.findUnique({ where: { id: lobby.fnb_provider_id } });
     if (!fnbProvider) {
       return {
         valid: false,
@@ -141,8 +144,11 @@ export function validateVoucher(
         : Math.min(voucher.max_discount, voucher.value);
   }
 
-  // Gắn voucher vào lobby trong store
-  store.setLobbyVoucher(lobby.id, voucher.id);
+  // Gắn voucher vào lobby trong DB
+  await prisma.groupLobby.update({
+    where: { id: lobby.id },
+    data: { voucher_id: voucher.id },
+  });
 
   return {
     valid: true,

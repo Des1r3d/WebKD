@@ -1,5 +1,6 @@
-import { SplitBillRecord } from '../data/initialData';
-import { store } from '../data/store';
+import { SplitBill as SplitBillRecord } from '@prisma/client';
+import { prisma } from '../prisma';
+import { findLobby } from './lobby';
 
 export interface SplitMemberInput {
   userId: string;
@@ -203,16 +204,14 @@ export function calculateSplitBills(
 export async function executeSplitBillForLobby(
   lobbyId: string
 ): Promise<SplitBillCalculationResult> {
-  const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+  const lobby = await findLobby(lobbyId);
   if (!lobby) throw new Error('LOBBY_NOT_FOUND');
 
-  const slot = store.getSlotById(lobby.slot_id);
+  const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
   if (!slot) throw new Error('SLOT_NOT_FOUND');
 
   // Lấy các thành viên JOINED
-  const members = store
-    .getMembersByLobbyId(lobby.id)
-    .filter((m) => m.status === 'JOINED')
+  const members = (await prisma.lobbyMember.findMany({ where: { lobby_id: lobby.id, status: 'JOINED' } }))
     .map((m) => ({
       userId: m.user_id,
       isHost: m.user_id === lobby.host_id,
@@ -225,7 +224,7 @@ export async function executeSplitBillForLobby(
   }
 
   // Lấy cart items
-  const cartItems = store.getCartItemsRaw(lobby.id).map((c) => ({
+  const cartItems = (await prisma.cartItem.findMany({ where: { lobby_id: lobby.id } })).map((c) => ({
     userId: c.user_id,
     qty: c.qty,
     unitPrice: c.unit_price_snapshot,
@@ -235,7 +234,7 @@ export async function executeSplitBillForLobby(
   let venueOrCrossDiscount = 0;
   let fnbDiscount = 0;
   if (lobby.voucher_id) {
-    const voucher = store.getVoucherById(lobby.voucher_id);
+    const voucher = await prisma.voucher.findUnique({ where: { id: lobby.voucher_id } });
     if (voucher) {
       const foodTotal = cartItems.reduce((acc, c) => acc + c.qty * c.unitPrice, 0);
       if (voucher.scope === 'VENUE') {
@@ -269,11 +268,12 @@ export async function executeSplitBillForLobby(
     cartItems,
   });
 
-  // Lưu split_bills vào store
-  store.saveSplitBills(result.bills);
-
-  // Chuyển trạng thái lobby sang AWAITING_PAYMENT
-  store.updateLobbyStatus(lobby.id, 'AWAITING_PAYMENT' as any);
+  // Lưu split_bills (thay bill cũ của lobby) + chuyển lobby sang AWAITING_PAYMENT
+  await prisma.$transaction([
+    prisma.splitBill.deleteMany({ where: { lobby_id: lobby.id } }),
+    prisma.splitBill.createMany({ data: result.bills }),
+    prisma.groupLobby.update({ where: { id: lobby.id }, data: { status: 'AWAITING_PAYMENT' } }),
+  ]);
 
   return result;
 }

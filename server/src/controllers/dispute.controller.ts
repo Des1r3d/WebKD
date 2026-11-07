@@ -1,8 +1,8 @@
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../middlewares/auth';
-import { createDisputeService, resolveDisputeService } from '../services/dispute';
-import { store } from '../data/store';
 import { DisputeStatus } from '@prisma/client';
+import { AuthenticatedRequest } from '../middlewares/auth';
+import { prisma } from '../prisma';
+import { createDisputeService, resolveDisputeService } from '../services/dispute';
 
 /**
  * POST /api/disputes
@@ -74,30 +74,26 @@ export async function handleGetDisputes(req: AuthenticatedRequest, res: Response
   try {
     const { lobbyId, status } = req.query;
 
-    let disputes = store.getAllDisputes();
-
-    if (lobbyId) {
-      disputes = disputes.filter((d) => d.lobby_id === String(lobbyId));
-    }
-
-    if (status) {
-      disputes = disputes.filter((d) => d.status === String(status));
-    }
-
-    // Gắn thêm thông tin reporter & provider
-    const enriched = disputes.map((d) => {
-      const reporter = store.getUserById(d.reporter_id);
-      const provider = store.getProviderById(d.target_provider_id);
-      const resolver = d.resolved_by ? store.getUserById(d.resolved_by) : null;
-
-      return {
-        ...d,
-        reporter_name: reporter?.full_name || d.reporter_id,
-        target_provider_name: provider?.name || d.target_provider_id,
-        target_provider_type: provider?.type,
-        resolver_name: resolver?.full_name || d.resolved_by,
-      };
+    const disputes = await prisma.dispute.findMany({
+      where: {
+        ...(lobbyId && { lobby_id: String(lobbyId) }),
+        ...(status && { status: String(status) as DisputeStatus }),
+      },
+      include: {
+        reporter: { select: { full_name: true } },
+        target_provider: { select: { name: true, type: true } },
+        resolver: { select: { full_name: true } },
+      },
+      orderBy: { created_at: 'desc' },
     });
+
+    const enriched = disputes.map(({ reporter, target_provider, resolver, ...d }) => ({
+      ...d,
+      reporter_name: reporter?.full_name || d.reporter_id,
+      target_provider_name: target_provider?.name || d.target_provider_id,
+      target_provider_type: target_provider?.type,
+      resolver_name: resolver?.full_name || d.resolved_by,
+    }));
 
     res.json({
       success: true,
@@ -115,23 +111,28 @@ export async function handleGetDisputes(req: AuthenticatedRequest, res: Response
 export async function handleGetDisputeById(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const id = String(req.params.id);
-    const dispute = store.getDisputeById(id);
+    const found = await prisma.dispute.findUnique({
+      where: { id },
+      include: {
+        reporter: { select: { full_name: true } },
+        target_provider: { select: { name: true } },
+        resolver: { select: { full_name: true } },
+      },
+    });
 
-    if (!dispute) {
+    if (!found) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy khiếu nại' });
       return;
     }
 
-    const reporter = store.getUserById(dispute.reporter_id);
-    const provider = store.getProviderById(dispute.target_provider_id);
-    const resolver = dispute.resolved_by ? store.getUserById(dispute.resolved_by) : null;
+    const { reporter, target_provider, resolver, ...dispute } = found;
 
     res.json({
       success: true,
       data: {
         ...dispute,
         reporter_name: reporter?.full_name,
-        target_provider_name: provider?.name,
+        target_provider_name: target_provider?.name,
         resolver_name: resolver?.full_name,
       },
     });

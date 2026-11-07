@@ -1,8 +1,9 @@
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../middlewares/auth';
-import { handlePaymentWebhook } from '../services/escrow';
-import { store } from '../data/store';
 import { EscrowStatus } from '@prisma/client';
+import { AuthenticatedRequest } from '../middlewares/auth';
+import { prisma } from '../prisma';
+import { handlePaymentWebhook } from '../services/escrow';
+import { findLobby } from '../services/lobby';
 
 /**
  * POST /api/payments/webhook-mock
@@ -14,8 +15,10 @@ export async function handleWebhookMock(req: AuthenticatedRequest, res: Response
 
     let targetBillId = splitBillId;
     if (!targetBillId && lobbyId && userId) {
-      const bills = store.getSplitBillsByLobbyId(lobbyId);
-      const userBill = bills.find((b) => b.user_id === userId);
+      const lobby = await findLobby(String(lobbyId));
+      const userBill = await prisma.splitBill.findFirst({
+        where: { lobby_id: lobby ? lobby.id : String(lobbyId), user_id: String(userId) },
+      });
       if (userBill) {
         targetBillId = userBill.id;
       }
@@ -64,30 +67,20 @@ export async function handleWebhookMock(req: AuthenticatedRequest, res: Response
 export async function handleGetLobbyEscrow(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const lobbyId = String(req.params.lobbyId);
-    const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+    const lobby = await findLobby(lobbyId);
 
     if (!lobby) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Phòng không tồn tại' });
       return;
     }
 
-    const transactions = store.getEscrowTransactionsByLobbyId(lobby.id);
+    const transactions = await prisma.escrowTransaction.findMany({
+      where: { lobby_id: lobby.id },
+      orderBy: { created_at: 'desc' },
+    });
 
-    const totalHeld = transactions
-      .filter((t) => t.status === EscrowStatus.HELD)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalReleased = transactions
-      .filter((t) => t.status === EscrowStatus.RELEASED)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalFrozen = transactions
-      .filter((t) => t.status === EscrowStatus.FROZEN)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalRefunded = transactions
-      .filter((t) => t.status === EscrowStatus.REFUNDED)
-      .reduce((sum, t) => sum + t.amount, 0);
+    const sumStatus = (s: EscrowStatus) =>
+      transactions.filter((t) => t.status === s).reduce((sum, t) => sum + t.amount, 0);
 
     res.json({
       success: true,
@@ -95,10 +88,10 @@ export async function handleGetLobbyEscrow(req: AuthenticatedRequest, res: Respo
         lobby_id: lobby.id,
         lobby_status: lobby.status,
         summary: {
-          held: totalHeld,
-          released: totalReleased,
-          frozen: totalFrozen,
-          refunded: totalRefunded,
+          held: sumStatus(EscrowStatus.HELD),
+          released: sumStatus(EscrowStatus.RELEASED),
+          frozen: sumStatus(EscrowStatus.FROZEN),
+          refunded: sumStatus(EscrowStatus.REFUNDED),
         },
         transactions,
       },

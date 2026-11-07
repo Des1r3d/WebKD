@@ -1,7 +1,8 @@
 import { Response } from 'express';
+import { LobbyStatus } from '@prisma/client';
 import { AuthenticatedRequest } from '../middlewares/auth';
-import { createLobby, getLobbyDetail, joinLobby, leaveLobby } from '../services/lobby';
-import { store } from '../data/store';
+import { prisma } from '../prisma';
+import { createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby } from '../services/lobby';
 
 /**
  * POST /api/lobbies
@@ -30,7 +31,7 @@ export async function handleCreateLobby(req: AuthenticatedRequest, res: Response
       voucherId,
     });
 
-    const fullDetail = getLobbyDetail(lobby.id);
+    const fullDetail = await getLobbyDetail(lobby.id);
 
     res.status(201).json({
       success: true,
@@ -67,7 +68,7 @@ export async function handleCreateLobby(req: AuthenticatedRequest, res: Response
 export async function handleGetLobby(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const code = String(req.params.code);
-    const detail = getLobbyDetail(code);
+    const detail = await getLobbyDetail(code);
 
     if (!detail) {
       res.status(404).json({
@@ -184,7 +185,7 @@ export async function handleLockLobby(req: AuthenticatedRequest, res: Response):
     }
 
     const id = String(req.params.id);
-    const lobby = store.getLobbyById(id) || store.getLobbyByCode(id);
+    const lobby = await findLobby(id);
 
     if (!lobby) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Phòng không tồn tại' });
@@ -207,12 +208,15 @@ export async function handleLockLobby(req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    const updated = store.updateLobbyStatus(lobby.id, 'LOCKED' as any);
+    const updated = await prisma.groupLobby.update({
+      where: { id: lobby.id },
+      data: { status: LobbyStatus.LOCKED, locked_at: new Date() },
+    });
     const io = req.app.get('io');
     if (io) {
       io.to(`lobby:${lobby.id}`).emit('lobby:locked', {
         lobbyId: lobby.id,
-        lockedAt: updated?.locked_at || new Date(),
+        lockedAt: updated.locked_at || new Date(),
       });
     }
 
@@ -239,7 +243,7 @@ export async function handleSplitLobby(req: AuthenticatedRequest, res: Response)
     }
 
     const id = String(req.params.id);
-    const lobby = store.getLobbyById(id) || store.getLobbyByCode(id);
+    const lobby = await findLobby(id);
 
     if (!lobby) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Phòng không tồn tại' });
@@ -256,7 +260,10 @@ export async function handleSplitLobby(req: AuthenticatedRequest, res: Response)
 
     // Tự động chuyển sang LOCKED nếu chưa khóa
     if (lobby.status === 'OPEN') {
-      store.updateLobbyStatus(lobby.id, 'LOCKED' as any);
+      await prisma.groupLobby.update({
+        where: { id: lobby.id },
+        data: { status: LobbyStatus.LOCKED, locked_at: new Date() },
+      });
     }
 
     const { executeSplitBillForLobby } = await import('../services/splitBill');
@@ -295,14 +302,14 @@ export async function handleSplitLobby(req: AuthenticatedRequest, res: Response)
 export async function handleGetSplitBills(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const id = String(req.params.id);
-    const lobby = store.getLobbyById(id) || store.getLobbyByCode(id);
+    const lobby = await findLobby(id);
 
     if (!lobby) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Phòng không tồn tại' });
       return;
     }
 
-    const bills = store.getSplitBillsByLobbyId(lobby.id);
+    const bills = await prisma.splitBill.findMany({ where: { lobby_id: lobby.id } });
     res.json({
       success: true,
       data: bills,
@@ -325,7 +332,7 @@ export async function handleCartAdd(req: AuthenticatedRequest, res: Response): P
     }
 
     const id = String(req.params.id);
-    const lobby = store.getLobbyById(id) || store.getLobbyByCode(id);
+    const lobby = await findLobby(id);
 
     if (!lobby) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Phòng không tồn tại' });
@@ -346,24 +353,49 @@ export async function handleCartAdd(req: AuthenticatedRequest, res: Response): P
       return;
     }
 
-    const menuItem = store.getMenuItemById(menuItemId);
+    const menuItem = await prisma.menuItem.findUnique({ where: { id: String(menuItemId) } });
     if (!menuItem) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Món ăn không tồn tại' });
       return;
     }
 
-    if (!lobby.fnb_provider_id) {
-      store.setLobbyFnbProvider(lobby.id, menuItem.provider_id);
+    let fnbProviderId = lobby.fnb_provider_id;
+    if (!fnbProviderId) {
+      fnbProviderId = menuItem.provider_id;
+      await prisma.groupLobby.update({
+        where: { id: lobby.id },
+        data: { fnb_provider_id: fnbProviderId },
+      });
     }
 
-    const cartItem = store.addCartItem({
-      lobbyId: lobby.id,
-      userId,
-      menuItemId,
-      qty,
+    const existing = await prisma.cartItem.findFirst({
+      where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItem.id },
+    });
+    const cartItem = existing
+      ? await prisma.cartItem.update({
+          where: { id: existing.id },
+          data: { qty: existing.qty + Number(qty) },
+        })
+      : await prisma.cartItem.create({
+          data: {
+            lobby_id: lobby.id,
+            user_id: userId,
+            menu_item_id: menuItem.id,
+            qty: Number(qty),
+            unit_price_snapshot: menuItem.price,
+          },
+        });
+    await prisma.menuItem.update({
+      where: { id: menuItem.id },
+      data: { order_count: { increment: Number(qty) } },
     });
 
-    const cartItems = store.getCartItems(lobby.id).map((c) => ({
+    const dbCart = await prisma.cartItem.findMany({
+      where: { lobby_id: lobby.id },
+      include: { menu_item: true },
+      orderBy: { created_at: 'asc' },
+    });
+    const cartItems = dbCart.map((c) => ({
       id: c.id,
       user_id: c.user_id,
       menu_item_id: c.menu_item_id,
@@ -381,7 +413,7 @@ export async function handleCartAdd(req: AuthenticatedRequest, res: Response): P
       io.to(`lobby:${lobby.id}`).emit('cart:updated', {
         items: cartItems,
         subtotal,
-        fnbProviderId: lobby.fnb_provider_id,
+        fnbProviderId,
       });
     }
 

@@ -23,8 +23,8 @@ app.set('io', io);
 setupLobbySocket(io);
 
 // BR-SLT-01: Background job quét các slot LOCKED quá hạn mỗi 60s
-setInterval(() => {
-  const expired = expireOverdueSlots();
+setInterval(async () => {
+  const expired = await expireOverdueSlots();
   if (expired.length > 0) {
     console.log(`[SlotJob] Đã tự động giải phóng ${expired.length} slot hết hạn:`, expired.map((s) => s.id));
     for (const s of expired) {

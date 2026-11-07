@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { GroupLobbyRecord, LobbyMemberRecord } from '../data/initialData';
-import { store } from '../data/store';
+import { GroupLobby as GroupLobbyRecord, LobbyMember as LobbyMemberRecord } from '@prisma/client';
+import { prisma } from '../prisma';
 import { calculateReputation } from '../utils/reputation';
 
 export interface CreateLobbyInput {
@@ -85,13 +85,17 @@ export function generateInviteCode(): string {
   return code;
 }
 
+/** Tìm phòng theo id hoặc invite_code */
+export const findLobby = (codeOrId: string) =>
+  prisma.groupLobby.findFirst({ where: { OR: [{ id: codeOrId }, { invite_code: codeOrId.toUpperCase() }] } });
+
 /**
  * UC04 / BR-INT-01: Tạo phòng ghép kèo gắn với 1 slot đã giữ
  */
 export async function createLobby(input: CreateLobbyInput): Promise<GroupLobbyRecord> {
   const { hostId, slotId, fnbProviderId, shipFee = 15000, voucherId } = input;
 
-  const slot = store.getSlotById(slotId);
+  const slot = await prisma.slot.findUnique({ where: { id: slotId } });
   if (!slot) {
     throw new Error('SLOT_NOT_FOUND');
   }
@@ -105,8 +109,7 @@ export async function createLobby(input: CreateLobbyInput): Promise<GroupLobbyRe
   }
 
   // 1 slot chỉ thuộc tối đa 1 lobby
-  const allLobbies = (store as any).lobbies as GroupLobbyRecord[];
-  const existingLobby = allLobbies.find((l) => l.slot_id === slotId && l.status !== 'CANCELLED');
+  const existingLobby = await prisma.groupLobby.findFirst({ where: { slot_id: slotId, status: { not: 'CANCELLED' } } });
   if (existingLobby) {
     throw new Error('LOBBY_SLOT_ALREADY_EXISTS');
   }
@@ -122,39 +125,46 @@ export async function createLobby(input: CreateLobbyInput): Promise<GroupLobbyRe
 
   let inviteCode = generateInviteCode();
   // Đảm bảo không trùng invite_code
-  while (store.getLobbyByCode(inviteCode)) {
+  while (await prisma.groupLobby.findUnique({ where: { invite_code: inviteCode } })) {
     inviteCode = generateInviteCode();
   }
 
-  const lobby = store.createLobby({
-    hostId,
-    slotId,
-    fnbProviderId: fnbProviderId || null,
-    inviteCode,
-    deadlineAt: deadline,
-    shipFee,
-    voucherId: voucherId || null,
+  // Host tự động là thành viên đầu tiên (deposit 0)
+  return prisma.groupLobby.create({
+    data: {
+      host_id: hostId,
+      slot_id: slotId,
+      fnb_provider_id: fnbProviderId || null,
+      invite_code: inviteCode,
+      deadline_at: deadline,
+      ship_fee: shipFee || 15000,
+      voucher_id: voucherId || null,
+      members: { create: { user_id: hostId } },
+    },
   });
-
-  return lobby;
 }
 
 /**
  * Lấy chi tiết phòng ghép kèo theo code hoặc id
  */
-export function getLobbyDetail(codeOrId: string): LobbyDetailResponse | null {
-  const lobby = store.getLobbyByCodeOrId(codeOrId);
+export async function getLobbyDetail(codeOrId: string): Promise<LobbyDetailResponse | null> {
+  const lobby = await findLobby(codeOrId);
   if (!lobby) return null;
 
-  const hostUser = store.getUserById(lobby.host_id)!;
-  const slot = store.getSlotById(lobby.slot_id)!;
-  const venueProvider = store.getProviderById(slot.provider_id)!;
+  const hostUser = (await prisma.user.findUnique({ where: { id: lobby.host_id } }))!;
+  const slot = (await prisma.slot.findUnique({ where: { id: lobby.slot_id } }))!;
+  const venueProvider = (await prisma.provider.findUnique({ where: { id: slot.provider_id } }))!;
 
   const fnbProvider = lobby.fnb_provider_id
-    ? store.getProviderById(lobby.fnb_provider_id)
+    ? await prisma.provider.findUnique({ where: { id: lobby.fnb_provider_id } })
     : null;
 
-  const members = store.getMembersByLobbyId(lobby.id).map((m) => ({
+  const dbMembers = await prisma.lobbyMember.findMany({
+    where: { lobby_id: lobby.id },
+    include: { user: true },
+    orderBy: { joined_at: 'asc' },
+  });
+  const members = dbMembers.map((m) => ({
     user_id: m.user_id,
     full_name: m.user.full_name,
     email: m.user.email,
@@ -167,7 +177,12 @@ export function getLobbyDetail(codeOrId: string): LobbyDetailResponse | null {
     joined_at: m.joined_at,
   }));
 
-  const cart = store.getCartItems(lobby.id).map((c) => ({
+  const dbCart = await prisma.cartItem.findMany({
+    where: { lobby_id: lobby.id },
+    include: { menu_item: true },
+    orderBy: { created_at: 'asc' },
+  });
+  const cart = dbCart.map((c) => ({
     id: c.id,
     user_id: c.user_id,
     menu_item_id: c.menu_item_id,
@@ -176,7 +191,7 @@ export function getLobbyDetail(codeOrId: string): LobbyDetailResponse | null {
     unit_price_snapshot: c.unit_price_snapshot,
   }));
 
-  const voucher = lobby.voucher_id ? store.getVouchers().find((v) => v.id === lobby.voucher_id) : null;
+  const voucher = lobby.voucher_id ? await prisma.voucher.findUnique({ where: { id: lobby.voucher_id } }) : null;
 
   return {
     lobby,
@@ -235,7 +250,7 @@ export async function joinLobby(lobbyId: string, userId: string): Promise<{
   depositRequired: number;
   depositPaid: number;
 }> {
-  const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+  const lobby = await findLobby(lobbyId);
   if (!lobby) {
     throw new Error('LOBBY_NOT_FOUND');
   }
@@ -244,7 +259,7 @@ export async function joinLobby(lobbyId: string, userId: string): Promise<{
     throw new Error('LOBBY_NOT_OPEN');
   }
 
-  const user = store.getUserById(userId);
+  const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     throw new Error('USER_NOT_FOUND');
   }
@@ -255,15 +270,15 @@ export async function joinLobby(lobbyId: string, userId: string): Promise<{
     throw new Error('REPUTATION_TOO_LOW');
   }
 
-  const slot = store.getSlotById(lobby.slot_id);
+  const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
   const slotPrice = slot ? slot.price : 120000;
 
   // Tính tiền cọc:
   // Ca chuẩn: 4 người -> mỗi người 30.000 VND
   // Lấy số thành viên JOINED khác user hiện tại để tính sĩ số dự kiến
-  const otherMembers = store
-    .getMembersByLobbyId(lobby.id)
-    .filter((m) => m.status === 'JOINED' && m.user_id !== userId);
+  const otherMembers = await prisma.lobbyMember.findMany({
+    where: { lobby_id: lobby.id, status: 'JOINED', user_id: { not: userId } },
+  });
   const estimatedGroupSize = Math.max(4, otherMembers.length + 1);
   const expectedSlotShare = Math.floor(slotPrice / estimatedGroupSize);
 
@@ -279,11 +294,11 @@ export async function joinLobby(lobbyId: string, userId: string): Promise<{
   }
 
   // Tự động ghi nhận cọc đã trả (mô phỏng ví/trừ cọc tự động cho demo)
-  const member = store.addOrUpdateMember({
-    lobbyId: lobby.id,
-    userId,
-    depositRequired,
-    depositPaid: depositRequired,
+  const fields = { status: 'JOINED' as const, deposit_required: depositRequired, deposit_paid: depositRequired };
+  const member = await prisma.lobbyMember.upsert({
+    where: { lobby_id_user_id: { lobby_id: lobby.id, user_id: userId } },
+    update: fields,
+    create: { lobby_id: lobby.id, user_id: userId, ...fields },
   });
 
   return {
@@ -299,7 +314,7 @@ export async function joinLobby(lobbyId: string, userId: string): Promise<{
  * Rời phòng ghép kèo
  */
 export async function leaveLobby(lobbyId: string, userId: string): Promise<boolean> {
-  const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+  const lobby = await findLobby(lobbyId);
   if (!lobby) {
     throw new Error('LOBBY_NOT_FOUND');
   }
@@ -308,5 +323,9 @@ export async function leaveLobby(lobbyId: string, userId: string): Promise<boole
     throw new Error('HOST_CANNOT_LEAVE');
   }
 
-  return store.memberLeave(lobby.id, userId);
+  const { count } = await prisma.lobbyMember.updateMany({
+    where: { lobby_id: lobby.id, user_id: userId },
+    data: { status: 'LEFT' },
+  });
+  return count > 0;
 }

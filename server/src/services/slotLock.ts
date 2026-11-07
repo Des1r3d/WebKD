@@ -1,5 +1,5 @@
-import { SlotRecord } from '../data/initialData';
-import { store } from '../data/store';
+import { Slot as SlotRecord } from '@prisma/client';
+import { prisma } from '../prisma';
 
 export interface LockSlotResult {
   success: boolean;
@@ -30,7 +30,7 @@ export async function lockSlot(slotId: string, userId: string): Promise<LockSlot
     };
   }
 
-  const existingSlot = store.getSlotById(slotId);
+  const existingSlot = await prisma.slot.findUnique({ where: { id: slotId } });
   if (!existingSlot) {
     return {
       success: false,
@@ -39,9 +39,17 @@ export async function lockSlot(slotId: string, userId: string): Promise<LockSlot
     };
   }
 
-  const lockedSlot = await store.lockSlot(slotId, userId, 10 * 60 * 1000);
+  // 1 câu UPDATE nguyên tử (không mutex JS): chỉ 1 request thắng, còn lại count=0
+  const now = new Date();
+  const { count } = await prisma.slot.updateMany({
+    where: {
+      id: slotId,
+      OR: [{ status: 'AVAILABLE' }, { status: 'LOCKED', locked_until: { lt: now } }],
+    },
+    data: { status: 'LOCKED', locked_by: userId, locked_until: new Date(now.getTime() + 10 * 60 * 1000) },
+  });
 
-  if (!lockedSlot) {
+  if (count === 0) {
     return {
       success: false,
       error: 'SLOT_TAKEN',
@@ -49,6 +57,7 @@ export async function lockSlot(slotId: string, userId: string): Promise<LockSlot
     };
   }
 
+  const lockedSlot = (await prisma.slot.findUnique({ where: { id: slotId } }))!;
   const lockedUntilIso = lockedSlot.locked_until?.toISOString();
   const expiresInSeconds = lockedSlot.locked_until
     ? Math.max(0, Math.round((lockedSlot.locked_until.getTime() - Date.now()) / 1000))
@@ -67,7 +76,7 @@ export async function lockSlot(slotId: string, userId: string): Promise<LockSlot
  * Giải phóng slot đang giữ về AVAILABLE
  */
 export async function releaseSlot(slotId: string, userId: string): Promise<ReleaseSlotResult> {
-  const existingSlot = store.getSlotById(slotId);
+  const existingSlot = await prisma.slot.findUnique({ where: { id: slotId } });
   if (!existingSlot) {
     return {
       success: false,
@@ -84,8 +93,12 @@ export async function releaseSlot(slotId: string, userId: string): Promise<Relea
     };
   }
 
-  const success = await store.releaseSlot(slotId, userId);
-  if (!success) {
+  // Chỉ người đang giữ (hoặc khóa đã hết hạn) mới được giải phóng
+  const { count } = await prisma.slot.updateMany({
+    where: { id: slotId, status: 'LOCKED', OR: [{ locked_by: userId }, { locked_until: { lt: new Date() } }] },
+    data: { status: 'AVAILABLE', locked_by: null, locked_until: null },
+  });
+  if (count === 0) {
     return {
       success: false,
       error: 'FORBIDDEN',
@@ -93,17 +106,28 @@ export async function releaseSlot(slotId: string, userId: string): Promise<Relea
     };
   }
 
-  const updatedSlot = store.getSlotById(slotId);
+  const updatedSlot = await prisma.slot.findUnique({ where: { id: slotId } });
   return {
     success: true,
     message: 'Đã giải phóng slot về trạng thái sẵn sàng (AVAILABLE)',
-    slot: updatedSlot,
+    slot: updatedSlot ?? undefined,
   };
 }
 
 /**
  * Quét các slot LOCKED đã quá hạn và trả về AVAILABLE (Job 60s - BR-SLT-01)
  */
-export function expireOverdueSlots(): SlotRecord[] {
-  return store.expireSlots();
+export async function expireOverdueSlots() {
+  const now = new Date();
+  const expired = await prisma.slot.findMany({
+    where: { status: 'LOCKED', locked_until: { lt: now } },
+    select: { id: true, provider_id: true },
+  });
+  if (expired.length === 0) return [];
+  await prisma.slot.updateMany({
+    where: { id: { in: expired.map((s) => s.id) }, status: 'LOCKED' },
+    data: { status: 'AVAILABLE', locked_by: null, locked_until: null },
+  });
+  return expired;
 }
+

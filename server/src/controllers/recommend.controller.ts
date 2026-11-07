@@ -20,7 +20,7 @@ export async function handleGetRecommendations(
       return;
     }
 
-    const recommendations = getRecommendationsForLobby(lobbyId);
+    const recommendations = await getRecommendationsForLobby(lobbyId);
 
     res.json({
       success: true,

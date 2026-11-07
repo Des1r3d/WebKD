@@ -326,9 +326,9 @@ Server là nguồn sự thật: mọi `cart:*` kiểm tra `lobby.status==='OPEN'
 
 ## 6b. Khối 7 — Remediation (làm lại web từ Design System; snapshot cũ: tag `demo-snapshot`)
 - [x] **R-0** Postgres local + `prisma migrate reset` + seed — *Gate:* Prisma Studio thấy 12 bảng có dữ liệu
-- [ ] **R-1** Backend `store.*` → `prisma.*` (slotLock UPDATE…RETURNING, escrow idempotency_key UNIQUE + `$transaction`, audit trong transaction); xóa `server/src/data/`, `dist/` — *Gate:* không còn import `data/store`, restart giữ dữ liệu
+- [x] **R-1** Backend `store.*` → `prisma.*` (slotLock UPDATE…RETURNING, escrow idempotency_key UNIQUE + `$transaction`, audit trong transaction); xóa `server/src/data/`, `dist/` — *Gate:* không còn import `data/store`, restart giữ dữ liệu
 - [ ] **R-2** Test trên DB thật: BR-SLT-01/02 (20 req → 1×200 + 19×409), BR-INT-02 (215.000/4 + biên), BR-ESC-03 (release 2 lần = 1 giao dịch)
-- [ ] **R-3a** Frontend mới: `ui/` từ `design.md`, 4 layout (Public/Member/Provider/Admin), router + guard JWT, `/styleguide`
+- [x] **R-3a** Frontend mới: `ui/` từ `design.md`, 4 layout (Public/Member/Provider/Admin), router + guard JWT, `/styleguide`
 - [ ] **R-3b** Features nối API thật: auth → discover → lobby realtime → bill/wallet → provider → admin; không mock, không role switcher — *Gate:* 2 user 2 trình duyệt đồng bộ cart <1s; tắt backend → UI báo lỗi; MEMBER vào `/admin` bị chặn
 - [ ] **R-4** Nghiệm thu lại Khối 3–5, cập nhật test-cases/Postman/ảnh/ch4-impl/demo-script, build sạch
 

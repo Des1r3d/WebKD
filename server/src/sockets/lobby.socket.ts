@@ -1,23 +1,58 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { store } from '../data/store';
+import { prisma } from '../prisma';
+import { findLobby } from '../services/lobby';
+
+// Chat trong phòng lưu tạm trong RAM (12 bảng DB đã khóa theo AGENTS.md, không có bảng chat)
+interface EphemeralChatMessage {
+  id: string;
+  lobby_id: string;
+  user_id: string;
+  full_name: string;
+  text: string;
+  created_at: Date;
+}
+const chatMessages = new Map<string, EphemeralChatMessage[]>();
+
+async function loadFormattedCart(lobbyId: string) {
+  const dbCart = await prisma.cartItem.findMany({
+    where: { lobby_id: lobbyId },
+    include: { menu_item: true },
+    orderBy: { created_at: 'asc' },
+  });
+  const items = dbCart.map((c) => ({
+    id: c.id,
+    user_id: c.user_id,
+    menu_item_id: c.menu_item_id,
+    name: c.menu_item?.name || 'Món ăn',
+    qty: c.qty,
+    unit_price_snapshot: c.unit_price_snapshot,
+  }));
+  const subtotal = items.reduce((sum, item) => sum + item.qty * item.unit_price_snapshot, 0);
+  return { items, subtotal };
+}
 
 export function setupLobbySocket(io: SocketIOServer) {
   io.on('connection', (socket: Socket) => {
     // ==========================================
     // ROOM JOIN & LEAVE
     // ==========================================
-    socket.on('lobby:join', (data: { lobbyId: string; userId?: string }) => {
-      const { lobbyId, userId } = data;
+    socket.on('lobby:join', async (data: { lobbyId: string; userId?: string }) => {
+      const { lobbyId } = data || {};
       if (!lobbyId) return;
 
-      const roomName = `lobby:${lobbyId}`;
-      socket.join(roomName);
-
-      const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+      const lobby = await findLobby(lobbyId);
       if (!lobby) return;
 
-      // Gửi danh sách thành viên hiện tại
-      const members = store.getMembersByLobbyId(lobby.id).map((m) => ({
+      // Vào cả room theo id và invite_code để emit theo id luôn tới được client
+      socket.join(`lobby:${lobby.id}`);
+      socket.join(`lobby:${lobby.invite_code}`);
+
+      const dbMembers = await prisma.lobbyMember.findMany({
+        where: { lobby_id: lobby.id },
+        include: { user: true },
+        orderBy: { joined_at: 'asc' },
+      });
+      const members = dbMembers.map((m) => ({
         user_id: m.user_id,
         full_name: m.user?.full_name || 'Thành viên',
         role: m.user?.role,
@@ -29,28 +64,15 @@ export function setupLobbySocket(io: SocketIOServer) {
       }));
       socket.emit('lobby:members', { members });
 
-      // Gửi giỏ hàng hiện tại
-      const cartItems = store.getCartItems(lobby.id).map((c) => ({
-        id: c.id,
-        user_id: c.user_id,
-        menu_item_id: c.menu_item_id,
-        name: c.menu_item?.name || 'Món ăn',
-        qty: c.qty,
-        unit_price_snapshot: c.unit_price_snapshot,
-      }));
-      const subtotal = cartItems.reduce(
-        (sum, item) => sum + item.qty * item.unit_price_snapshot,
-        0
-      );
+      const { items, subtotal } = await loadFormattedCart(lobby.id);
       socket.emit('cart:updated', {
-        items: cartItems,
+        items,
         subtotal,
         fnbProviderId: lobby.fnb_provider_id,
       });
 
-      // Gửi lịch sử chat
-      const chatHistory = store.getChatMessages(lobby.id);
-      for (const msg of chatHistory) {
+      const history = chatMessages.get(lobby.id) || [];
+      for (const msg of history) {
         socket.emit('chat:message', {
           id: msg.id,
           userId: msg.user_id,
@@ -61,27 +83,30 @@ export function setupLobbySocket(io: SocketIOServer) {
       }
     });
 
-    socket.on('lobby:leave', (data: { lobbyId: string }) => {
-      if (data.lobbyId) {
-        socket.leave(`lobby:${data.lobbyId}`);
+    socket.on('lobby:leave', async (data: { lobbyId: string }) => {
+      if (!data?.lobbyId) return;
+      socket.leave(`lobby:${data.lobbyId}`);
+      const lobby = await findLobby(data.lobbyId);
+      if (lobby) {
+        socket.leave(`lobby:${lobby.id}`);
+        socket.leave(`lobby:${lobby.invite_code}`);
       }
     });
 
     // ==========================================
-    // CART OPERATIONS (BR-INT-01, BR-INT-04)
+    // CART OPERATIONS (BR-INT-01, BR-INT-04) — ghi DB trước, emit sau
     // ==========================================
     socket.on(
       'cart:add',
-      (data: { lobbyId: string; userId: string; menuItemId: string; qty: number }) => {
-        const { lobbyId, userId, menuItemId, qty = 1 } = data;
-        const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+      async (data: { lobbyId: string; userId: string; menuItemId: string; qty: number }) => {
+        const { lobbyId, userId, menuItemId, qty = 1 } = data || {};
+        const lobby = await findLobby(lobbyId);
 
         if (!lobby) {
           socket.emit('notify', { type: 'ERROR', message: 'Phòng không tồn tại' });
           return;
         }
 
-        // BR-INT-04: Phòng đã LOCKED thì từ chối thêm món
         if (lobby.status !== 'OPEN') {
           socket.emit('notify', {
             type: 'ERROR',
@@ -90,51 +115,59 @@ export function setupLobbySocket(io: SocketIOServer) {
           return;
         }
 
-        const menuItem = store.getMenuItemById(menuItemId);
+        const menuItem = await prisma.menuItem.findUnique({ where: { id: menuItemId } });
         if (!menuItem) {
           socket.emit('notify', { type: 'ERROR', message: 'Món ăn không tồn tại' });
           return;
         }
 
-        // Nếu lobby chưa có fnb_provider_id, gắn với quán của món ăn đầu tiên
-        if (!lobby.fnb_provider_id) {
-          store.setLobbyFnbProvider(lobby.id, menuItem.provider_id);
+        let fnbProviderId = lobby.fnb_provider_id;
+        if (!fnbProviderId) {
+          fnbProviderId = menuItem.provider_id;
+          await prisma.groupLobby.update({
+            where: { id: lobby.id },
+            data: { fnb_provider_id: fnbProviderId },
+          });
         }
 
-        store.addCartItem({
-          lobbyId: lobby.id,
-          userId,
-          menuItemId,
-          qty,
+        const existing = await prisma.cartItem.findFirst({
+          where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItemId },
+        });
+        if (existing) {
+          await prisma.cartItem.update({
+            where: { id: existing.id },
+            data: { qty: existing.qty + Number(qty) },
+          });
+        } else {
+          await prisma.cartItem.create({
+            data: {
+              lobby_id: lobby.id,
+              user_id: userId,
+              menu_item_id: menuItemId,
+              qty: Number(qty),
+              unit_price_snapshot: menuItem.price,
+            },
+          });
+        }
+        await prisma.menuItem.update({
+          where: { id: menuItemId },
+          data: { order_count: { increment: Number(qty) } },
         });
 
-        // Broadcast giỏ hàng cập nhật cho cả phòng
-        const cartItems = store.getCartItems(lobby.id).map((c) => ({
-          id: c.id,
-          user_id: c.user_id,
-          menu_item_id: c.menu_item_id,
-          name: c.menu_item?.name || 'Món ăn',
-          qty: c.qty,
-          unit_price_snapshot: c.unit_price_snapshot,
-        }));
-        const subtotal = cartItems.reduce(
-          (sum, item) => sum + item.qty * item.unit_price_snapshot,
-          0
-        );
-
+        const { items, subtotal } = await loadFormattedCart(lobby.id);
         io.to(`lobby:${lobby.id}`).emit('cart:updated', {
-          items: cartItems,
+          items,
           subtotal,
-          fnbProviderId: lobby.fnb_provider_id,
+          fnbProviderId,
         });
       }
     );
 
     socket.on(
       'cart:update',
-      (data: { lobbyId: string; cartItemId: string; qty: number }) => {
-        const { lobbyId, cartItemId, qty } = data;
-        const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+      async (data: { lobbyId: string; cartItemId: string; qty: number }) => {
+        const { lobbyId, cartItemId, qty } = data || {};
+        const lobby = await findLobby(lobbyId);
 
         if (!lobby || lobby.status !== 'OPEN') {
           socket.emit('notify', {
@@ -144,23 +177,18 @@ export function setupLobbySocket(io: SocketIOServer) {
           return;
         }
 
-        store.updateCartItem(cartItemId, qty);
+        if (qty <= 0) {
+          await prisma.cartItem.deleteMany({ where: { id: cartItemId, lobby_id: lobby.id } });
+        } else {
+          await prisma.cartItem.updateMany({
+            where: { id: cartItemId, lobby_id: lobby.id },
+            data: { qty: Number(qty) },
+          });
+        }
 
-        const cartItems = store.getCartItems(lobby.id).map((c) => ({
-          id: c.id,
-          user_id: c.user_id,
-          menu_item_id: c.menu_item_id,
-          name: c.menu_item?.name || 'Món ăn',
-          qty: c.qty,
-          unit_price_snapshot: c.unit_price_snapshot,
-        }));
-        const subtotal = cartItems.reduce(
-          (sum, item) => sum + item.qty * item.unit_price_snapshot,
-          0
-        );
-
+        const { items, subtotal } = await loadFormattedCart(lobby.id);
         io.to(`lobby:${lobby.id}`).emit('cart:updated', {
-          items: cartItems,
+          items,
           subtotal,
           fnbProviderId: lobby.fnb_provider_id,
         });
@@ -169,9 +197,9 @@ export function setupLobbySocket(io: SocketIOServer) {
 
     socket.on(
       'cart:remove',
-      (data: { lobbyId: string; cartItemId: string }) => {
-        const { lobbyId, cartItemId } = data;
-        const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+      async (data: { lobbyId: string; cartItemId: string }) => {
+        const { lobbyId, cartItemId } = data || {};
+        const lobby = await findLobby(lobbyId);
 
         if (!lobby || lobby.status !== 'OPEN') {
           socket.emit('notify', {
@@ -181,23 +209,11 @@ export function setupLobbySocket(io: SocketIOServer) {
           return;
         }
 
-        store.removeCartItem(cartItemId);
+        await prisma.cartItem.deleteMany({ where: { id: cartItemId, lobby_id: lobby.id } });
 
-        const cartItems = store.getCartItems(lobby.id).map((c) => ({
-          id: c.id,
-          user_id: c.user_id,
-          menu_item_id: c.menu_item_id,
-          name: c.menu_item?.name || 'Món ăn',
-          qty: c.qty,
-          unit_price_snapshot: c.unit_price_snapshot,
-        }));
-        const subtotal = cartItems.reduce(
-          (sum, item) => sum + item.qty * item.unit_price_snapshot,
-          0
-        );
-
+        const { items, subtotal } = await loadFormattedCart(lobby.id);
         io.to(`lobby:${lobby.id}`).emit('cart:updated', {
-          items: cartItems,
+          items,
           subtotal,
           fnbProviderId: lobby.fnb_provider_id,
         });
@@ -209,31 +225,34 @@ export function setupLobbySocket(io: SocketIOServer) {
     // ==========================================
     socket.on(
       'chat:send',
-      (data: { lobbyId: string; text: string; userId: string }) => {
-        const { lobbyId, text, userId } = data;
+      async (data: { lobbyId: string; text: string; userId: string }) => {
+        const { lobbyId, text, userId } = data || {};
         if (!text || !text.trim()) return;
 
-        const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+        const lobby = await findLobby(lobbyId);
         if (!lobby) return;
 
-        const user = store.getUserById(userId);
+        const user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
         const fullName = user?.full_name || 'Thành viên';
 
-        const messageRecord = store.addChatMessage({
+        const msg: EphemeralChatMessage = {
           id: `msg-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
           lobby_id: lobby.id,
           user_id: userId,
           full_name: fullName,
           text: text.trim(),
           created_at: new Date(),
-        });
+        };
+        const list = chatMessages.get(lobby.id) || [];
+        list.push(msg);
+        chatMessages.set(lobby.id, list.slice(-100));
 
         io.to(`lobby:${lobby.id}`).emit('chat:message', {
-          id: messageRecord.id,
-          userId: messageRecord.user_id,
-          fullName: messageRecord.full_name,
-          text: messageRecord.text,
-          createdAt: messageRecord.created_at,
+          id: msg.id,
+          userId: msg.user_id,
+          fullName: msg.full_name,
+          text: msg.text,
+          createdAt: msg.created_at,
         });
       }
     );

@@ -39,7 +39,9 @@ app.get('/api/health', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authRouter);
-app.use('/api/test', testRbacRouter);
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/test', testRbacRouter);
+}
 app.use('/api/providers', providerRouter);
 app.use('/api/slots', slotRouter);
 app.use('/api/lobbies', lobbyRouter);

@@ -1,6 +1,7 @@
 import { ProviderType } from '@prisma/client';
-import { store } from '../data/store';
+import { prisma } from '../prisma';
 import { haversineDistanceMeters } from '../utils/distance';
+import { findLobby } from './lobby';
 
 export interface RecommendFnbItem {
   id: string;
@@ -53,28 +54,32 @@ function isTimeInOpenHours(time: Date, openHours: string): boolean {
  * Công thức:
  * score = 0.5 * max(0, 1 - d/1000) + 0.3 * isOpenAtSlotTime + 0.2 * norm(order_count) + crossVoucherBonus(0.15)
  */
-export function getRecommendationsForLobby(lobbyId: string): FnbRecommendation[] {
-  const lobby = store.getLobbyById(lobbyId) || store.getLobbyByCode(lobbyId);
+export async function getRecommendationsForLobby(lobbyId: string): Promise<FnbRecommendation[]> {
+  const lobby = await findLobby(lobbyId);
   if (!lobby) throw new Error('LOBBY_NOT_FOUND');
 
-  const slot = store.getSlotById(lobby.slot_id);
+  const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
   if (!slot) throw new Error('SLOT_NOT_FOUND');
 
-  const venueProvider = store.getProviderById(slot.provider_id);
+  const venueProvider = await prisma.provider.findUnique({ where: { id: slot.provider_id } });
   if (!venueProvider) throw new Error('VENUE_NOT_FOUND');
 
-  // Lấy danh sách quán FNB
-  const fnbProviders = store.getProviders({ type: ProviderType.FNB, radius: 3000 });
-  const allVouchers = store.getVouchers();
-  const crossVouchers = allVouchers.filter((v) => v.scope === 'CROSS');
+  // Lấy danh sách quán FNB trong bán kính 3km quanh sân
+  const allFnb = await prisma.provider.findMany({
+    where: { type: ProviderType.FNB },
+    include: { menu_items: true },
+  });
+  const fnbProviders = allFnb.filter(
+    (p) => haversineDistanceMeters(venueProvider.lat, venueProvider.lng, p.lat, p.lng) <= 3000
+  );
+  const crossVouchers = await prisma.voucher.findMany({ where: { scope: 'CROSS' } });
 
   // Tìm maxOrderCount giữa các quán FNB để chuẩn hóa
   let maxOrderCount = 1;
   const fnbItemsMap = new Map<string, RecommendFnbItem[]>();
 
   for (const fnb of fnbProviders) {
-    const detail = store.getProviderById(fnb.id);
-    const items = (detail?.menu_items || []).map((m) => ({
+    const items = (fnb.menu_items || []).map((m) => ({
       id: m.id,
       name: m.name,
       price: m.price,

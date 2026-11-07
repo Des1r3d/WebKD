@@ -20,7 +20,7 @@ export async function handleValidateVoucher(
       return;
     }
 
-    const result = validateVoucher(code, lobbyId);
+    const result = await validateVoucher(code, lobbyId);
 
     if (!result.valid) {
       res.status(400).json({
