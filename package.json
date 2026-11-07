@@ -1,0 +1,14 @@
+{
+  "name": "synchub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install --prefix server && npm run prisma:generate --prefix server && npm install --prefix client",
+    "seed": "npm run prisma:seed --prefix server",
+    "dev": "node scripts/dev.js",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "test": "npm run test --prefix server",
+    "build": "npm run build --prefix client && npm run build --prefix server"
+  }
+}

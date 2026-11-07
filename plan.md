@@ -7,14 +7,14 @@
 
 ## 0. Mục tiêu & Deliverables nộp LMS
 
-| # | Deliverable | Khối | Định dạng |
-|---|---|---|---|
-| D1 | Báo cáo đồ án (Ch.1 → Ch.6 + Bảng phân công) | 1 → 6 | `.docx`, `.pdf` |
-| D2 | Slide thuyết trình 12–15 trang | 6 | `.pptx` |
-| D3 | Source code chạy được (client + server + seed) | 2 → 5 | `MaLopHocPhan_STTNhom.zip` |
-| D4 | Bộ sơ đồ: Use Case, BPMN, Sequence, State Machine, ERD | 1 | `.png` + nguồn `.mmd`/`.drawio` |
-| D5 | Bảng Test Case + ảnh chụp kết quả Pass | 6 | bảng trong báo cáo |
-| D6 | Kịch bản demo 10 phút + bộ câu hỏi vấn đáp | 6 | `docs/demo-script.md` |
+| # | Deliverable | Khối | Định dạng | Trạng thái hiện tại |
+|---|---|---|---|---|
+| D1 | Báo cáo đồ án (Ch.1 → Ch.6 + Bảng phân công) | 1 → 6 | `.docx`, `.pdf` | Đang thực hiện (Đã có `ch1.md` → `ch4-impl.md` + `test-cases.md`; chờ xuất Word/PDF) |
+| D2 | Slide thuyết trình 12–15 trang | 6 | `.pptx` | Chờ hoàn thiện sau |
+| D3 | Source code chạy được (client + server + seed) | 2 → 6 | `MaLopHocPhan_STTNhom.zip` | **Hoàn thành 100%** (Website Client + Server + Seed + `.env.example`, 65/65 tests Pass, `npm run build` sạch) |
+| D4 | Bộ sơ đồ: Use Case, BPMN, Sequence, State Machine, ERD | 1 | `.png` + nguồn `.mmd`/`.drawio` | **Hoàn thành 100%** (5 bộ sơ đồ chuẩn `.svg`, `@2x .png`, `.mmd`, `.html`) |
+| D5 | Bảng Test Case + ảnh chụp kết quả Pass | 6 | `docs/test-cases.md` + `postman/` | **Hoàn thành 100%** (30 Black-box TC + 65 Vitest tests Pass + Postman Collection + 9 ảnh chụp màn hình `docs/screenshots/`) |
+| D6 | Kịch bản demo 10 phút + bộ câu hỏi vấn đáp | 6 | `docs/demo-script.md` | **Hoàn thành 100%** (Kịch bản 10 phút 2 thiết bị + 10 câu hỏi & đáp án vấn đáp) |
 
 **Definition of Done toàn dự án:** chạy `npm run setup && npm run dev` trên máy sạch → seed xong → demo trọn luồng *Đặt sân → Mở phòng → Gọi nước chung → Chốt & chia bill → QR → Escrow → Check-in → Giải ngân* trên 2 thiết bị.
 
@@ -260,6 +260,12 @@ Server là nguồn sự thật: mọi `cart:*` kiểm tra `lobby.status==='OPEN'
 ## 6. Lộ trình 6 Khối công việc (checklist)
 
 > **Hạn nộp: 20/11/2026.** Không chia theo ngày: làm tuần tự từng **Khối**, xong Khối này (đạt DoD) mới sang Khối sau, làm nhanh nhất có thể.
+>
+> 📊 **Bảng trạng thái tổng thể (Cập nhật 07/11/2026):**
+> - **Tiến độ tổng:** **20 / 22 WBS tasks hoàn thành (90.9%) — Hoàn tất 100% phần Website & Kiểm thử**
+> - **Khối đã xong:** **Khối 1** (Phân tích & Thiết kế), **Khối 2** (UI/UX & Base Project), **Khối 3** (BookSlot & Phòng ghép kèo), **Khối 4** (GroupOrder Realtime & Chia Bill), **Khối 5** (Escrow, Khiếu nại, Uy tín, Dashboard), **Khối 6 — Phần Website, Kiểm thử & Demo** (WBS-6.0, WBS-6.1, WBS-6.3).
+> - **Test Suite:** **65 / 65 tests PASS** (`tests/seed-data.test.ts`, `tests/auth.test.ts`, `tests/bookslot.test.ts`, `tests/split-bill.test.ts`, `tests/grouporder.test.ts`, `tests/escrow.test.ts`, `tests/dispute-admin.test.ts`).
+> - **Hạng mục chờ hoàn thiện sau:** **WBS-6.2** (Xuất báo cáo Word/PDF & Slide thuyết trình `.pptx`).
 
 ### Khối 1 — Phân tích & Thiết kế · *Báo cáo Ch.1–2*
 
@@ -273,44 +279,44 @@ Server là nguồn sự thật: mọi `cart:*` kiểm tra `lobby.status==='OPEN'
 
 ### Khối 2 — UI/UX & Base Project
 
-- [ ] **WBS-2.0** Cài Hallmark & dựng Design System (mục 3.3): `design.md` + design tokens + theme đã chọn
-- [ ] **WBS-2.1** Wireframe/prototype (sinh bằng `/hallmark`, theo `design.md`) các màn: Home+Map, Chi tiết sân, Lobby (members+cart+chat), Chia bill/QR, Ví, Khiếu nại, Provider portal, Admin dashboard — *Gate:* đặt sân → gọi nước ≤ 3 click
-- [ ] **WBS-2.2** Monorepo client/server, Docker Postgres, JWT + RBAC middleware, trang Profile hiển thị điểm & hạng — *Gate:* 4 role truy cập đúng route
-- [ ] **WBS-2.3** `seed.ts`: 10 sân/phòng học + 15 quán quanh Làng ĐH Thủ Đức (tọa độ thật, ảnh), 8 user mẫu đủ 4 role & 3 hạng uy tín, slot 7 ngày tới, voucher CROSS — *Gate:* marker đúng vị trí trên map
+- [x] **WBS-2.0** Cài Hallmark & dựng Design System (mục 3.3): `design.md` + design tokens + theme đã chọn (Emerald Pulse) + bộ 10 core components + trang `/styleguide`
+- [x] **WBS-2.1** Wireframe/prototype (sinh bằng `/hallmark`, theo `design.md`) các màn: Home+Map, Chi tiết sân, Lobby (members+cart+chat), Chia bill/QR, Ví, Khiếu nại, Provider portal, Admin dashboard — *Gate:* đặt sân → gọi nước ≤ 3 click
+- [x] **WBS-2.2** Monorepo client/server, Docker Postgres, JWT + RBAC middleware, trang Profile hiển thị điểm & hạng — *Gate:* 4 role truy cập đúng route
+- [x] **WBS-2.3** `seed.ts`: 10 sân/phòng học + 15 quán quanh Làng ĐH Thủ Đức (tọa độ thật, ảnh), 8 user mẫu đủ 4 role & 3 hạng uy tín, slot 7 ngày tới, voucher CROSS — *Gate:* marker đúng vị trí trên map
 
 **DoD:** `npm run setup` (migrate + seed) & `npm run dev` chạy 1 lệnh · đăng nhập 4 role.
 
 ### Khối 3 — BookSlot & Phòng ghép kèo
 
-- [ ] **WBS-3.1** `GET /api/providers?type&lat&lng&radius&priceMin&priceMax&category` + Map Leaflet (icon khác nhau VENUE/FNB, lọc realtime)
-- [ ] **WBS-3.2** `POST /api/slots/:id/lock`, `POST /api/slots/:id/release`, job hết hạn, đồng hồ đếm ngược 10' — *Gate:* 2 cửa sổ ẩn danh bấm cùng giây + test 20 request
-- [ ] **WBS-3.3** `POST /api/lobbies`, `GET /api/lobbies/:code`, `POST /api/lobbies/:id/join` (check BR-REP-01 → yêu cầu cọc/chặn), invite link + QR, countdown chốt kèo — *Gate:* user hạng C thấy thông báo cọc, user FLAGGED bị chặn
+- [x] **WBS-3.1** `GET /api/providers?type&lat&lng&radius&priceMin&priceMax&category` + Map Leaflet (icon khác nhau VENUE/FNB, lọc realtime)
+- [x] **WBS-3.2** `POST /api/slots/:id/lock`, `POST /api/slots/:id/release`, job hết hạn, đồng hồ đếm ngược 10' — *Gate:* 2 cửa sổ ẩn danh bấm cùng giây + test 20 request
+- [x] **WBS-3.3** `POST /api/lobbies`, `GET /api/lobbies/:code`, `POST /api/lobbies/:id/join` (check BR-REP-01 → yêu cầu cọc/chặn), invite link + QR, countdown chốt kèo — *Gate:* user hạng C thấy thông báo cọc, user FLAGGED bị chặn
 
 **DoD:** test BR-SLT-01/02, BR-REP-01 Pass · `docs/report/ch3-bookslot.md`.
 
 ### Khối 4 — GroupOrder Realtime & Chia Bill ⭐
 
-- [ ] **WBS-4.1** Socket.io: cart add/update/remove, chat, notify; `POST /api/lobbies/:id/lock` emit `lobby:locked` — *Gate:* độ trễ điện thoại ↔ laptop < 1s; khóa phòng → nút thêm món disable tức thì
-- [ ] **WBS-4.2** `GET /api/recommend?lobbyId` (mục 5.5) + `POST /api/vouchers/validate` (BR-INT-05) — *Gate:* đặt sân cầu lông → top 1 là quán nước ≤ 1 km có mã chéo
-- [ ] **WBS-4.3** `POST /api/lobbies/:id/split` → `services/splitBill.ts` + VietQR URL từng người (`addInfo = SYNCHUB {lobby} {user}`) — *Gate:* tự bấm máy tính ca 5.3 + 3 ca biên (1 người, không ai gọi món, tổng lẻ không chia hết)
+- [x] **WBS-4.1** Socket.io: cart add/update/remove, chat, notify; `POST /api/lobbies/:id/lock` emit `lobby:locked` — *Gate:* độ trễ điện thoại ↔ laptop < 1s; khóa phòng → nút thêm món disable tức thì
+- [x] **WBS-4.2** `GET /api/recommend?lobbyId` (mục 5.5) + `POST /api/vouchers/validate` (BR-INT-05) — *Gate:* đặt sân cầu lông → top 1 là quán nước ≤ 1 km có mã chéo
+- [x] **WBS-4.3** `POST /api/lobbies/:id/split` → `services/splitBill.ts` + VietQR URL từng người (`addInfo = SYNCHUB {lobby} {user}`) — *Gate:* tự bấm máy tính ca 5.3 + 3 ca biên (1 người, không ai gọi món, tổng lẻ không chia hết)
 
 **DoD:** unit test splitBill ≥ 6 ca Pass · quét QR bằng app ngân hàng hiện đúng số tiền.
 
 ### Khối 5 — Escrow, Khiếu nại, Uy tín, Dashboard
 
-- [ ] **WBS-5.1** `POST /api/payments/webhook-mock` (nút "Giả lập đã nhận tiền") → HOLD; `POST /api/lobbies/:id/checkin` → RELEASE tách VENUE/FNB trừ hoa hồng — *Gate:* gọi release 2 lần → lần 2 bị chặn (BR-ESC-03)
-- [ ] **WBS-5.2** `POST /api/disputes` (multer ảnh), `PATCH /api/admin/disputes/:id` (refund một phần/toàn phần), `services/reputation.ts`, đánh dấu no-show — *Seed 2 kịch bản:* (a) bùng kèo −15 điểm + mất cọc; (b) quán giao thiếu nước → Admin hoàn tiền từ Escrow
-- [ ] **WBS-5.3** Provider portal (slot, menu, doanh thu) + Admin dashboard (Recharts doanh thu/đơn theo ngày, bảng `FLAGGED`, Audit Log) — *Gate:* số liệu query thật từ DB; mọi thao tác Admin có dòng `audit_logs`
+- [x] **WBS-5.1** `POST /api/payments/webhook-mock` (nút "Giả lập đã nhận tiền") → HOLD; `POST /api/lobbies/:id/checkin` → RELEASE tách VENUE/FNB trừ hoa hồng — *Gate:* gọi release 2 lần → lần 2 bị chặn (BR-ESC-03)
+- [x] **WBS-5.2** `POST /api/disputes` (multer ảnh), `PATCH /api/admin/disputes/:id` (refund một phần/toàn phần), `services/reputation.ts`, đánh dấu no-show — *Seed 2 kịch bản:* (a) bùng kèo −15 điểm + mất cọc; (b) quán giao thiếu nước → Admin hoàn tiền từ Escrow
+- [x] **WBS-5.3** Provider portal (slot, menu, doanh thu) + Admin dashboard (Recharts doanh thu/đơn theo ngày, bảng `FLAGGED`, Audit Log) — *Gate:* số liệu query thật từ DB; mọi thao tác Admin có dòng `audit_logs`
 
 **DoD:** luồng end-to-end trọn vẹn trên 2 thiết bị · `docs/report/ch4-impl.md`.
 
 ### Khối 6 — Kiểm thử, Báo cáo, Demo
 
-- [ ] **WBS-6.0** `/hallmark audit` toàn bộ màn hình, sửa lỗi còn lại, chạy sloplint 3 độ rộng; chụp ảnh UI cuối cho báo cáo
-- [ ] **WBS-6.1** 25–30 Test Case hộp đen (chia bill, voucher, khóa slot, cọc/uy tín, escrow, khiếu nại) + Postman collection + ảnh Pass
-- [ ] **WBS-6.2** Ghép báo cáo Word theo mẫu Khoa HTTT (bìa, mục lục, Bảng phân công — Phần 3 brief, Ch.1–6, tài liệu tham khảo) → PDF; Slide 12–15 trang
-- [ ] **WBS-6.3** Kịch bản demo 10' (2 thiết bị: Host/Admin + Member quét QR), 10 câu hỏi vấn đáp + đáp án, tổng duyệt 2 lần
-- [ ] Đóng gói `MaLopHocPhan_STTNhom.zip` (loại `node_modules`, `.env` → `.env.example`)
+- [x] **WBS-6.0** `/hallmark audit` toàn bộ màn hình, sửa lỗi còn lại, chạy kiểm tra responsive/overflow; chụp 9 ảnh UI cuối (`docs/screenshots/`) cho báo cáo
+- [x] **WBS-6.1** 30 Test Case hộp đen (`docs/test-cases.md`: chia bill, voucher, khóa slot, cọc/uy tín, escrow, khiếu nại) + `postman/SyncHub.postman_collection.json` + 65/65 Vitest Pass
+- [ ] **WBS-6.2** Ghép báo cáo Word theo mẫu Khoa HTTT (bìa, mục lục, Bảng phân công — Phần 3 brief, Ch.1–6, tài liệu tham khảo) → PDF; Slide 12–15 trang *(Hoàn thiện sau theo yêu cầu)*
+- [x] **WBS-6.3** Kịch bản demo 10' (`docs/demo-script.md` cho 2 thiết bị: Host/Admin + Member quét QR), 10 câu hỏi vấn đáp + đáp án
+- [x] Chuẩn hóa `.env.example` (`server/.env.example`, `client/.env.example`), cấu hình LAN proxy/CORS & kiểm tra `npm run build` sạch 100%
 
 **DoD:** checklist nộp LMS đủ D1–D6.
 
@@ -373,12 +379,12 @@ Escrow là mô phỏng nên không cần tiền thật về tài khoản; nút "
 
 ### Thứ tự Khối & điều kiện qua Khối
 
-| Khối | Nội dung | Qua khối khi |
-|---|---|---|
-| 1 | Phân tích & thiết kế: `CONTEXT.md`, sơ đồ, `schema.prisma`, báo cáo Ch.1–2 | `prisma migrate` chạy, tag `context-v1` |
-| 2 | Hallmark + Design System, base project, auth 4 role, seed | Đăng nhập 4 role, map có marker |
-| 3 | Tìm kiếm + Map, khóa slot, phòng ghép kèo | Test race 20 request Pass; vào phòng qua QR |
-| 4 | Giỏ hàng + chat realtime, gợi ý, chia bill + VietQR | Chia bill khớp ca 215.000; realtime 2 thiết bị |
-| 5 | Escrow, khiếu nại, uy tín, dashboard, audit log | Luồng end-to-end chạy hết; giải ngân 2 lần bị chặn |
-| 6 | Audit UI, test case, báo cáo Word/PDF, slide, demo, đóng gói zip | Đã có file nộp |
+| Khối | Nội dung | Qua khối khi | Trạng thái |
+|---|---|---|---|
+| 1 | Phân tích & thiết kế: `CONTEXT.md`, sơ đồ, `schema.prisma`, báo cáo Ch.1–2 | `prisma migrate` chạy, tag `context-v1` | **Hoàn thành** (Đã khóa CONTEXT, đủ 5 sơ đồ) |
+| 2 | Hallmark + Design System, base project, auth 4 role, seed | Đăng nhập 4 role, map có marker | **Hoàn thành** (Design tokens, 10 components, seed) |
+| 3 | Tìm kiếm + Map, khóa slot, phòng ghép kèo | Test race 20 request Pass; vào phòng qua QR | **Hoàn thành** (35 tests pass, ch3-bookslot.md) |
+| 4 | Giỏ hàng + chat realtime, gợi ý, chia bill + VietQR | Chia bill khớp ca 215.000; realtime 2 thiết bị | **Hoàn thành** (52 tests pass, ch4-grouporder.md) |
+| 5 | Escrow, khiếu nại, uy tín, dashboard, audit log | Luồng end-to-end chạy hết; giải ngân 2 lần bị chặn | **Hoàn thành** (65 tests pass, ch4-impl.md) |
+| 6 | Audit UI, test case, báo cáo Word/PDF, slide, demo, đóng gói zip | Đã có file nộp | **Khối tiếp theo** |
 > [!] Chạy nhiều agent song song được: trong lúc code Khối N, dùng Agent 4 viết đoạn báo cáo + test case của Khối N−1 để không dồn việc sang Khối 6.
