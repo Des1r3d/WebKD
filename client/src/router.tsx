@@ -1,5 +1,5 @@
 ﻿import { lazy, Suspense, type ReactNode } from 'react';
-import { createBrowserRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { AdminLayout } from './layouts/AdminLayout';
 import { MemberLayout } from './layouts/MemberLayout';
 import { ProviderLayout } from './layouts/ProviderLayout';
@@ -25,8 +25,10 @@ export const router = createBrowserRouter([
           { path: 'login', element: L(() => import('./pages/Login')) },
           { path: 'register', element: L(() => import('./pages/Register')) },
           { index: true, element: L(() => import('./pages/Discover')) },
+          { path: 'discover', element: L(() => import('./pages/Discover')) },
           { path: 'venues/:id', element: L(() => import('./pages/Venue')) },
           { path: 'join/:code', element: L(() => import('./pages/Join')) },
+          { path: 'join', element: <Navigate to="/" replace /> },
         ],
       },
       {
@@ -52,6 +54,7 @@ export const router = createBrowserRouter([
         element: <RoleGuard roles={['ADMIN']} />,
         children: [{ element: <AdminLayout />, children: [{ path: '*', element: L(() => import('./pages/Admin')) }, { index: true, element: L(() => import('./pages/Admin')) }] }],
       },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ]);
