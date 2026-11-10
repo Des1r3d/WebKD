@@ -1,540 +1,540 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" pages="1">
   <diagram id="seq_t1" name="Tuần tự nghiệp vụ SyncHub">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="2050" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1580" pageHeight="2300" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="ll_host" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=umlActor;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#FFFFFF;strokeColor=#2C3E50;fontColor=#2C3E50;size=60;" value="Host&#10;(Trưởng nhóm)" vertex="1">
-          <mxGeometry x="80" y="60" width="110" height="1920" as="geometry" />
+        <mxCell id="ll_host" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Host&#10;(Trưởng nhóm)" vertex="1">
+          <mxGeometry x="70" y="60" width="130" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ll_member" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=umlActor;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#FFFFFF;strokeColor=#2C3E50;fontColor=#2C3E50;size=60;" value="Member&#10;(Thành viên)" vertex="1">
-          <mxGeometry x="310" y="60" width="110" height="1920" as="geometry" />
+        <mxCell id="ll_member" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Member&#10;(Thành viên)" vertex="1">
+          <mxGeometry x="330" y="60" width="130" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ll_client" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=rect;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#EBF5FB;strokeColor=#2980B9;fontColor=#1A5276;size=40;" value="Client Web&#10;(React + Leaflet)" vertex="1">
-          <mxGeometry x="540" y="60" width="140" height="1920" as="geometry" />
+        <mxCell id="ll_client" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Client Web&#10;(React + Leaflet)" vertex="1">
+          <mxGeometry x="580" y="60" width="150" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ll_server" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=rect;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#EBF5FB;strokeColor=#2980B9;fontColor=#1A5276;size=40;" value="Server&#10;(Express + Socket.io)" vertex="1">
-          <mxGeometry x="790" y="60" width="150" height="1920" as="geometry" />
+        <mxCell id="ll_server" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Server&#10;(Express + Socket.io)" vertex="1">
+          <mxGeometry x="840" y="60" width="150" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ll_db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=rect;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#EBF5FB;strokeColor=#2980B9;fontColor=#1A5276;size=40;" value="Database&#10;(PostgreSQL + Prisma)" vertex="1">
-          <mxGeometry x="1050" y="60" width="140" height="1920" as="geometry" />
+        <mxCell id="ll_db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Database&#10;(PostgreSQL + Prisma)" vertex="1">
+          <mxGeometry x="1100" y="60" width="140" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ll_gw" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;participant=rect;fontFamily=Tahoma;fontSize=12;fontStyle=1;fillColor=#EBF5FB;strokeColor=#2980B9;fontColor=#1A5276;size=40;" value="Cổng VietQR&#10;&amp; Webhook" vertex="1">
-          <mxGeometry x="1300" y="60" width="140" height="1920" as="geometry" />
+        <mxCell id="ll_gw" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;size=50;" value="Cổng VietQR&#10;&amp; Webhook" vertex="1">
+          <mxGeometry x="1360" y="60" width="140" height="2200" as="geometry" />
           </mxCell>
-        <mxCell id="ph1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#EBF5FB;strokeColor=#2980B9;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#2980B9;" value="GIAI ĐOẠN 1: KHÓA SLOT NGUYÊN TỬ CHỐNG RACE CONDITION (BR-SLT-01, BR-SLT-02)" vertex="1">
-          <mxGeometry x="50" y="180" width="1430" height="420" as="geometry" />
+        <mxCell id="ph1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 5;fillColor=none;strokeColor=#64748B;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontColor=#1E293B;" value="GIAI ĐOẠN 1: KHÓA SLOT NGUYÊN TỬ CHỐNG RACE CONDITION (BR-SLT-01, BR-SLT-02)" vertex="1">
+          <mxGeometry x="50" y="140" width="1480" height="530" as="geometry" />
           </mxCell>
-        <mxCell id="m01" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.08333;entryX=0.5;entryY=0.08333;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m01" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.05455;entryX=0.5;entryY=0.05455;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="180" as="sourcePoint" />
+            <mxPoint y="180" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m01_lbl" connectable="0" parent="m01" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="1: Nhấn giữ chỗ slot" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m02" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.07273;entryX=0.5;entryY=0.07273;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="220" as="sourcePoint" />
             <mxPoint y="220" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m01_lbl" connectable="0" parent="m01" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="1: Nhấn giữ chỗ slot" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m02_lbl" connectable="0" parent="m02" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="2: Nhấn giữ chỗ slot (đồng thời cùng milli-giây)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m02" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.09896;entryX=0.5;entryY=0.09896;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m03" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.09091;entryX=0.5;entryY=0.09091;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="250" as="sourcePoint" />
-            <mxPoint y="250" as="targetPoint" />
+            <mxPoint y="260" as="sourcePoint" />
+            <mxPoint y="260" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m02_lbl" connectable="0" parent="m02" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="2: Nhấn giữ chỗ slot (đồng thời cùng milli-giây)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m03_lbl" connectable="0" parent="m03" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="3: POST /api/slots/:id/lock (Request 1 - Host)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m03" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.11458;entryX=0.5;entryY=0.11458;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m04" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.10909;entryX=0.5;entryY=0.10909;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="280" as="sourcePoint" />
-            <mxPoint y="280" as="targetPoint" />
+            <mxPoint y="300" as="sourcePoint" />
+            <mxPoint y="300" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m03_lbl" connectable="0" parent="m03" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="3: POST /api/slots/:id/lock (Request 1 - Host)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m04_lbl" connectable="0" parent="m04" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="4: POST /api/slots/:id/lock (Request 2 - Member)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m04" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.13021;entryX=0.5;entryY=0.13021;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="310" as="sourcePoint" />
-            <mxPoint y="310" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m04_lbl" connectable="0" parent="m04" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="4: POST /api/slots/:id/lock (Request 2 - Member)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m05" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.14583;entryX=0.5;entryY=0.14583;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m05" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.12727;entryX=0.5;entryY=0.12727;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="340" as="sourcePoint" />
             <mxPoint y="340" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m05_lbl" connectable="0" parent="m05" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="5: UPDATE slots SET status='LOCKED' WHERE (AVAILABLE or expired)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m05_lbl" connectable="0" parent="m05" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="5: UPDATE slots SET status='LOCKED' WHERE (AVAILABLE or expired)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m06" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.16146;entryX=0.5;entryY=0.16146;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m06" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.14545;entryX=0.5;entryY=0.14545;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="370" as="sourcePoint" />
-            <mxPoint y="370" as="targetPoint" />
+            <mxPoint y="380" as="sourcePoint" />
+            <mxPoint y="380" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m06_lbl" connectable="0" parent="m06" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="6: rowCount = 1 (Host thành công)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m06_lbl" connectable="0" parent="m06" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="6: rowCount = 1 (Host thành công)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m07" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.17708;entryX=0.5;entryY=0.17708;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m07" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.16364;entryX=0.5;entryY=0.16364;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="400" as="sourcePoint" />
-            <mxPoint y="400" as="targetPoint" />
+            <mxPoint y="420" as="sourcePoint" />
+            <mxPoint y="420" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m07_lbl" connectable="0" parent="m07" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="7: 200 OK (locked_until = +10m)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m07_lbl" connectable="0" parent="m07" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="7: 200 OK (locked_until = +10m)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m08" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.19271;entryX=0.5;entryY=0.19271;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="430" as="sourcePoint" />
-            <mxPoint y="430" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m08_lbl" connectable="0" parent="m08" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="8: Bật đồng hồ đếm ngược 10:00" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m09" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.20833;entryX=0.5;entryY=0.20833;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m08" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.18182;entryX=0.5;entryY=0.18182;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="460" as="sourcePoint" />
             <mxPoint y="460" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m09_lbl" connectable="0" parent="m09" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="9: UPDATE slots ... (Request 2 của Member)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m08_lbl" connectable="0" parent="m08" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="8: Bật đồng hồ đếm ngược 10:00" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m10" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.22396;entryX=0.5;entryY=0.22396;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m09" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.20000;entryX=0.5;entryY=0.20000;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="490" as="sourcePoint" />
-            <mxPoint y="490" as="targetPoint" />
+            <mxPoint y="500" as="sourcePoint" />
+            <mxPoint y="500" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m10_lbl" connectable="0" parent="m10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="10: rowCount = 0 (Slot đã bị khóa)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m09_lbl" connectable="0" parent="m09" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="9: UPDATE slots ... (Request 2 của Member)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m11" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.23958;entryX=0.5;entryY=0.23958;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m10" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.21818;entryX=0.5;entryY=0.21818;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="520" as="sourcePoint" />
-            <mxPoint y="520" as="targetPoint" />
+            <mxPoint y="540" as="sourcePoint" />
+            <mxPoint y="540" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m11_lbl" connectable="0" parent="m11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="11: 409 Conflict (SLOT_TAKEN)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m10_lbl" connectable="0" parent="m10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="10: rowCount = 0 (Slot đã bị khóa)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m12" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.25521;entryX=0.5;entryY=0.25521;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m11" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.23636;entryX=0.5;entryY=0.23636;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="550" as="sourcePoint" />
-            <mxPoint y="550" as="targetPoint" />
+            <mxPoint y="580" as="sourcePoint" />
+            <mxPoint y="580" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m12_lbl" connectable="0" parent="m12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="12: Thông báo: Slot vừa bị người khác giữ chỗ" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m11_lbl" connectable="0" parent="m11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="11: 409 Conflict (SLOT_TAKEN)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="ph2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#EAFAF1;strokeColor=#27AE60;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="GIAI ĐOẠN 2: GIỎ HÀNG NHÓM REALTIME &amp; KHÓA PHÒNG TỨC THÌ (BR-INT-01, BR-INT-04)" vertex="1">
-          <mxGeometry x="50" y="620" width="1430" height="560" as="geometry" />
-          </mxCell>
-        <mxCell id="m13" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.31250;entryX=0.5;entryY=0.31250;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m12" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.25455;entryX=0.5;entryY=0.25455;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="660" as="sourcePoint" />
-            <mxPoint y="660" as="targetPoint" />
+            <mxPoint y="620" as="sourcePoint" />
+            <mxPoint y="620" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m13_lbl" connectable="0" parent="m13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="13: Xác nhận mở phòng ghép kèo" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m12_lbl" connectable="0" parent="m12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="12: Thông báo: Slot vừa bị người khác giữ chỗ" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m14" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.32812;entryX=0.5;entryY=0.32812;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="ph2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 5;fillColor=none;strokeColor=#64748B;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontColor=#1E293B;" value="GIAI ĐOẠN 2: GIỎ HÀNG NHÓM REALTIME &amp; KHÓA PHÒNG TỨC THÌ (BR-INT-01, BR-INT-04)" vertex="1">
+          <mxGeometry x="50" y="700" width="1480" height="770" as="geometry" />
+          </mxCell>
+        <mxCell id="m13" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.30909;entryX=0.5;entryY=0.30909;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="690" as="sourcePoint" />
-            <mxPoint y="690" as="targetPoint" />
+            <mxPoint y="740" as="sourcePoint" />
+            <mxPoint y="740" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m14_lbl" connectable="0" parent="m14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="14: POST /api/lobbies { slot_id }" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m13_lbl" connectable="0" parent="m13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="13: Xác nhận mở phòng ghép kèo" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m15" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.34375;entryX=0.5;entryY=0.34375;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="720" as="sourcePoint" />
-            <mxPoint y="720" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m15_lbl" connectable="0" parent="m15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="15: INSERT group_lobbies (status='OPEN', slot_id)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m16" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.35938;entryX=0.5;entryY=0.35938;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="750" as="sourcePoint" />
-            <mxPoint y="750" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m16_lbl" connectable="0" parent="m16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="16: Tạo bản ghi thành công (invite_code: KD8261)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m17" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.37500;entryX=0.5;entryY=0.37500;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m14" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.32727;entryX=0.5;entryY=0.32727;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="780" as="sourcePoint" />
             <mxPoint y="780" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m17_lbl" connectable="0" parent="m17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="17: 201 Created (invite_code, QR URL)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m14_lbl" connectable="0" parent="m14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="14: POST /api/lobbies { slot_id }" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m18" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.39062;entryX=0.5;entryY=0.39062;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m15" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.34545;entryX=0.5;entryY=0.34545;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="810" as="sourcePoint" />
-            <mxPoint y="810" as="targetPoint" />
+            <mxPoint y="820" as="sourcePoint" />
+            <mxPoint y="820" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m18_lbl" connectable="0" parent="m18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="18: Hiển thị mã mời &amp; QR chia sẻ phòng" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m15_lbl" connectable="0" parent="m15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="15: INSERT group_lobbies (status='OPEN', slot_id)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m19" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.40625;entryX=0.5;entryY=0.40625;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m16" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.36364;entryX=0.5;entryY=0.36364;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="840" as="sourcePoint" />
-            <mxPoint y="840" as="targetPoint" />
+            <mxPoint y="860" as="sourcePoint" />
+            <mxPoint y="860" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m19_lbl" connectable="0" parent="m19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="19: Quét mã QR tham gia phòng" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m16_lbl" connectable="0" parent="m16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="16: Tạo bản ghi thành công (invite_code: KD8261)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m20" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.42188;entryX=0.5;entryY=0.42188;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="870" as="sourcePoint" />
-            <mxPoint y="870" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m20_lbl" connectable="0" parent="m20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="20: Socket emit 'lobby:join' { lobbyId }" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m21" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.43750;entryX=0.5;entryY=0.43750;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m17" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.38182;entryX=0.5;entryY=0.38182;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="900" as="sourcePoint" />
             <mxPoint y="900" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m21_lbl" connectable="0" parent="m21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="21: Chọn món nước đồ uống" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m17_lbl" connectable="0" parent="m17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="17: 201 Created (invite_code, QR URL)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m22" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.45312;entryX=0.5;entryY=0.45312;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m18" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.40000;entryX=0.5;entryY=0.40000;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="930" as="sourcePoint" />
-            <mxPoint y="930" as="targetPoint" />
+            <mxPoint y="940" as="sourcePoint" />
+            <mxPoint y="940" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m22_lbl" connectable="0" parent="m22" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="22: Socket emit 'cart:add' { lobbyId, menuItemId, qty }" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m18_lbl" connectable="0" parent="m18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="18: Hiển thị mã mời &amp; QR chia sẻ phòng" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m23" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.46875;entryX=0.5;entryY=0.46875;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m19" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.41818;entryX=0.5;entryY=0.41818;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="960" as="sourcePoint" />
-            <mxPoint y="960" as="targetPoint" />
+            <mxPoint y="980" as="sourcePoint" />
+            <mxPoint y="980" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m23_lbl" connectable="0" parent="m23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="23: Check status='OPEN' -&gt; INSERT cart_items (snapshot giá)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m19_lbl" connectable="0" parent="m19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="19: Quét mã QR tham gia phòng" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m24" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.48438;entryX=0.5;entryY=0.48438;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="990" as="sourcePoint" />
-            <mxPoint y="990" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m24_lbl" connectable="0" parent="m24" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="24: Broadcast 'cart:updated' (items, subtotal) trong &lt; 1s" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m25" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.50000;entryX=0.5;entryY=0.50000;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m20" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.43636;entryX=0.5;entryY=0.43636;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1020" as="sourcePoint" />
             <mxPoint y="1020" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m25_lbl" connectable="0" parent="m25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="25: Bấm nút Chốt đơn &amp; Khóa phòng" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m20_lbl" connectable="0" parent="m20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="20: Socket emit 'lobby:join' { lobbyId }" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m26" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.51562;entryX=0.5;entryY=0.51562;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m21" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.45455;entryX=0.5;entryY=0.45455;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1050" as="sourcePoint" />
-            <mxPoint y="1050" as="targetPoint" />
+            <mxPoint y="1060" as="sourcePoint" />
+            <mxPoint y="1060" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m26_lbl" connectable="0" parent="m26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="26: POST /api/lobbies/:id/lock" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m21_lbl" connectable="0" parent="m21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="21: Chọn món nước đồ uống" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m27" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.53125;entryX=0.5;entryY=0.53125;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m22" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.47273;entryX=0.5;entryY=0.47273;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1080" as="sourcePoint" />
-            <mxPoint y="1080" as="targetPoint" />
+            <mxPoint y="1100" as="sourcePoint" />
+            <mxPoint y="1100" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m27_lbl" connectable="0" parent="m27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="27: UPDATE group_lobbies SET status='LOCKED', locked_at=now()" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m22_lbl" connectable="0" parent="m22" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="22: Socket emit 'cart:add' { lobbyId, menuItemId, qty }" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m28" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.54688;entryX=0.5;entryY=0.54688;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m23" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.49091;entryX=0.5;entryY=0.49091;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1110" as="sourcePoint" />
-            <mxPoint y="1110" as="targetPoint" />
+            <mxPoint y="1140" as="sourcePoint" />
+            <mxPoint y="1140" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m28_lbl" connectable="0" parent="m28" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="28: Broadcast 'lobby:locked' (Disable ngay nút thêm món)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m23_lbl" connectable="0" parent="m23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="23: Check status='OPEN' -&gt; INSERT cart_items (snapshot giá)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m29" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.55990;entryX=0.5;entryY=0.55990;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m24" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.50909;entryX=0.5;entryY=0.50909;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1135" as="sourcePoint" />
-            <mxPoint y="1135" as="targetPoint" />
+            <mxPoint y="1180" as="sourcePoint" />
+            <mxPoint y="1180" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m29_lbl" connectable="0" parent="m29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="29: Cố tình bấm thêm món sau khi khóa" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m24_lbl" connectable="0" parent="m24" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="24: Broadcast 'cart:updated' (items, subtotal) trong &lt; 1s" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m30" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.57031;entryX=0.5;entryY=0.57031;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m25" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.52727;entryX=0.5;entryY=0.52727;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1155" as="sourcePoint" />
-            <mxPoint y="1155" as="targetPoint" />
+            <mxPoint y="1220" as="sourcePoint" />
+            <mxPoint y="1220" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m30_lbl" connectable="0" parent="m30" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="30: Socket emit 'cart:add' -&gt; 403 Forbidden (LOBBY_LOCKED)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m25_lbl" connectable="0" parent="m25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="25: Bấm nút Chốt đơn &amp; Khóa phòng" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="ph3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#FEF9E7;strokeColor=#F39C12;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#F39C12;" value="GIAI ĐOẠN 3: THANH TOÁN ESCROW VIETQR &amp; CHECK-IN GIẢI NGÂN (BR-INT-02, BR-ESC-01..03)" vertex="1">
-          <mxGeometry x="50" y="1200" width="1430" height="690" as="geometry" />
-          </mxCell>
-        <mxCell id="m31" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.61458;entryX=0.5;entryY=0.61458;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m26" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.54545;entryX=0.5;entryY=0.54545;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1240" as="sourcePoint" />
-            <mxPoint y="1240" as="targetPoint" />
+            <mxPoint y="1260" as="sourcePoint" />
+            <mxPoint y="1260" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m31_lbl" connectable="0" parent="m31" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="31: Yêu cầu chia bill phòng" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m26_lbl" connectable="0" parent="m26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="26: POST /api/lobbies/:id/lock" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m32" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.63021;entryX=0.5;entryY=0.63021;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1270" as="sourcePoint" />
-            <mxPoint y="1270" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m32_lbl" connectable="0" parent="m32" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="32: POST /api/lobbies/:id/split" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m33" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.64583;entryX=0.5;entryY=0.64583;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m27" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.56364;entryX=0.5;entryY=0.56364;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1300" as="sourcePoint" />
             <mxPoint y="1300" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m33_lbl" connectable="0" parent="m33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="33: Largest Remainder -&gt; INSERT split_bills (Assert Σtotal=GrandTotal)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m27_lbl" connectable="0" parent="m27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="27: UPDATE group_lobbies SET status='LOCKED', locked_at=now()" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m34" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.66146;entryX=0.5;entryY=0.66146;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m28" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.58182;entryX=0.5;entryY=0.58182;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1330" as="sourcePoint" />
-            <mxPoint y="1330" as="targetPoint" />
+            <mxPoint y="1340" as="sourcePoint" />
+            <mxPoint y="1340" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m34_lbl" connectable="0" parent="m34" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="34: Lưu split_bills + Lobby status='AWAITING_PAYMENT'" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m28_lbl" connectable="0" parent="m28" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="28: Broadcast 'lobby:locked' (Disable ngay nút thêm món)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m35" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.67708;entryX=0.5;entryY=0.67708;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m29" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.60000;entryX=0.5;entryY=0.60000;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1360" as="sourcePoint" />
-            <mxPoint y="1360" as="targetPoint" />
+            <mxPoint y="1380" as="sourcePoint" />
+            <mxPoint y="1380" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m35_lbl" connectable="0" parent="m35" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="35: Broadcast 'bill:ready' (Link ảnh VietQR cá nhân từng người)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m29_lbl" connectable="0" parent="m29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="29: Cố tình bấm thêm món sau khi khóa" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m36" edge="1" parent="1" source="ll_member" target="ll_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.69271;entryX=0.5;entryY=0.69271;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1390" as="sourcePoint" />
-            <mxPoint y="1390" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m36_lbl" connectable="0" parent="m36" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="36: Quét mã VietQR chuyển khoản cá nhân" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m37" edge="1" parent="1" source="ll_gw" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.70833;entryX=0.5;entryY=0.70833;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m30" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.61818;entryX=0.5;entryY=0.61818;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1420" as="sourcePoint" />
             <mxPoint y="1420" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m37_lbl" connectable="0" parent="m37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="37: POST /api/payments/webhook-mock { splitBillId }" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m30_lbl" connectable="0" parent="m30" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="30: Socket emit 'cart:add' -&gt; 403 Forbidden (LOBBY_LOCKED)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m38" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.72396;entryX=0.5;entryY=0.72396;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1450" as="sourcePoint" />
-            <mxPoint y="1450" as="targetPoint" />
-            </mxGeometry>
+        <mxCell id="ph3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 5;fillColor=none;strokeColor=#64748B;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontColor=#1E293B;" value="GIAI ĐOẠN 3: THANH TOÁN ESCROW VIETQR &amp; CHECK-IN GIẢI NGÂN (BR-INT-02, BR-ESC-01..03)" vertex="1">
+          <mxGeometry x="50" y="1500" width="1480" height="690" as="geometry" />
           </mxCell>
-        <mxCell id="m38_lbl" connectable="0" parent="m38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="38: UPDATE split_bills='PAID' + INSERT escrow_transactions (HOLD)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m39" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.73958;entryX=0.5;entryY=0.73958;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1480" as="sourcePoint" />
-            <mxPoint y="1480" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m39_lbl" connectable="0" parent="m39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="39: Broadcast 'payment:confirmed' (100% PAID -&gt; Lobby PAID, Slot BOOKED)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m40" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.75521;entryX=0.5;entryY=0.75521;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1510" as="sourcePoint" />
-            <mxPoint y="1510" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m40_lbl" connectable="0" parent="m40" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="40: Đến sân &amp; Điểm danh khách Check-in" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m41" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.77083;entryX=0.5;entryY=0.77083;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m31" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.67273;entryX=0.5;entryY=0.67273;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1540" as="sourcePoint" />
             <mxPoint y="1540" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m41_lbl" connectable="0" parent="m41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="41: POST /api/lobbies/:id/checkin" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m31_lbl" connectable="0" parent="m31" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="31: Yêu cầu chia bill phòng" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m42" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.78646;entryX=0.5;entryY=0.78646;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m32" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.69091;entryX=0.5;entryY=0.69091;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1570" as="sourcePoint" />
-            <mxPoint y="1570" as="targetPoint" />
+            <mxPoint y="1580" as="sourcePoint" />
+            <mxPoint y="1580" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m42_lbl" connectable="0" parent="m42" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="42: Check disputes OPEN? Sạch -&gt; INSERT escrow (RELEASE Venue 92%, FNB 88%)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m32_lbl" connectable="0" parent="m32" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="32: POST /api/lobbies/:id/split" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m43" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.80208;entryX=0.5;entryY=0.80208;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m33" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.70909;entryX=0.5;entryY=0.70909;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1600" as="sourcePoint" />
-            <mxPoint y="1600" as="targetPoint" />
+            <mxPoint y="1620" as="sourcePoint" />
+            <mxPoint y="1620" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m43_lbl" connectable="0" parent="m43" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="43: Xác nhận giải ngân Idempotent (RELEASED)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m33_lbl" connectable="0" parent="m33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="33: Largest Remainder -&gt; INSERT split_bills (Assert Σtotal=GrandTotal)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m44" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.81771;entryX=0.5;entryY=0.81771;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1630" as="sourcePoint" />
-            <mxPoint y="1630" as="targetPoint" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m44_lbl" connectable="0" parent="m44" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="44: Broadcast 'escrow:released' (Lobby COMPLETED)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint y="-8" as="offset" />
-            </mxGeometry>
-          </mxCell>
-        <mxCell id="m45" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.83333;entryX=0.5;entryY=0.83333;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m34" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.72727;entryX=0.5;entryY=0.72727;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1660" as="sourcePoint" />
             <mxPoint y="1660" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m45_lbl" connectable="0" parent="m45" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="45: Điểm danh CHECKED_IN (+2đ) / NO_SHOW (-15đ, bồi thường sân)" vertex="1">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="m34_lbl" connectable="0" parent="m34" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="34: Lưu split_bills + Lobby status='AWAITING_PAYMENT'" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m46" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.84896;entryX=0.5;entryY=0.84896;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
+        <mxCell id="m35" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.74545;entryX=0.5;entryY=0.74545;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint y="1690" as="sourcePoint" />
-            <mxPoint y="1690" as="targetPoint" />
+            <mxPoint y="1700" as="sourcePoint" />
+            <mxPoint y="1700" as="targetPoint" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m46_lbl" connectable="0" parent="m46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontFamily=Tahoma;fontSize=11;fontColor=#2C3E50;" value="46: Hoàn tất phiên kèo, cộng điểm uy tín người dùng" vertex="1">
+        <mxCell id="m35_lbl" connectable="0" parent="m35" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="35: Broadcast 'bill:ready' (Link ảnh VietQR cá nhân từng người)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m36" edge="1" parent="1" source="ll_member" target="ll_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.76364;entryX=0.5;entryY=0.76364;" value="">
           <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1740" as="sourcePoint" />
+            <mxPoint y="1740" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m36_lbl" connectable="0" parent="m36" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="36: Quét mã VietQR chuyển khoản cá nhân" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m37" edge="1" parent="1" source="ll_gw" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.78182;entryX=0.5;entryY=0.78182;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1780" as="sourcePoint" />
+            <mxPoint y="1780" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m37_lbl" connectable="0" parent="m37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="37: POST /api/payments/webhook-mock { splitBillId }" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m38" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.80000;entryX=0.5;entryY=0.80000;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1820" as="sourcePoint" />
+            <mxPoint y="1820" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m38_lbl" connectable="0" parent="m38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="38: UPDATE split_bills='PAID' + INSERT escrow_transactions (HOLD)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m39" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.81818;entryX=0.5;entryY=0.81818;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1860" as="sourcePoint" />
+            <mxPoint y="1860" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m39_lbl" connectable="0" parent="m39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="39: Broadcast 'payment:confirmed' (100% PAID -&gt; Lobby PAID, Slot BOOKED)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m40" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.83636;entryX=0.5;entryY=0.83636;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1900" as="sourcePoint" />
+            <mxPoint y="1900" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m40_lbl" connectable="0" parent="m40" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="40: Đến sân &amp; Điểm danh khách Check-in" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m41" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.85455;entryX=0.5;entryY=0.85455;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1940" as="sourcePoint" />
+            <mxPoint y="1940" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m41_lbl" connectable="0" parent="m41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="41: POST /api/lobbies/:id/checkin" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m42" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#1E293B;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.87273;entryX=0.5;entryY=0.87273;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="1980" as="sourcePoint" />
+            <mxPoint y="1980" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m42_lbl" connectable="0" parent="m42" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="42: Check disputes OPEN? Sạch -&gt; INSERT escrow (RELEASE Venue 92%, FNB 88%)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m43" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.89091;entryX=0.5;entryY=0.89091;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="2020" as="sourcePoint" />
+            <mxPoint y="2020" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m43_lbl" connectable="0" parent="m43" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="43: Xác nhận giải ngân Idempotent (RELEASED)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m44" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.90909;entryX=0.5;entryY=0.90909;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="2060" as="sourcePoint" />
+            <mxPoint y="2060" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m44_lbl" connectable="0" parent="m44" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="44: Broadcast 'escrow:released' (Lobby COMPLETED)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m45" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.92727;entryX=0.5;entryY=0.92727;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="2100" as="sourcePoint" />
+            <mxPoint y="2100" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m45_lbl" connectable="0" parent="m45" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="45: Điểm danh CHECKED_IN (+2đ) / NO_SHOW (-15đ, bồi thường sân)" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
+            <mxPoint y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m46" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;exitX=0.5;exitY=0.94545;entryX=0.5;entryY=0.94545;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="2140" as="sourcePoint" />
+            <mxPoint y="2140" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        <mxCell id="m46_lbl" connectable="0" parent="m46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="46: Hoàn tất phiên kèo, cộng điểm uy tín người dùng" vertex="1">
+          <mxGeometry relative="1" as="geometry" y="-10">
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
