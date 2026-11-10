@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" pages="1">
   <diagram id="seq_t1" name="Tuần tự nghiệp vụ SyncHub">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="2050" background="#ffffff" math="0" shadow="0">
@@ -25,7 +26,7 @@
         <mxCell id="ph1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#EBF5FB;strokeColor=#2980B9;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#2980B9;" value="GIAI ĐOẠN 1: KHÓA SLOT NGUYÊN TỬ CHỐNG RACE CONDITION (BR-SLT-01, BR-SLT-02)" vertex="1">
           <mxGeometry x="50" y="180" width="1430" height="420" as="geometry" />
           </mxCell>
-        <mxCell id="m01" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m01" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.08333;entryX=0.5;entryY=0.08333;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="220" as="sourcePoint" />
             <mxPoint y="220" as="targetPoint" />
@@ -36,7 +37,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m02" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m02" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.09896;entryX=0.5;entryY=0.09896;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="250" as="sourcePoint" />
             <mxPoint y="250" as="targetPoint" />
@@ -47,7 +48,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m03" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m03" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.11458;entryX=0.5;entryY=0.11458;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="280" as="sourcePoint" />
             <mxPoint y="280" as="targetPoint" />
@@ -58,7 +59,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m04" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m04" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.13021;entryX=0.5;entryY=0.13021;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="310" as="sourcePoint" />
             <mxPoint y="310" as="targetPoint" />
@@ -69,7 +70,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m05" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m05" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.14583;entryX=0.5;entryY=0.14583;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="340" as="sourcePoint" />
             <mxPoint y="340" as="targetPoint" />
@@ -80,7 +81,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m06" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m06" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.16146;entryX=0.5;entryY=0.16146;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="370" as="sourcePoint" />
             <mxPoint y="370" as="targetPoint" />
@@ -91,7 +92,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m07" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m07" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.17708;entryX=0.5;entryY=0.17708;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="400" as="sourcePoint" />
             <mxPoint y="400" as="targetPoint" />
@@ -102,7 +103,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m08" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m08" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.19271;entryX=0.5;entryY=0.19271;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="430" as="sourcePoint" />
             <mxPoint y="430" as="targetPoint" />
@@ -113,7 +114,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m09" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m09" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.20833;entryX=0.5;entryY=0.20833;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="460" as="sourcePoint" />
             <mxPoint y="460" as="targetPoint" />
@@ -124,7 +125,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m10" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m10" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.22396;entryX=0.5;entryY=0.22396;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="490" as="sourcePoint" />
             <mxPoint y="490" as="targetPoint" />
@@ -135,7 +136,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m11" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m11" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.23958;entryX=0.5;entryY=0.23958;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="520" as="sourcePoint" />
             <mxPoint y="520" as="targetPoint" />
@@ -146,7 +147,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m12" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m12" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.25521;entryX=0.5;entryY=0.25521;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="550" as="sourcePoint" />
             <mxPoint y="550" as="targetPoint" />
@@ -160,7 +161,7 @@
         <mxCell id="ph2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#EAFAF1;strokeColor=#27AE60;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#27AE60;" value="GIAI ĐOẠN 2: GIỎ HÀNG NHÓM REALTIME &amp; KHÓA PHÒNG TỨC THÌ (BR-INT-01, BR-INT-04)" vertex="1">
           <mxGeometry x="50" y="620" width="1430" height="560" as="geometry" />
           </mxCell>
-        <mxCell id="m13" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m13" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.31250;entryX=0.5;entryY=0.31250;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="660" as="sourcePoint" />
             <mxPoint y="660" as="targetPoint" />
@@ -171,7 +172,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m14" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m14" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.32812;entryX=0.5;entryY=0.32812;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="690" as="sourcePoint" />
             <mxPoint y="690" as="targetPoint" />
@@ -182,7 +183,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m15" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m15" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.34375;entryX=0.5;entryY=0.34375;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="720" as="sourcePoint" />
             <mxPoint y="720" as="targetPoint" />
@@ -193,7 +194,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m16" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m16" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.35938;entryX=0.5;entryY=0.35938;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="750" as="sourcePoint" />
             <mxPoint y="750" as="targetPoint" />
@@ -204,7 +205,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m17" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m17" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.37500;entryX=0.5;entryY=0.37500;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="780" as="sourcePoint" />
             <mxPoint y="780" as="targetPoint" />
@@ -215,7 +216,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m18" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m18" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.39062;entryX=0.5;entryY=0.39062;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="810" as="sourcePoint" />
             <mxPoint y="810" as="targetPoint" />
@@ -226,7 +227,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m19" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m19" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.40625;entryX=0.5;entryY=0.40625;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="840" as="sourcePoint" />
             <mxPoint y="840" as="targetPoint" />
@@ -237,7 +238,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m20" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m20" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.42188;entryX=0.5;entryY=0.42188;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="870" as="sourcePoint" />
             <mxPoint y="870" as="targetPoint" />
@@ -248,7 +249,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m21" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m21" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.43750;entryX=0.5;entryY=0.43750;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="900" as="sourcePoint" />
             <mxPoint y="900" as="targetPoint" />
@@ -259,7 +260,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m22" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m22" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.45312;entryX=0.5;entryY=0.45312;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="930" as="sourcePoint" />
             <mxPoint y="930" as="targetPoint" />
@@ -270,7 +271,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m23" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m23" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.46875;entryX=0.5;entryY=0.46875;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="960" as="sourcePoint" />
             <mxPoint y="960" as="targetPoint" />
@@ -281,7 +282,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m24" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m24" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.48438;entryX=0.5;entryY=0.48438;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="990" as="sourcePoint" />
             <mxPoint y="990" as="targetPoint" />
@@ -292,7 +293,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m25" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m25" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.50000;entryX=0.5;entryY=0.50000;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1020" as="sourcePoint" />
             <mxPoint y="1020" as="targetPoint" />
@@ -303,7 +304,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m26" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m26" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.51562;entryX=0.5;entryY=0.51562;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1050" as="sourcePoint" />
             <mxPoint y="1050" as="targetPoint" />
@@ -314,7 +315,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m27" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m27" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.53125;entryX=0.5;entryY=0.53125;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1080" as="sourcePoint" />
             <mxPoint y="1080" as="targetPoint" />
@@ -325,7 +326,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m28" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m28" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.54688;entryX=0.5;entryY=0.54688;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1110" as="sourcePoint" />
             <mxPoint y="1110" as="targetPoint" />
@@ -336,7 +337,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m29" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m29" edge="1" parent="1" source="ll_member" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.55990;entryX=0.5;entryY=0.55990;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1135" as="sourcePoint" />
             <mxPoint y="1135" as="targetPoint" />
@@ -347,7 +348,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m30" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m30" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.57031;entryX=0.5;entryY=0.57031;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1155" as="sourcePoint" />
             <mxPoint y="1155" as="targetPoint" />
@@ -361,7 +362,7 @@
         <mxCell id="ph3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=#FEF9E7;strokeColor=#F39C12;strokeWidth=1.2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;fontStyle=1;fontFamily=Tahoma;fontSize=11;fontColor=#F39C12;" value="GIAI ĐOẠN 3: THANH TOÁN ESCROW VIETQR &amp; CHECK-IN GIẢI NGÂN (BR-INT-02, BR-ESC-01..03)" vertex="1">
           <mxGeometry x="50" y="1200" width="1430" height="690" as="geometry" />
           </mxCell>
-        <mxCell id="m31" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m31" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.61458;entryX=0.5;entryY=0.61458;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1240" as="sourcePoint" />
             <mxPoint y="1240" as="targetPoint" />
@@ -372,7 +373,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m32" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m32" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.63021;entryX=0.5;entryY=0.63021;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1270" as="sourcePoint" />
             <mxPoint y="1270" as="targetPoint" />
@@ -383,7 +384,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m33" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m33" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.64583;entryX=0.5;entryY=0.64583;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1300" as="sourcePoint" />
             <mxPoint y="1300" as="targetPoint" />
@@ -394,7 +395,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m34" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m34" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.66146;entryX=0.5;entryY=0.66146;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1330" as="sourcePoint" />
             <mxPoint y="1330" as="targetPoint" />
@@ -405,7 +406,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m35" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m35" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.67708;entryX=0.5;entryY=0.67708;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1360" as="sourcePoint" />
             <mxPoint y="1360" as="targetPoint" />
@@ -416,7 +417,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m36" edge="1" parent="1" source="ll_member" target="ll_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m36" edge="1" parent="1" source="ll_member" target="ll_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.69271;entryX=0.5;entryY=0.69271;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1390" as="sourcePoint" />
             <mxPoint y="1390" as="targetPoint" />
@@ -427,7 +428,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m37" edge="1" parent="1" source="ll_gw" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m37" edge="1" parent="1" source="ll_gw" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.70833;entryX=0.5;entryY=0.70833;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1420" as="sourcePoint" />
             <mxPoint y="1420" as="targetPoint" />
@@ -438,7 +439,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m38" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m38" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.72396;entryX=0.5;entryY=0.72396;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1450" as="sourcePoint" />
             <mxPoint y="1450" as="targetPoint" />
@@ -449,7 +450,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m39" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m39" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.73958;entryX=0.5;entryY=0.73958;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1480" as="sourcePoint" />
             <mxPoint y="1480" as="targetPoint" />
@@ -460,7 +461,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m40" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m40" edge="1" parent="1" source="ll_host" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.75521;entryX=0.5;entryY=0.75521;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1510" as="sourcePoint" />
             <mxPoint y="1510" as="targetPoint" />
@@ -471,7 +472,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m41" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m41" edge="1" parent="1" source="ll_client" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.77083;entryX=0.5;entryY=0.77083;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1540" as="sourcePoint" />
             <mxPoint y="1540" as="targetPoint" />
@@ -482,7 +483,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m42" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m42" edge="1" parent="1" source="ll_server" target="ll_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.78646;entryX=0.5;entryY=0.78646;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1570" as="sourcePoint" />
             <mxPoint y="1570" as="targetPoint" />
@@ -493,7 +494,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m43" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m43" edge="1" parent="1" source="ll_db" target="ll_server" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;strokeColor=#27AE60;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.80208;entryX=0.5;entryY=0.80208;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1600" as="sourcePoint" />
             <mxPoint y="1600" as="targetPoint" />
@@ -504,7 +505,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m44" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m44" edge="1" parent="1" source="ll_server" target="ll_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.81771;entryX=0.5;entryY=0.81771;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1630" as="sourcePoint" />
             <mxPoint y="1630" as="targetPoint" />
@@ -515,7 +516,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m45" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m45" edge="1" parent="1" source="ll_client" target="ll_host" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.83333;entryX=0.5;entryY=0.83333;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1660" as="sourcePoint" />
             <mxPoint y="1660" as="targetPoint" />
@@ -526,7 +527,7 @@
             <mxPoint y="-8" as="offset" />
             </mxGeometry>
           </mxCell>
-        <mxCell id="m46" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;" value="">
+        <mxCell id="m46" edge="1" parent="1" source="ll_client" target="ll_member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;endArrow=classic;endFill=1;strokeColor=#2C3E50;strokeWidth=1.2;fontFamily=Tahoma;exitX=0.5;exitY=0.84896;entryX=0.5;entryY=0.84896;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <mxPoint y="1690" as="sourcePoint" />
             <mxPoint y="1690" as="targetPoint" />
