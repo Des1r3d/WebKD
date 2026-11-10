@@ -24,12 +24,16 @@ setupLobbySocket(io);
 
 // BR-SLT-01: Background job quét các slot LOCKED quá hạn mỗi 60s
 setInterval(async () => {
-  const expired = await expireOverdueSlots();
-  if (expired.length > 0) {
-    console.log(`[SlotJob] Đã tự động giải phóng ${expired.length} slot hết hạn:`, expired.map((s) => s.id));
-    for (const s of expired) {
-      io.emit('slot:released', { slotId: s.id, providerId: s.provider_id });
+  try {
+    const expired = await expireOverdueSlots();
+    if (expired.length > 0) {
+      console.log(`[SlotJob] Đã tự động giải phóng ${expired.length} slot hết hạn:`, expired.map((s) => s.id));
+      for (const s of expired) {
+        io.emit('slot:released', { slotId: s.id, providerId: s.provider_id });
+      }
     }
+  } catch (err) {
+    console.error('[SlotJob] Quét slot hết hạn thất bại:', err);
   }
 }, 60 * 1000);
 

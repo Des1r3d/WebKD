@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "setup": "npm install --prefix server && npm run prisma:generate --prefix server && npm install --prefix client",
+    "setup": "npm install --prefix server && npm install --prefix client && npm run setup:env && npm run prisma:generate --prefix server && npm run prisma:deploy --prefix server",
+    "setup:env": "node -e \"const fs=require('fs');if(!fs.existsSync('server/.env'))fs.copyFileSync('server/.env.example','server/.env')\"",
     "seed": "npm run prisma:seed --prefix server",
     "dev": "node scripts/dev.js",
     "dev:server": "npm run dev --prefix server",

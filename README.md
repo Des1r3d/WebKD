@@ -36,15 +36,20 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 docker compose up -d
 ```
 
-### 3. Cài đặt dependencies & generate Prisma client
+### 3. Cài đặt dependencies, tạo file môi trường & migrate DB
 ```bash
 npm run setup
 ```
+Lệnh này sẽ:
+- cài dependencies cho `server` và `client`,
+- tạo `server/.env` từ `server/.env.example` (chỉ khi file chưa tồn tại — không ghi đè cấu hình đang có),
+- `prisma generate` và `prisma migrate deploy` để tạo 12 bảng trong `synchub_db`.
 
 ### 4. Seed dữ liệu mẫu
 ```bash
 npm run seed
 ```
+> ⚠️ `npm run seed` **xoá toàn bộ dữ liệu hiện có** trong 12 bảng rồi tạo lại dữ liệu mẫu — chỉ chạy trên DB dev, đừng chạy khi đã có dữ liệu thật cần giữ.
 
 ### 5. Chạy môi trường phát triển (Dev)
 ```bash
@@ -52,6 +57,11 @@ npm run dev
 ```
 - **Client:** `http://localhost:5173`
 - **Server API:** `http://localhost:5000`
+- **Health check:** `http://localhost:5000/api/health`
+
+> **Sự cố thường gặp:** `/api/health` trả `ok` nhưng gọi API khác bị `500`/`502`
+> → kiểm tra `server/.env` có `DATABASE_URL` chưa và đã chạy `npm run setup` (bước migrate) chưa.
+> Nếu server tự tắt sau ~60s, đó là job quét slot hết hạn lỗi kết nối DB — xem log `[SlotJob]`.
 
 ---
 
