@@ -500,10 +500,10 @@
           <mxGeometry x="140" y="270" width="170" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_gw_disp" parent="1" style="points=[[0.25,0.25,0],[0.5,0,0],[0.75,0.25,0],[1,0.5,0],[0.75,0.75,0],[0.5,1,0],[0.25,0.75,0],[0,0.5,0]];shape=mxgraph.bpmn.gateway2;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=rhombusPerimeter;outlineConnect=0;outline=none;symbol=none;gwType=exclusive;fontFamily=Tahoma;fillColor=#FFFFFF;strokeColor=#333333;" value="Có khiếu nại OPEN? (BR-ESC-04)" vertex="1">
-          <mxGeometry x="380" y="460" width="60" height="60" as="geometry"/>
+          <mxGeometry x="380" y="470" width="60" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_e_idem" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=service;fontFamily=Tahoma;fillColor=#F4F6F6;strokeColor=#2C3E50;fontSize=11;align=center;" value="Khóa Idempotency key = release:{lobbyId}:{providerId} (BR-ESC-03)" vertex="1">
-          <mxGeometry x="520" y="450" width="230" height="80" as="geometry"/>
+          <mxGeometry x="520" y="430" width="230" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_p_venue" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=service;fontFamily=Tahoma;fillColor=#F4F6F6;strokeColor=#2C3E50;fontSize=11;align=center;" value="Giải ngân 92% tiền sân cho Venue (Sàn giữ 8% hoa hồng)" vertex="1">
           <mxGeometry x="800" y="270" width="200" height="75" as="geometry"/>
@@ -512,19 +512,19 @@
           <mxGeometry x="800" y="660" width="200" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_e_rep" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=service;fontFamily=Tahoma;fillColor=#F4F6F6;strokeColor=#2C3E50;fontSize=11;align=center;" value="Cộng +2 uy tín CHECKED_IN, Phạt -15 uy tín NO_SHOW (BR-REP-02/03)" vertex="1">
-          <mxGeometry x="1050" y="450" width="220" height="80" as="geometry"/>
+          <mxGeometry x="1050" y="430" width="220" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_c_disp" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=user;fontFamily=Tahoma;fillColor=#FFFFFF;strokeColor=#333333;fontSize=11;align=center;" value="Member gửi khiếu nại kèm ảnh chứng cứ (sân hỏng/thiếu nước)" vertex="1">
           <mxGeometry x="520" y="85" width="200" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_e_freeze" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=service;fontFamily=Tahoma;fillColor=#F4F6F6;strokeColor=#2C3E50;fontSize=11;align=center;" value="Đóng băng Escrow FROZEN đối tác bị kiện (BR-ESC-04)" vertex="1">
-          <mxGeometry x="770" y="450" width="190" height="80" as="geometry"/>
+          <mxGeometry x="770" y="530" width="190" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_adm_res" parent="1" style="points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];shape=mxgraph.bpmn.task2;whiteSpace=wrap;rectStyle=rounded;size=10;html=1;container=1;expand=0;collapsible=0;taskMarker=service;fontFamily=Tahoma;fillColor=#F4F6F6;strokeColor=#2C3E50;fontSize=11;align=center;" value="Admin thẩm định chứng cứ, duyệt REFUND &amp;amp; Ghi Audit Logs (BR-DSP-01)" vertex="1">
-          <mxGeometry x="1020" y="450" width="220" height="80" as="geometry"/>
+          <mxGeometry x="1050" y="530" width="220" height="75" as="geometry"/>
         </mxCell>
         <mxCell id="tb5_end" parent="1" style="points=[[0.145,0.145,0],[0.5,0,0],[0.855,0.145,0],[1,0.5,0],[0.855,0.855,0],[0.5,1,0],[0.145,0.855,0],[0,0.5,0]];shape=mxgraph.bpmn.event;html=1;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;align=center;perimeter=ellipsePerimeter;outlineConnect=0;aspect=fixed;outline=throwing;symbol=general;fillColor=#FDEDEC;strokeColor=#C0392B;strokeWidth=3;fontFamily=Tahoma;fontSize=11;" value="Chuyển Lobby COMPLETED" vertex="1">
-          <mxGeometry x="1340" y="470" width="45" height="45" as="geometry"/>
+          <mxGeometry x="1340" y="480" width="45" height="45" as="geometry"/>
         </mxCell>
         <mxCell id="f_tb5_1" parent="1" source="tb5_c_arrive" target="tb5_v_checkin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 8;strokeColor=#7F8C8D;fontFamily=Tahoma;;labelBackgroundColor=#ffffff;" value="Có mặt tại sân" edge="1">
           <mxGeometry relative="1" as="geometry"/>
