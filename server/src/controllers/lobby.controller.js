@@ -1,6 +1,6 @@
 import { LobbyStatus } from '@prisma/client';
 import { prisma } from '../prisma.js';
-import { cancelLobby, createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby } from '../services/lobby.js';
+import { cancelLobby, createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby, lockLobbyRow } from '../services/lobby.js';
 
 /**
  * POST /api/lobbies
@@ -371,35 +371,40 @@ export async function handleCartAdd(req, res) {
       return;
     }
 
-    let fnbProviderId = lobby.fnb_provider_id;
-    if (!fnbProviderId) {
-      fnbProviderId = menuItem.provider_id;
-      await prisma.groupLobby.update({
-        where: { id: lobby.id },
-        data: { fnb_provider_id: fnbProviderId },
-      });
-    }
-
-    const existing = await prisma.cartItem.findFirst({
-      where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItem.id },
-    });
-    const cartItem = existing
-      ? await prisma.cartItem.update({
-          where: { id: existing.id },
-          data: { qty: existing.qty + Number(qty) },
-        })
-      : await prisma.cartItem.create({
-          data: {
-            lobby_id: lobby.id,
-            user_id: userId,
-            menu_item_id: menuItem.id,
-            qty: Number(qty),
-            unit_price_snapshot: menuItem.price,
-          },
+    const { cartItem, fnbProviderId } = await prisma.$transaction(async (tx) => {
+      const current = await lockLobbyRow(tx, lobby.id);
+      if (current.status !== 'OPEN') throw new Error('LOBBY_LOCKED');
+      let fnbProviderId = current.fnb_provider_id;
+      if (!fnbProviderId) {
+        fnbProviderId = menuItem.provider_id;
+        await tx.groupLobby.update({
+          where: { id: lobby.id },
+          data: { fnb_provider_id: fnbProviderId },
         });
-    await prisma.menuItem.update({
-      where: { id: menuItem.id },
-      data: { order_count: { increment: Number(qty) } },
+      }
+
+      const existing = await tx.cartItem.findFirst({
+        where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItem.id },
+      });
+      const cartItem = existing
+        ? await tx.cartItem.update({
+            where: { id: existing.id },
+            data: { qty: existing.qty + Number(qty) },
+          })
+        : await tx.cartItem.create({
+            data: {
+              lobby_id: lobby.id,
+              user_id: userId,
+              menu_item_id: menuItem.id,
+              qty: Number(qty),
+              unit_price_snapshot: menuItem.price,
+            },
+          });
+      await tx.menuItem.update({
+        where: { id: menuItem.id },
+        data: { order_count: { increment: Number(qty) } },
+      });
+      return { cartItem, fnbProviderId };
     });
 
     const dbCart = await prisma.cartItem.findMany({
@@ -439,6 +444,10 @@ export async function handleCartAdd(req, res) {
       },
     });
   } catch (error) {
+    if (error.message === 'LOBBY_LOCKED') {
+      res.status(403).json({ error: 'LOBBY_LOCKED', message: 'Phòng đã khóa, không thể thêm món (BR-INT-04)' });
+      return;
+    }
     res.status(500).json({ error: 'SERVER_ERROR', message: error.message });
   }
 }

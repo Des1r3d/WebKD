@@ -1,5 +1,5 @@
 import { prisma } from '../prisma.js';
-import { findLobby } from '../services/lobby.js';
+import { findLobby, lockLobbyRow } from '../services/lobby.js';
 
 // Chat trong phòng lưu tạm trong RAM (12 bảng DB đã khóa theo AGENTS.md, không có bảng chat)
 const chatMessages = new Map();
@@ -112,38 +112,48 @@ export function setupLobbySocket(io) {
           return;
         }
 
-        let fnbProviderId = lobby.fnb_provider_id;
-        if (!fnbProviderId) {
-          fnbProviderId = menuItem.provider_id;
-          await prisma.groupLobby.update({
-            where: { id: lobby.id },
-            data: { fnb_provider_id: fnbProviderId },
-          });
-        }
+        const fnbProviderId = await prisma.$transaction(async (tx) => {
+          const current = await lockLobbyRow(tx, lobby.id);
+          if (current.status !== 'OPEN') return false;
+          let fnbProviderId = current.fnb_provider_id;
+          if (!fnbProviderId) {
+            fnbProviderId = menuItem.provider_id;
+            await tx.groupLobby.update({
+              where: { id: lobby.id },
+              data: { fnb_provider_id: fnbProviderId },
+            });
+          }
 
-        const existing = await prisma.cartItem.findFirst({
-          where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItemId },
+          const existing = await tx.cartItem.findFirst({
+            where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItemId },
+          });
+          if (existing) {
+            await tx.cartItem.update({
+              where: { id: existing.id },
+              data: { qty: existing.qty + Number(qty) },
+            });
+          } else {
+            await tx.cartItem.create({
+              data: {
+                lobby_id: lobby.id,
+                user_id: userId,
+                menu_item_id: menuItemId,
+                qty: Number(qty),
+                unit_price_snapshot: menuItem.price,
+              },
+            });
+          }
+          await tx.menuItem.update({
+            where: { id: menuItemId },
+            data: { order_count: { increment: Number(qty) } },
+          });
+
+          return fnbProviderId;
         });
-        if (existing) {
-          await prisma.cartItem.update({
-            where: { id: existing.id },
-            data: { qty: existing.qty + Number(qty) },
-          });
-        } else {
-          await prisma.cartItem.create({
-            data: {
-              lobby_id: lobby.id,
-              user_id: userId,
-              menu_item_id: menuItemId,
-              qty: Number(qty),
-              unit_price_snapshot: menuItem.price,
-            },
-          });
+        if (fnbProviderId === false) {
+          socket.emit('notify', { type: 'ERROR', message: 'Phòng đã khóa giỏ hàng, không thể thêm món' });
+          return;
         }
-        await prisma.menuItem.update({
-          where: { id: menuItemId },
-          data: { order_count: { increment: Number(qty) } },
-        });
 
         const { items, subtotal } = await loadFormattedCart(lobby.id);
         io.to(`lobby:${lobby.id}`).emit('cart:updated', {

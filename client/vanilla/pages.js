@@ -147,10 +147,11 @@ function mountLobbySocket(root, code, user, navigate, status) {
     root.querySelector('[data-lobby-status]').innerHTML = Badge(next);
     root.querySelector('[data-lobby-lock-notice]').hidden = false;
     const actions = root.querySelector('[data-lobby-actions]');
-    const cancel = actions.querySelector('[data-cancel-lobby]');
     const canSplit = actions.querySelector('[data-lock-and-split]');
+    const cancel = actions.querySelector('[data-cancel-lobby]');
     actions.innerHTML = canSplit && ['LOCKED', 'AWAITING_PAYMENT'].includes(next)
       ? `<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`
+      : '';
     if (cancel && ['LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(next)) actions.prepend(cancel);
     if (next === 'CANCELLED') {
       root.querySelector('[data-lobby-lock-notice]').textContent = 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.';
@@ -158,7 +159,6 @@ function mountLobbySocket(root, code, user, navigate, status) {
       cartSnapshot = { items: [], subtotal: 0 };
       renderCart();
     }
-      : '';
     updateControls();
   };
 
@@ -189,8 +189,8 @@ function mountLobbySocket(root, code, user, navigate, status) {
     root.querySelector('[data-member-count]').textContent = members.length;
     renderCart();
   });
-    if (cart.dataset.status === 'CANCELLED') return;
   socket.on('cart:updated', snapshot => {
+    if (cart.dataset.status === 'CANCELLED') return;
     cartSnapshot = snapshot;
     renderCart();
     finishSync();
