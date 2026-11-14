@@ -1,0 +1,10 @@
+
+> synchub@1.0.0 start
+> npm run start --prefix server
+
+
+> synchub-server@1.0.0 start
+> node src/index.js
+
+🚀 [SyncHub Server] đang chạy tại http://localhost:5500
+📡 [API Health] http://localhost:5500/api/health

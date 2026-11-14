@@ -4,6 +4,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import { app } from './app.js';
 import { expireOverdueSlots } from './services/slotLock.js';
 import { setupLobbySocket } from './sockets/lobby.socket.js';
+import { verifyJwt } from './utils/jwt.js';
 
 const PORT = Number(process.env.PORT) || 5000;
 const server = http.createServer(app);
@@ -18,6 +19,18 @@ export const io = new SocketIOServer(server, {
 });
 
 app.set('io', io);
+io.use((socket, next) => {
+  const { token } = socket.handshake.auth;
+  if (typeof token === 'string' && token) {
+    try {
+      verifyJwt(token);
+      return next();
+    } catch {
+      return next(new Error('INVALID_TOKEN'));
+    }
+  }
+  return next(new Error('UNAUTHORIZED'));
+});
 setupLobbySocket(io);
 
 // BR-SLT-01: Background job quét các slot LOCKED quá hạn mỗi 60s

@@ -1,0 +1,19 @@
+  current_database   | inet_server_port |            current_setting            | business_tables
+---------------------+------------------+---------------------------------------+-----------------
+ synchub_phase4_demo |            55434 | 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) |              12
+(1 row)
+
+   migration_name    | applied
+---------------------+---------
+ 20261106000000_init | t
+(1 row)
+
+  current_database   | inet_server_port |            current_setting            | business_tables
+---------------------+------------------+---------------------------------------+-----------------
+ synchub_phase4_test |            55434 | 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) |              12
+(1 row)
+
+   migration_name    | applied
+---------------------+---------
+ 20261106000000_init | t
+(1 row)

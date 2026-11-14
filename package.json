@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "setup": "npm install --prefix server && npm install --prefix client && npm run setup:env && npm run prisma:generate --prefix server && npm run prisma:deploy --prefix server",
+    "setup": "npm run setup:env && npm ci --prefix server && npm run prisma:generate && npm run prisma:deploy",
     "setup:env": "node -e \"const fs=require('fs');if(!fs.existsSync('server/.env'))fs.copyFileSync('server/.env.example','server/.env')\"",
     "seed": "npm run prisma:seed --prefix server",
-    "dev": "node scripts/dev.js",
-    "dev:server": "npm run dev --prefix server",
-    "dev:client": "npm run dev --prefix client",
-    "dev:vanilla": "npm run dev:vanilla --prefix client",
+    "dev": "npm run dev --prefix server",
     "test": "npm run test --prefix server",
-    "build": "npm run build --prefix client",
-    "build:vanilla": "npm run build:vanilla --prefix client"
+    "prisma:generate": "npm run prisma:generate --prefix server",
+    "prisma:deploy": "npm run prisma:deploy --prefix server",
+    "start": "npm run start --prefix server"
   }
 }

@@ -10,8 +10,7 @@
    ```bash
    npm run dev
    ```
-   - Backend Express + Socket.io chạy tại `http://localhost:5000`
-   - Frontend React + Vite chạy tại `http://localhost:5173` (hỗ trợ cả truy cập LAN cho điện thoại cùng Wi-Fi/Hotspot).
+   - Express phục vụ giao diện, REST API và Socket.io tại `http://localhost:5000`. Điện thoại cùng Wi-Fi/Hotspot dùng IP LAN của máy chạy Express và cổng 5000.
 2. **Thiết lập 2 thiết bị / cửa sổ (xác thực JWT thật qua `/login`):**
    - **Thiết bị 1 (Laptop — Màn hình chiếu chính):** Đăng nhập tại `/login` với tài khoản **Host Đào Tiến Đạt (`dat.dt@synchub.vn` / `Password123!`, Hạng A — 98đ)**. Khi sang phần Portal/Quản trị, đăng xuất và đăng nhập tài khoản **Provider (`thang.venue@synchub.vn`)** hoặc **Admin (`admin@synchub.vn`)**.
    - **Thiết bị 2 (Điện thoại hoặc Cửa sổ Ẩn danh bên cạnh):** Đăng nhập tài khoản **Member Trần Quang Minh (`minh.b@synchub.vn`, Hạng B — 82đ)**, **Lê Hoàng Linh (`linh.c@synchub.vn`, Hạng C — 64đ)** và **Phạm Gia Hưng (`hung.flag@synchub.vn`, FLAGGED — 42đ)**.
@@ -56,11 +55,11 @@
 
 ### Phút 08:00 – 10:00 | Giải ngân Escrow Đa bên, Chống Lặp & Phân xử Khiếu nại (`UC10`, `UC11`, `UC12`)
 - **Thao tác (Thiết bị 1 - `/lobby/SYNC01/split`, `/wallet`, `/disputes`, `/admin`):**
-  1. Ngay tại khối **Điểm danh Check-in & Giải ngân Escrow**:
+  1. Nếu trình diễn khiếu nại F&B, gửi đơn ở **Khiếu nại** trước khi bấm giải ngân. Sau đó mở khối **Điểm danh Check-in & Giải ngân Escrow**:
      - Chọn trạng thái `Có mặt (+2đ)` hoặc `Bùng kèo (-15đ, phạt cọc)` cho từng thành viên (`BR-REP-02/03`).
      - Bấm **"Xác nhận Check-in & Giải ngân Escrow"** → Hệ thống chạy `prisma.$transaction` tách dòng tiền: Chủ sân nhận `110.400 ₫` (trừ 8% hoa hồng = `9.600 ₫`), Quán nước nhận `83.600 ₫` (trừ 12% hoa hồng = `11.400 ₫`) (`BR-ESC-02`).
      - **Bấm nút giải ngân lần thứ 2 liên tiếp** → Hệ thống trả lỗi `409 IDEMPOTENCY_DUPLICATE_RELEASE` nhờ ràng buộc `UNIQUE(idempotency_key)` trong PostgreSQL (`BR-ESC-03`).
-  2. Sang trang **Khiếu nại (`/disputes`)**: Tạo đơn khiếu nại giao thiếu nước làm đóng băng khoản tiền `FROZEN` của quán F&B (`BR-ESC-04`).
+  2. Kiểm tra sổ cái: nếu đã gửi khiếu nại trước check-in, khoản của quán F&B ở `FROZEN`, còn khoản của chủ sân ở `RELEASED` (`BR-ESC-04`).
   3. Đăng nhập tài khoản **ADMIN (`admin@synchub.vn`)** → Mở **Admin Dashboard (`/admin`)**: Duyệt hoàn tiền khiếu nại (`BR-DSP-01`), khôi phục tài khoản `FLAGGED` và đối chiếu bảng nhật ký kiểm toán **`audit_logs`**.
 
 ---
@@ -68,10 +67,10 @@
 ## PHẦN 3: BỘ 10 CÂU HỎI VẤN ĐÁP HỘI ĐỒNG & ĐÁP ÁN CHUẨN
 
 ### Câu 1: Làm thế nào hệ thống ngăn chặn việc 2 nhóm cùng bấm đặt 1 khung giờ sân ở cùng một mili-giây?
-- **Đáp án:** Hệ thống áp dụng luật `BR-SLT-01` và `BR-SLT-02`. Ở tầng CSDL có ràng buộc `UNIQUE(provider_id, start_at)`. Khi xử lý request `POST /api/slots/:id/lock`, server thực hiện kiểm tra và cập nhật nguyên tử (Atomic Check-and-Set) với điều kiện `WHERE id = $slot AND (status = 'AVAILABLE' OR (status = 'LOCKED' AND locked_until < now()))`. Chỉ đúng 1 request đầu tiên thỏa điều kiện và cập nhật `rowCount = 1`, 19 request đồng thời còn lại nhận `rowCount = 0` và bị trả về mã lỗi HTTP `409 SLOT_TAKEN`. Nhóm đã chứng minh bằng unit test `Promise.all` 20 request đồng thời trong `tests/bookslot.test.ts`.
+- **Đáp án:** Hệ thống áp dụng luật `BR-SLT-01` và `BR-SLT-02`. Ở tầng CSDL có ràng buộc `UNIQUE(provider_id, start_at)`. Khi xử lý request `POST /api/slots/:id/lock`, server thực hiện kiểm tra và cập nhật nguyên tử (Atomic Check-and-Set) với điều kiện `WHERE id = $slot AND (status = 'AVAILABLE' OR (status = 'LOCKED' AND locked_until < now()))`. Chỉ đúng 1 request đầu tiên thỏa điều kiện và cập nhật `rowCount = 1`, 19 request đồng thời còn lại nhận `rowCount = 0` và bị trả về mã lỗi HTTP `409 SLOT_TAKEN`. Nhóm đã chứng minh bằng unit test `Promise.all` 20 request đồng thời trong `tests/bookslot.test.js`.
 
 ### Câu 2: Nếu người dùng khóa slot 10 phút rồi tắt trình duyệt bỏ đi không tạo phòng/thanh toán thì sao?
-- **Đáp án:** Mỗi khi khóa slot, cột `locked_until` được gán bằng `now() + 10 minutes`. Trên server (`src/index.ts`) có một background job (`setInterval` mỗi 60 giây) gọi hàm `expireOverdueSlots()` để quét mọi slot đang `LOCKED` có `locked_until < now()` (mà chưa `BOOKED`), tự động trả trạng thái về `AVAILABLE` và phát sự kiện Socket.io `slot:released` để mở khóa trên giao diện của các người dùng khác. Ngoài ra, ngay trong câu lệnh lock của người mới cũng tự động ghi đè được các slot đã quá hạn `locked_until`.
+- **Đáp án:** Mỗi khi khóa slot, cột `locked_until` được gán bằng `now() + 10 minutes`. Trên server (`src/index.js`) có một background job (`setInterval` mỗi 60 giây) gọi hàm `expireOverdueSlots()` để quét mọi slot đang `LOCKED` có `locked_until < now()` (mà chưa `BOOKED`), tự động trả trạng thái về `AVAILABLE` và phát sự kiện Socket.io `slot:released` để mở khóa trên giao diện của các người dùng khác. Ngoài ra, ngay trong câu lệnh lock của người mới cũng tự động ghi đè được các slot đã quá hạn `locked_until`.
 
 ### Câu 3: Tại sao phải dùng kiểu `Int` cho tiền tệ và thuật toán Largest Remainder khi chia bill?
 - **Đáp án:** Tiền VNĐ không dùng phần thập phân. Nếu lưu kiểu số thực (`Float`) và làm tròn thông thường (`Math.round`), khi chia `100.000 ₫` cho 3 người sẽ ra `33.333 × 3 = 99.999 ₫` (lệch `1 ₫`), dẫn đến sai lệch sổ cái kế toán giữa tổng tiền thu của thành viên và tổng tiền giải ngân cho đối tác. Do đó, hệ thống lưu toàn bộ tiền bằng `Int`, dùng `Math.floor` tính phần nguyên, sau đó tính tổng phần dư $\Delta = \text{GrandTotal} - \sum \text{floor}_i$ và phân phối từng `1 ₫` theo phương pháp **Largest Remainder (Hamilton)** (ưu tiên phần thập phân lớn nhất, nếu hòa nhau thì dồn cho Host). Cuối hàm `splitBill` luôn có câu lệnh `assert` kiểm tra $\sum \text{total}_i === \text{GrandTotal}$, sai lệch dù `1 ₫` sẽ rollback ngay.

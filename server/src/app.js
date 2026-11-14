@@ -15,6 +15,9 @@ import { authenticateJWT } from './middlewares/auth.js';
 import { handleGetLobbyEscrow } from './controllers/payment.controller.js';
 
 export const app = express();
+const frontend = new URL('../../client/vanilla/', import.meta.url);
+const publicFiles = new URL('../../client/public/', import.meta.url);
+const leaflet = new URL('../node_modules/leaflet/dist/', import.meta.url);
 
 app.use(
   cors({
@@ -25,8 +28,15 @@ app.use(
 
 app.use(express.json());
 
-// Serve static uploaded files
-app.use('/uploads', express.static(fileURLToPath(new URL('../uploads/', import.meta.url))));
+// Uploaded images share the app origin. Sandbox active content on direct navigation.
+app.use('/uploads', express.static(fileURLToPath(new URL('../uploads/', import.meta.url)), {
+  index: false,
+  redirect: false,
+  setHeaders(res) {
+    res.setHeader('Content-Security-Policy', 'sandbox');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+  },
+}));
 
 // Health check
 app.get('/api/health', (_req, res) => {
@@ -54,10 +64,30 @@ app.use('/api/admin', adminRouter);
 // GET /api/escrow/:lobbyId (BR-ESC-01..04)
 app.get('/api/escrow/:lobbyId', authenticateJWT, handleGetLobbyEscrow);
 
-// 404 handler
-app.use((_req, res) => {
+function notFound(_req, res) {
   res.status(404).json({
     error: 'NOT_FOUND',
     message: 'Endpoint không tồn tại',
   });
+}
+
+app.use(['/api', '/uploads', '/socket.io'], notFound);
+
+app.use('/assets/leaflet', express.static(fileURLToPath(leaflet), { index: false, redirect: false }));
+app.use('/assets', express.static(fileURLToPath(frontend), { index: false, redirect: false }));
+app.use('/assets', notFound);
+app.use(express.static(fileURLToPath(publicFiles), { index: false, redirect: false }));
+app.use('/images', notFound);
+
+app.get('*', (req, res, next) => {
+  // Only browser document requests should reach the History API router.
+  res.vary('Accept');
+  const accept = req.get('accept') || '';
+  const wantsHtml = /(?:^|,)\s*text\/html\s*(?:;|,|$)/i.test(accept) && req.accepts('html');
+  if (!wantsHtml || req.path.split('/').some(segment => segment.includes('.'))) {
+    return next();
+  }
+  res.sendFile(fileURLToPath(new URL('index.html', frontend)));
 });
+
+app.use(notFound);

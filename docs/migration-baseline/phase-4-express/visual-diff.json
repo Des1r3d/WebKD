@@ -1,0 +1,224 @@
+{
+  "before": {
+    "count": 87,
+    "overflow": [],
+    "page_errors": [],
+    "resource_errors": [],
+    "api_errors": [
+      {
+        "scenario": "error-390x844.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-390x844.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/auth/login",
+            "status": 401
+          }
+        ]
+      },
+      {
+        "scenario": "error-768x1024.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-768x1024.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/auth/login",
+            "status": 401
+          }
+        ]
+      },
+      {
+        "scenario": "error-1440x900.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-1440x900.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5180/api/auth/login",
+            "status": 401
+          }
+        ]
+      }
+    ],
+    "images_failed": []
+  },
+  "after": {
+    "count": 87,
+    "overflow": [],
+    "page_errors": [],
+    "resource_errors": [],
+    "api_errors": [
+      {
+        "scenario": "error-390x844.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-390x844.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/auth/login",
+            "status": 401
+          }
+        ]
+      },
+      {
+        "scenario": "error-768x1024.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-768x1024.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/auth/login",
+            "status": 401
+          }
+        ]
+      },
+      {
+        "scenario": "error-1440x900.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/providers/no-such-provider",
+            "status": 404
+          }
+        ]
+      },
+      {
+        "scenario": "login-error-1440x900.png",
+        "responses": [
+          {
+            "url": "http://127.0.0.1:5000/api/auth/login",
+            "status": 401
+          }
+        ]
+      }
+    ],
+    "images_failed": []
+  },
+  "pixel_diffs": [
+    {
+      "image": "lobby-host-1440x900.png",
+      "bounds": [
+        1127,
+        644,
+        1274,
+        836
+      ]
+    },
+    {
+      "image": "lobby-host-390x844.png",
+      "bounds": [
+        75,
+        3990,
+        222,
+        4182
+      ]
+    },
+    {
+      "image": "lobby-host-768x1024.png",
+      "bounds": [
+        83,
+        2694,
+        230,
+        2886
+      ]
+    },
+    {
+      "image": "lobby-locked-1440x900.png",
+      "bounds": [
+        1127,
+        644,
+        1274,
+        836
+      ]
+    },
+    {
+      "image": "lobby-locked-390x844.png",
+      "bounds": [
+        75,
+        4056,
+        222,
+        4248
+      ]
+    },
+    {
+      "image": "lobby-locked-768x1024.png",
+      "bounds": [
+        83,
+        2745,
+        230,
+        2937
+      ]
+    },
+    {
+      "image": "lobby-member-1440x900.png",
+      "bounds": [
+        1127,
+        644,
+        1274,
+        836
+      ]
+    },
+    {
+      "image": "lobby-member-390x844.png",
+      "bounds": [
+        75,
+        3990,
+        222,
+        4182
+      ]
+    },
+    {
+      "image": "lobby-member-768x1024.png",
+      "bounds": [
+        83,
+        2694,
+        230,
+        2886
+      ]
+    },
+    {
+      "image": "provider-wildcard-768x1024.png",
+      "bounds": [
+        [
+          768,
+          3854
+        ],
+        [
+          768,
+          3904
+        ]
+      ]
+    }
+  ]
+}

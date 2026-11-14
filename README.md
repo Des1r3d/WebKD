@@ -18,9 +18,9 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 
 | Thành phần | Công nghệ |
 |------------|-----------|
-| **Frontend** | React 19, Vite, TypeScript, Tailwind CSS, Leaflet, Lucide Icons. Bản HTML/CSS/JavaScript thuần đang được đối chiếu trong `client/vanilla/`. |
+| **Frontend** | HTML, CSS, JavaScript ES modules, Leaflet và SVG trong `client/vanilla/`. |
 | **Backend**  | Node.js, Express, JavaScript (ES modules), Socket.io |
-| **Database** | PostgreSQL 16, Prisma ORM |
+| **Database** | PostgreSQL 16, Prisma ORM 5.x |
 | **Kiểm thử** | Node test runner, Supertest |
 
 ---
@@ -36,16 +36,19 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 docker compose up -d
 ```
 
-### 3. Cài đặt dependencies, tạo file môi trường & migrate DB
+### 3. Cài đặt và áp dụng migration
+
 ```bash
+npm run setup:env
+# Xác minh DATABASE_URL trong server/.env hoặc môi trường shell.
 npm run setup
 ```
-Lệnh này sẽ:
-- cài dependencies cho `server` và `client`,
-- tạo `server/.env` từ `server/.env.example` (chỉ khi file chưa tồn tại — không ghi đè cấu hình đang có),
-- `prisma generate` và `prisma migrate deploy` để tạo 12 bảng trong `synchub_db`.
+
+`setup:env` tạo `server/.env` từ mẫu nếu cần. `setup` chạy `npm ci --prefix server` theo lockfile, `npm run prisma:generate` và `npm run prisma:deploy`.
 
 ### 4. Seed dữ liệu mẫu
+
+Xác minh `DATABASE_URL` trỏ tới DB demo trước khi seed.
 ```bash
 npm run seed
 ```
@@ -55,15 +58,7 @@ npm run seed
 ```bash
 npm run dev
 ```
-- **Client:** `http://localhost:5173`
-- **Server API:** `http://localhost:5000`
-- **Health check:** `http://localhost:5000/api/health`
-
-Để kiểm tra frontend vanilla, chạy thêm `npm run dev:vanilla` khi Express đang chạy. Vite in URL preview (mặc định cổng 5174) và proxy API/Socket.io đến cổng 5000. `npm run build` tạo bản React đang dùng để triển khai, còn `npm run build:vanilla` tạo bản đối chiếu. Trạng thái chuyển sang Express một origin được theo dõi trong [MIGRATION_PLAN.md](MIGRATION_PLAN.md).
-
-> **Sự cố thường gặp:** `/api/health` trả `ok` nhưng gọi API khác bị `500`/`502`
-> → kiểm tra `server/.env` có `DATABASE_URL` chưa và đã chạy `npm run setup` (bước migrate) chưa.
-> Nếu server tự tắt sau ~60s, đó là job quét slot hết hạn lỗi kết nối DB — xem log `[SlotJob]`.
+Mở [SyncHub](http://localhost:5000). Express phục vụ giao diện, tài nguyên, `/api`, `/uploads` và `/socket.io` cùng origin. Kiểm tra tiến trình qua [API Health](http://localhost:5000/api/health).
 
 ### 6. Chạy kiểm thử backend
 
@@ -83,9 +78,29 @@ npm test
 
 Các test tích hợp nạp lại fixture trên `TEST_DATABASE_URL` trước mỗi ca.
 
+Smoke test trên bản demo đang chạy dùng Python Playwright và Chromium. Đặt `SYNCHUB_SEED_PASSWORD` theo tài khoản demo. Mặc định script dùng cổng 5000. Có thể đặt `SYNCHUB_BASE_URL` và `SYNCHUB_BROWSER` để đổi origin và executable trình duyệt.
+
+```bash
+node scripts/verify_phase4_http.mjs
+python3 scripts/verify_phase3_browser.py
+SYNCHUB_LOBBY_ARTIFACTS=/tmp/synchub-lobby python3 scripts/verify_phase3_lobby.py
+SYNCHUB_CAPTURE_DIR=/tmp/synchub-capture python3 scripts/capture_phase3_scenarios.py
+```
+
+Script lobby khóa phòng `SYNC01` trong DB demo. Chụp giao diện trước khi chạy script đó hoặc nạp lại fixture đã xác minh. Khi so sánh ảnh, dùng cùng `SYNCHUB_CAPTURE_TIME` theo ISO 8601 và cùng DB demo cho hai origin. `SYNCHUB_BASELINE_URL` là tùy chọn để script lobby chụp thêm mốc đối chiếu.
+
 ### 7. Deploy với cấu hình hiện hành
 
-Chạy `npm ci --prefix server` và `npm ci --prefix client` để cài từ hai lockfile. Xác minh `DATABASE_URL` đích rồi chạy `npm run prisma:generate --prefix server` và `npm run prisma:deploy --prefix server`. Khởi động Express bằng `npm run start --prefix server`. Chạy `npm run build` để tạo `client/dist` cho máy chủ static có fallback SPA. Khi frontend và API dùng chung hostname qua reverse proxy, chuyển tiếp `/api`, `/uploads` và `/socket.io` (gồm WebSocket upgrade) đến Express.
+Đưa cả `server/` và `client/` lên máy triển khai theo cấu trúc repo. Xác minh `DATABASE_URL` đích trước khi áp dụng migration.
+
+```bash
+npm ci --prefix server
+npm run prisma:generate
+npm run prisma:deploy
+npm start
+```
+
+`npm start` chạy `node src/index.js` trong `server/`. Nếu dùng reverse proxy, chuyển tiếp mọi đường dẫn tới Express và bật WebSocket upgrade cho `/socket.io`. Thư mục `server/uploads/` chứa ảnh bằng chứng tải lên.
 
 ---
 
@@ -106,18 +121,15 @@ Chạy `npm ci --prefix server` và `npm ci --prefix client` để cài từ hai
 
 ```
 WebKD/
-├── client/          # Ứng dụng React 18 + Vite (SPA)
-│   ├── src/
-│   │   ├── layouts/ # Shell navigation (Sidebar, Drawer, Bottom Nav)
-│   │   ├── pages/   # 12 màn hình chính của ứng dụng
-│   │   ├── ui/      # Thư viện component nguyên tử theo design tokens
-│   │   └── lib/     # API client, imagery mapper, socket
-├── server/          # REST API Node.js + Express
+├── client/          # Giao diện SPA vanilla
+│   ├── vanilla/     # HTML shell, router, trang, component và CSS
+│   └── public/      # Ảnh, favicon và SVG sprite
+├── server/          # Express, REST API và Socket.io cùng origin
 │   ├── prisma/      # Schema 12 bảng & seed script
 │   ├── src/         # Controllers, services, routes, middleware
 │   └── tests/       # 65 ca kiểm thử JavaScript
 ├── docs/            # Tài liệu dự án
-├── scripts/         # Script runner đồng thời client + server
+├── scripts/         # Script kiểm chứng trình duyệt và công cụ dự án
 ├── CONTEXT.md       # Nguồn sự thật (Source of Truth) về nghiệp vụ & schema
 └── design.md        # Hướng dẫn thiết kế và hệ thống Design Tokens
 ```

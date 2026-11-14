@@ -1,9 +1,11 @@
 import asyncio, json, os
 from pathlib import Path
+from datetime import datetime
 from playwright.async_api import Error as PlaywrightError, async_playwright
 
-BASE = 'http://127.0.0.1:5180'
-OUT = Path('docs/migration-baseline/screenshots/phase-3')
+BASE = os.environ.get('SYNCHUB_BASE_URL', 'http://127.0.0.1:5000').rstrip('/')
+OUT = Path(os.environ['SYNCHUB_CAPTURE_DIR'])
+INSTANT = os.environ.get('SYNCHUB_CAPTURE_TIME')
 PASSWORD = os.environ.get('SYNCHUB_SEED_PASSWORD')
 VIEWPORTS = [(390, 844), (768, 1024), (1440, 900)]
 ACCOUNTS = {
@@ -53,7 +55,7 @@ async def main():
     OUT.mkdir(parents=True, exist_ok=True)
     results = []
     async with async_playwright() as p:
-        browser = await p.chromium.launch(channel='chrome', headless=True)
+        browser = await p.chromium.launch(executable_path=os.environ.get('SYNCHUB_BROWSER'), headless=True)
         tokens = {}
         for role, email in ACCOUNTS.items():
             response = await browser.new_page()
@@ -69,6 +71,15 @@ async def main():
                     token = tokens[account]
                     await context.add_init_script(f"localStorage.setItem('synchub.token', {json.dumps(token)})")
                 page = await context.new_page()
+                if INSTANT:
+                    await page.clock.set_fixed_time(datetime.fromisoformat(INSTANT))
+                if name == 'lobby-locked':
+                    async def locked_lobby(route):
+                        response = await route.fetch()
+                        body = await response.json()
+                        body['data']['lobby']['status'] = 'LOCKED'
+                        await route.fulfill(response=response, json=body)
+                    await page.route('**/api/lobbies/SYNC01', locked_lobby)
                 page.set_default_navigation_timeout(12000)
                 page.set_default_timeout(6000)
                 failed_requests, api_errors, page_errors = [], [], []

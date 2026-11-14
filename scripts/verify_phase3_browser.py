@@ -1,6 +1,6 @@
 import asyncio, json, os
 from playwright.async_api import async_playwright
-BASE='http://127.0.0.1:5180'
+BASE=os.environ.get('SYNCHUB_BASE_URL', 'http://127.0.0.1:5000').rstrip('/')
 PASSWORD=os.environ.get('SYNCHUB_SEED_PASSWORD')
 ACCOUNTS={'HOST':'dat.dt@synchub.vn','MEMBER':'minh.b@synchub.vn','PROVIDER':'thang.venue@synchub.vn','ADMIN':'admin@synchub.vn'}
 
@@ -8,7 +8,7 @@ async def main():
   if not PASSWORD: raise RuntimeError('Set SYNCHUB_SEED_PASSWORD to the documented seed password.')
   results=[]
   async with async_playwright() as p:
-    browser=await p.chromium.launch(channel='chrome',headless=True)
+    browser=await p.chromium.launch(executable_path=os.environ.get('SYNCHUB_BROWSER'),headless=True)
     tokens={}
     for role,email in ACCOUNTS.items():
       response=await (await browser.new_page()).request.post(BASE+'/api/auth/login',data={'email':email,'password':PASSWORD})
@@ -25,6 +25,15 @@ async def main():
     results.append({'check':'login redirect','pass':page.url.endswith('/login'),'url':page.url})
     await page.locator('[name=email]').fill(ACCOUNTS['HOST']); await page.locator('[name=password]').fill(PASSWORD); await page.locator('[data-auth-form] button[type=submit]').click(); await page.wait_for_url('**/wallet',timeout=6000)
     results.append({'check':'login returns to from route','pass':page.url.endswith('/wallet'),'url':page.url})
+    await page.locator('[data-logout]').click()
+    await page.wait_for_url(BASE+'/')
+    await page.goto(BASE+'/wallet')
+    await page.wait_for_url('**/login')
+    results.append({'check':'logout clears token and protects wallet','pass':await page.evaluate("!localStorage.getItem('synchub.token')")})
+    await page.evaluate("(token) => localStorage.setItem('synchub.token', token)", os.environ.get('SYNCHUB_EXPIRED_TOKEN', 'invalid-token'))
+    await page.goto(BASE+'/lobby/SYNC01/split')
+    await page.wait_for_url('**/login')
+    results.append({'check':'rejected session clears token and redirects','pass':await page.evaluate("!localStorage.getItem('synchub.token')")})
     await ctx.close()
 
     # Back/forward and deep-link refresh.

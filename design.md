@@ -4,18 +4,18 @@
 > **Phiên bản:** 1.0.0 — Khóa theo WBS-2.0 & Hallmark Floor  
 > **Mục tiêu:** Giao diện thể thao năng động, tin cậy về tài chính (Escrow/Chia bill), thao tác tối ưu trên Mobile (≤ 3 click từ đặt sân sang giỏ hàng F&B).
 
-> **Công cụ:** Bản React hiện hành dùng Tailwind và `lucide-react`. Bản vanilla đối chiếu dùng chung `tokens.css`, với CSS theo thành phần và biểu tượng SVG.
+> **Công cụ:** Giao diện vanilla dùng `client/vanilla/tokens.css`, CSS theo thành phần và biểu tượng SVG.
 
 ---
 
 ## 1. Triết lý thiết kế & Tiêu chuẩn Hallmark (The Floor)
 
-1. **Tokens-first:** Toàn bộ màu sắc, kích thước và font đều qua biến CSS `:root` trong `tokens.css` và ánh xạ vào `tailwind.config.js`. Không dùng mã màu trực tiếp trong component.
+1. **Tokens-first:** Toàn bộ màu sắc, kích thước và font đều qua biến CSS `:root` trong `tokens.css`. Không dùng mã màu trực tiếp trong component.
 2. **Motion có kiểm soát:** Không sử dụng `transition: all`. Chỉ animate `opacity` và `transform`. Mọi chuyển động có fallback `@media (prefers-reduced-motion: reduce)`.
 3. **Typography rõ ràng:** Heading dùng font đậm tự nhiên, không in nghiêng tùy tiện, số tiền luôn dùng font monospace/tabular-nums để căn lề thẳng hàng.
 4. **Layout di động:** Cắt cụt ngang `overflow-x: clip` trên `html, body`. Grid linh hoạt `minmax(0, 1fr)`.
 5. **Khả năng tiếp cận (a11y):** Mọi thành phần tương tác đều có `:focus-visible` chuẩn sắc nét, độ tương phản văn bản đạt chuẩn WCAG AA.
-6. **Không "AI Slop":** Không dùng gradient tím-xanh công nghiệp, không lồng card trong card thừa thãi, không dùng emoji thay thế icon hệ thống (dùng `lucide-react`).
+6. **Không "AI Slop":** Không dùng gradient tím-xanh công nghiệp, không lồng card trong card thừa thãi, không dùng emoji thay thế icon hệ thống (dùng biểu tượng SVG).
 
 ---
 

@@ -140,7 +140,7 @@ Mỗi nhóm phải đạt đối chiếu giao diện và chức năng trước k
 
 ### Giai đoạn 4 — Gỡ Vite và công cụ cũ hoàn toàn
 
-**Trạng thái ngày 14/11/2026: đủ điều kiện bắt đầu, chưa triển khai.** [Biên bản giai đoạn 3](docs/migration-baseline/phase-3-results.md)
+**Trạng thái ngày 14/11/2026: hoàn tất các cổng nghiệm thu Giai đoạn 4.** [Biên bản triển khai](docs/migration-baseline/phase-4-express/README.md) · [Kiểm tra điều kiện bắt đầu](docs/migration-baseline/phase-4-results.md)
 
 1. Express phục vụ frontend mới, `/api`, `/uploads` và `/socket.io` cùng origin; bỏ proxy Vite.
 2. Thay `scripts/dev.js` và các npm script để `npm run dev` khởi động một server. Giữ lệnh setup/generate/deploy/seed rõ ràng; bỏ bước compile frontend/backend không còn cần thiết.
@@ -152,6 +152,8 @@ Mỗi nhóm phải đạt đối chiếu giao diện và chức năng trước k
 Nghiệm thu: cài mới từ lockfile, generate Prisma, áp dụng migration trên DB trống và chạy ứng dụng thành công mà không cần React/Vite/Tailwind/TypeScript.
 
 ### Giai đoạn 5 — Sửa lỗi nghiệp vụ sau migration
+
+**Hoàn tất kiểm chứng ngày 14/11/2026.** Suite Node 24 đạt 82/82 trên PostgreSQL test riêng. [Biên bản và bảng đối chiếu 15 BR](docs/migration-baseline/phase-5/README.md) ghi kết quả các cổng nghiệp vụ và smoke trên Express.
 
 Người dùng đã chốt thực hiện giai đoạn sửa lỗi sau khi migrate. Chỉ bắt đầu khi giai đoạn 0–4 đạt tiêu chí chuyển công nghệ và bảo toàn giao diện; lỗi hồi quy do migration phải được xử lý ngay ở giai đoạn phát sinh, không dồn sang giai đoạn này.
 

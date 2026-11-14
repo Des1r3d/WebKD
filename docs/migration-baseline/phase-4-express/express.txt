@@ -1,0 +1,19 @@
+
+> synchub@1.0.0 dev
+> npm run dev --prefix server
+
+
+> synchub-server@1.0.0 dev
+> node --watch src/index.js
+
+🚀 [SyncHub Server] đang chạy tại http://localhost:5000
+📡 [API Health] http://localhost:5000/api/health
+Change detected in '/home/dat/Desktop/WebKD/server/src/app.js'
+Restarting 'src/index.js'
+🚀 [SyncHub Server] đang chạy tại http://localhost:5000
+📡 [API Health] http://localhost:5000/api/health
+Change detected in '/home/dat/Desktop/WebKD/server/src/index.js'
+Restarting 'src/index.js'
+🚀 [SyncHub Server] đang chạy tại http://localhost:5000
+📡 [API Health] http://localhost:5000/api/health
+[SlotJob] Đã tự động giải phóng 1 slot hết hạn: [ 'phase4-sweep-slot' ]

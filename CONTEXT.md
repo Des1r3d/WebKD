@@ -7,7 +7,7 @@
 
 ## 1. Kiến trúc & Quy ước Chung
 
-- **Stack:** React 19 + Vite + TypeScript + TailwindCSS + Leaflet (Client hiện hành, có bản HTML/CSS/JavaScript thuần đang đối chiếu) · Node.js + Express + JavaScript + Socket.io (Server) · PostgreSQL 16 + Prisma (Database).
+- **Stack:** HTML + CSS + JavaScript ES modules + Leaflet (Client cùng origin với Express) · Node.js + Express + JavaScript + Socket.io (Server) · PostgreSQL 16 + Prisma 5.x (Database).
 - **Tiền tệ:** Lưu kiểu `Int` (VND, không có phần thập phân). Mọi phép chia dùng `Math.floor` + phân phối phần dư theo thuật toán **Largest Remainder** (Mục 5).
 - **Thời gian:** Lưu UTC (`TIMESTAMPTZ` / `DateTime`), hiển thị `Asia/Ho_Chi_Minh` (`UTC+7`).
 - **Tỷ lệ hoa hồng mặc định:** `VENUE = 0.08` (8%), `FNB = 0.12` (12%).
@@ -199,7 +199,7 @@ Cho $N$ thành viên có trạng thái `JOINED` trong phòng ($i \in \{1..N\}$):
 | **UC09** | Thanh toán & Giữ tiền Escrow | Member | BR-ESC-01 | Webhook giả lập xác nhận chuyển khoản → `split_bills.PAID`, tạo `escrow_transactions.HOLD`. |
 | **UC10** | Check-in & Giải ngân đa bên | Host, Provider | BR-ESC-02, BR-ESC-03, BR-REP-02, BR-REP-03 | Đánh dấu `CHECKED_IN`/`NO_SHOW` → Giải ngân tách VENUE (trừ 8%) & FNB (trừ 12%), cộng/trừ điểm uy tín. |
 | **UC11** | Gửi & Phân xử Khiếu nại | Member, Admin | BR-ESC-04, BR-DSP-01, BR-INT-03 | Upload ảnh bằng chứng → Đóng băng (`FROZEN`) khoản tiền liên quan → Admin hoàn tiền/giải ngân + ghi `audit_logs`. |
-| **UC12** | Portal Provider & Admin Dashboard | Provider, Admin | BR-DSP-01 | Quản lý slot/menu, xem biểu đồ doanh thu Recharts, danh sách `FLAGGED`, tra cứu `audit_logs`. |
+| **UC12** | Portal Provider & Admin Dashboard | Provider, Admin | BR-DSP-01 | Quản lý slot/menu, xem biểu đồ doanh thu, danh sách `FLAGGED`, tra cứu `audit_logs`. |
 
 ---
 

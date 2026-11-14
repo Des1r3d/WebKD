@@ -1,0 +1,116 @@
+[
+  {
+    "variant": "baseline",
+    "width": 390,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 33,
+      "y": 363,
+      "width": 324,
+      "height": 80
+    },
+    "members": {
+      "x": 33,
+      "y": 3579.34375,
+      "width": 324,
+      "height": 24
+    },
+    "bottomNav": true
+  },
+  {
+    "variant": "current",
+    "width": 390,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 33,
+      "y": 363,
+      "width": 324,
+      "height": 80
+    },
+    "members": {
+      "x": 33,
+      "y": 3579.34375,
+      "width": 324,
+      "height": 24
+    },
+    "bottomNav": true
+  },
+  {
+    "variant": "baseline",
+    "width": 768,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 41,
+      "y": 277,
+      "width": 686,
+      "height": 24
+    },
+    "members": {
+      "x": 41,
+      "y": 2282.5625,
+      "width": 686,
+      "height": 24
+    },
+    "bottomNav": true
+  },
+  {
+    "variant": "current",
+    "width": 768,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 41,
+      "y": 277,
+      "width": 686,
+      "height": 24
+    },
+    "members": {
+      "x": 41,
+      "y": 2282.5625,
+      "width": 686,
+      "height": 24
+    },
+    "bottomNav": true
+  },
+  {
+    "variant": "baseline",
+    "width": 1440,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 313,
+      "y": 233,
+      "width": 714,
+      "height": 24
+    },
+    "members": {
+      "x": 1085,
+      "y": 233,
+      "width": 306,
+      "height": 24
+    },
+    "bottomNav": false
+  },
+  {
+    "variant": "current",
+    "width": 1440,
+    "overflow": false,
+    "timer": "38:52",
+    "cart": {
+      "x": 313,
+      "y": 233,
+      "width": 714,
+      "height": 24
+    },
+    "members": {
+      "x": 1085,
+      "y": 233,
+      "width": 306,
+      "height": 24
+    },
+    "bottomNav": false
+  }
+]

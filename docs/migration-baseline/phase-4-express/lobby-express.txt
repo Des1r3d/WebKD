@@ -1,0 +1,4 @@
+PASS snapshots Host/Member
+PASS cart adds one unit, restores focus and preserves chat draft
+PASS chat and reconnect snapshot without duplicate history/messages
+PASS realtime lock and HTTP 403 LOBBY_LOCKED

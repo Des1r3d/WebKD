@@ -1,6 +1,5 @@
 import { Badge, Button, Card, EmptyState, formatVnd, PageHeader, StatCard, QRCard, ChatBubble, MemberAvatar, LobbyIcon, createCountdown } from './components.js';
-import 'leaflet/dist/leaflet.css';
-import { io } from 'socket.io-client';
+import { io } from '/socket.io/socket.io.esm.min.js';
 
 const esc = (v = '') => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let activeController = null;
@@ -257,6 +256,7 @@ export function mountBusiness(path,user,navigate) {
   on('[data-lock-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.lockSlot}/lock`));
   on('[data-release-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.releaseSlot}/release`));
   on('[data-create-lobby]','click',async e=>{try{const r=dataOf(await api('/api/lobbies',{method:'POST',body:{slotId:e.currentTarget.dataset.createLobby}}));navigate(`/lobby/${r.lobby.invite_code}`);}catch(x){status(`Không thể mở phòng: ${x.message}`);}});
+  on('[data-join-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.joinLobby}/join`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.joinLobby}`);}catch(x){status(`Không thể tham gia: ${x.message}`);}});
   on('[data-cancel-lobby]', 'click', async event => {
     const button = event.currentTarget;
     if (!window.confirm('Hủy phòng và hoàn các khoản đang giữ?')) return;
@@ -269,7 +269,6 @@ export function mountBusiness(path,user,navigate) {
       status(`Không thể hủy phòng: ${error.message}`);
     }
   });
-  on('[data-join-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.joinLobby}/join`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.joinLobby}`);}catch(x){status(`Không thể tham gia: ${x.message}`);}});
   on('[data-lock-lobby]', 'click', async event => {
     const button = event.currentTarget;
     button.disabled = true;
@@ -298,17 +297,18 @@ export function mountBusiness(path,user,navigate) {
   const lobby = document.querySelector('.lobby-page');
   if (lobby) cleanups.push(mountLobbySocket(lobby, decodeURIComponent(path.split('/')[2]), user, navigate, status));
   if (path.startsWith('/lobby/') && path.endsWith('/split')) {
-    const socket = io({ auth: { token: localStorage.getItem('synchub.token') } });
+    const socket = io({ autoConnect: false, auth: { token: localStorage.getItem('synchub.token') } });
     socket.on('connect', () => socket.emit('lobby:join', { lobbyId: decodeURIComponent(path.split('/')[2]), userId: user?.id }));
+    socket.on('payment:confirmed', () => location.reload());
     socket.on('notify', message => {
       if (message.type === 'INFO' && message.message === 'Phòng đã hủy.') navigate(path, { replace: true });
     });
-    socket.on('payment:confirmed', () => location.reload());
+    socket.connect();
     cleanups.push(() => { socket.removeAllListeners(); socket.disconnect(); });
   }
   let disposed=false;
   document.querySelectorAll('[data-countdown-until]').forEach(el=>{const timer=createCountdown(el.dataset.countdownUntil);el.replaceWith(timer);cleanups.push(()=>timer.destroy?.());});
-  if(path==='/'||path==='/discover') import('leaflet').then(L=>{const el=document.querySelector('#provider-map');if(disposed||!el)return;const map=L.default.map(el).setView([10.8752,106.8007],14);L.default.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const layer=L.default.layerGroup().addTo(map);document.querySelectorAll('[data-provider-lat]').forEach(card=>{const marker=L.default.circleMarker([Number(card.dataset.providerLat),Number(card.dataset.providerLng)],{radius:8,fillColor:'#059669',color:'#fff',weight:2,fillOpacity:.95}).addTo(layer);const popup=document.createElement('div');const strong=document.createElement('strong');strong.textContent=card.dataset.providerName;const address=document.createElement('p');address.textContent=card.dataset.providerAddress;const a=document.createElement('a');a.href=`/venues/${encodeURIComponent(card.dataset.providerId)}`;a.dataset.link='';a.textContent='Xem chi tiết →';popup.append(strong,address,a);marker.bindPopup(popup);});cleanups.push(()=>map.remove());}).catch(()=>{});
+  if(path==='/'||path==='/discover') import('/assets/leaflet/leaflet-src.esm.js').then(L=>{const el=document.querySelector('#provider-map');if(disposed||!el)return;const map=L.map(el).setView([10.8752,106.8007],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const layer=L.layerGroup().addTo(map);document.querySelectorAll('[data-provider-lat]').forEach(card=>{const marker=L.circleMarker([Number(card.dataset.providerLat),Number(card.dataset.providerLng)],{radius:8,fillColor:'#059669',color:'#fff',weight:2,fillOpacity:.95}).addTo(layer);const popup=document.createElement('div');const strong=document.createElement('strong');strong.textContent=card.dataset.providerName;const address=document.createElement('p');address.textContent=card.dataset.providerAddress;const a=document.createElement('a');a.href=`/venues/${encodeURIComponent(card.dataset.providerId)}`;a.dataset.link='';a.textContent='Xem chi tiết →';popup.append(strong,address,a);marker.bindPopup(popup);});cleanups.push(()=>map.remove());}).catch(()=>{});
   cleanups.push(()=>{disposed=true;});
   return ()=>cleanups.forEach(fn=>fn());
 }
