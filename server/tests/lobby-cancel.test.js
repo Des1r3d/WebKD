@@ -81,3 +81,19 @@ test('cannot cancel a completed lobby', async () => {
   const result = await post('/lobbies/SYNC00/cancel');
   assert.equal(result.status, 409);
 });
+
+test('a cancelled lobby preserves its slot history and prevents rebooking', async () => {
+  const [paid] = await billIds();
+  await webhook(paid).expect(200);
+  await cancel().expect(200);
+  const cancelled = await lobby();
+  const ledger = await transactions();
+
+  const lock = await post(`/slots/${cancelled.slot_id}/lock`).expect(409);
+  assert.equal(lock.body.error, 'SLOT_TAKEN');
+  const create = await post('/lobbies').send({ slotId: cancelled.slot_id }).expect(409);
+  assert.equal(create.body.error, 'LOBBY_EXISTS');
+  assert.equal((await prisma.slot.findUniqueOrThrow({ where: { id: cancelled.slot_id } })).status, 'AVAILABLE');
+  assert.deepEqual(await lobby(), cancelled);
+  assert.deepEqual(await transactions(), ledger);
+});

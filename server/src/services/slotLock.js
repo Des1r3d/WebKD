@@ -27,6 +27,7 @@ export async function lockSlot(slotId, userId) {
   const { count } = await prisma.slot.updateMany({
     where: {
       id: slotId,
+      NOT: { lobby: { is: { status: 'CANCELLED' } } },
       OR: [{ status: 'AVAILABLE' }, { status: 'LOCKED', locked_until: { lt: now } }],
     },
     data: { status: 'LOCKED', locked_by: userId, locked_until: new Date(now.getTime() + 10 * 60 * 1000) },
@@ -36,7 +37,7 @@ export async function lockSlot(slotId, userId) {
     return {
       success: false,
       error: 'SLOT_TAKEN',
-      message: 'Khung giờ này đã có người giữ hoặc đã được đặt thành công (BR-SLT-02)',
+      message: 'Khung giờ này đã có người giữ, đã đặt hoặc đã gắn với lịch sử phòng hủy',
     };
   }
 

@@ -85,18 +85,18 @@ export async function createLobby(input) {
     throw new Error('SLOT_NOT_FOUND');
   }
 
+  // 1 slot chỉ thuộc tối đa 1 lobby
+  const existingLobby = await prisma.groupLobby.findFirst({ where: { slot_id: slotId } });
+  if (existingLobby) {
+    throw new Error('LOBBY_SLOT_ALREADY_EXISTS');
+  }
+
   // BR-INT-01: Slot phải đang được giữ bởi chính host (hoặc đã BOOKED)
   if (slot.status === 'LOCKED' && slot.locked_by !== hostId) {
     throw new Error('SLOT_NOT_LOCKED_BY_HOST');
   }
   if (slot.status === 'AVAILABLE') {
     throw new Error('SLOT_MUST_BE_LOCKED_FIRST');
-  }
-
-  // 1 slot chỉ thuộc tối đa 1 lobby
-  const existingLobby = await prisma.groupLobby.findFirst({ where: { slot_id: slotId, status: { not: 'CANCELLED' } } });
-  if (existingLobby) {
-    throw new Error('LOBBY_SLOT_ALREADY_EXISTS');
   }
 
   // Mặc định hạn chốt kèo (deadline) là trước giờ bắt đầu slot 30 phút hoặc +45 phút
