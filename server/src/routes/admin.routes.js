@@ -25,5 +25,5 @@ adminRouter.patch('/users/:id/status', handleUpdateUserStatus);
 // Nhật ký kiểm toán audit_logs
 adminRouter.get('/audit-logs', handleGetAuditLogs);
 
-// BR-DSP-01: Phân xử khiếu nại (theo hợp đồng CONTEXT.md)
+// BR-DSP-01: Phân xử khiếu nại
 adminRouter.patch('/disputes/:id', handleResolveDispute);

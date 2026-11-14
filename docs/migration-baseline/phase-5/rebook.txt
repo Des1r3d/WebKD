@@ -1,2 +1,0 @@
-Existing lobby: CANCELLED slot: slt-03
-Slot lock HTTP 200 | Create lobby HTTP 500 SERVER_ERROR

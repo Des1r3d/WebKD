@@ -8,8 +8,8 @@
         <mxCell id="erd_header_banner" parent="1" vertex="1" value="&lt;b&gt;SYNCHUB (WEBKD) — SƠ ĐỒ CƠ SỞ DỮ LIỆU THỰC THỂ LIÊN KẾT (PHYSICAL ERD)&lt;/b&gt;&lt;br/&gt;&lt;font style='font-size: 11px; font-weight: normal; color: #4A5568;'&gt;12 Bảng Thực thể Vật lý PostgreSQL &amp; Ký hiệu Chân quạ Martin's Crow's Foot Notation (100% Orthogonal Connectors)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=12;align=center;fontColor=#1E293B;">
           <mxGeometry x="60" y="20" width="860" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="erd_legend_box" parent="1" vertex="1" value="&lt;b&gt;CHÚ GIẢI (LEGEND)&lt;/b&gt;: &lt;font color='#C53030'&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/font&gt;=Khóa chính | &lt;font color='#2B6CB0'&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/font&gt;=Khóa ngoại | &lt;font color='#276749'&gt;&lt;b&gt;UK&lt;/b&gt;&lt;/font&gt;=Duy nhất&lt;br/&gt;&lt;b&gt;BẢN SỐ&lt;/b&gt;: &lt;b&gt;||&lt;/b&gt;=Bắt buộc 1 | &lt;b&gt;o{&lt;/b&gt;=0..N | &lt;b&gt;|{&lt;/b&gt;=1..N | &lt;b&gt;o|&lt;/b&gt;=0..1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;align=center;fontColor=#1E293B;">
-          <mxGeometry x="940" y="20" width="360" height="46" as="geometry" />
+        <mxCell id="erd_legend_box" parent="1" vertex="1" value="&lt;b&gt;CHÚ GIẢI (LEGEND)&lt;/b&gt;: &lt;font color='#C53030'&gt;&lt;b&gt;PK&lt;/b&gt;&lt;/font&gt;=Khóa chính | &lt;font color='#2B6CB0'&gt;&lt;b&gt;FK&lt;/b&gt;&lt;/font&gt;=Khóa ngoại | &lt;font color='#276749'&gt;&lt;b&gt;UK&lt;/b&gt;&lt;/font&gt;=Duy nhất&lt;br/&gt;&lt;b&gt;BẢN SỐ&lt;/b&gt;: &lt;b&gt;||&lt;/b&gt;=Bắt buộc 1 | &lt;b&gt;o{&lt;/b&gt;=0..N | &lt;b&gt;|{&lt;/b&gt;=1..N | &lt;b&gt;o|&lt;/b&gt;=0..1&lt;br/&gt;Khóa duy nhất ghép: slots(provider_id, start_at) và split_bills(lobby_id, user_id)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;align=center;fontColor=#1E293B;">
+          <mxGeometry x="940" y="20" width="360" height="48" as="geometry" />
         </mxCell>
         <mxCell id="table_users" parent="1" vertex="1" value="USERS" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;fillColor=#F1F5F9;strokeColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica, Arial, sans-serif;fontSize=12;fontColor=#1E293B;">
           <mxGeometry x="60" y="100" width="280" height="300" as="geometry" />
@@ -27,7 +27,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_id_type" parent="row_users_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_users_id_type" parent="row_users_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -45,7 +45,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_email_type" parent="row_users_email" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_users_email_type" parent="row_users_email" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -63,7 +63,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_password_hash_type" parent="row_users_password_hash" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_users_password_hash_type" parent="row_users_password_hash" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -81,7 +81,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_full_name_type" parent="row_users_full_name" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
+        <mxCell id="cell_users_full_name_type" parent="row_users_full_name" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -99,7 +99,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_phone_type" parent="row_users_phone" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_users_phone_type" parent="row_users_phone" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -171,7 +171,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_users_created_at_type" parent="row_users_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_users_created_at_type" parent="row_users_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -192,7 +192,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_id_type" parent="row_providers_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_id_type" parent="row_providers_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -210,7 +210,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_owner_id_type" parent="row_providers_owner_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_owner_id_type" parent="row_providers_owner_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -246,7 +246,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_category_type" parent="row_providers_category" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_category_type" parent="row_providers_category" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -264,7 +264,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_name_type" parent="row_providers_name" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
+        <mxCell id="cell_providers_name_type" parent="row_providers_name" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -282,7 +282,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_address_type" parent="row_providers_address" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_address_type" parent="row_providers_address" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -336,7 +336,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_open_hours_type" parent="row_providers_open_hours" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_open_hours_type" parent="row_providers_open_hours" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -354,7 +354,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_bank_code_type" parent="row_providers_bank_code" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_bank_code_type" parent="row_providers_bank_code" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -372,7 +372,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_bank_account_type" parent="row_providers_bank_account" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_bank_account_type" parent="row_providers_bank_account" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -408,7 +408,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_providers_created_at_type" parent="row_providers_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_providers_created_at_type" parent="row_providers_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -429,7 +429,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_id_type" parent="row_slots_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_id_type" parent="row_slots_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -447,7 +447,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_provider_id_type" parent="row_slots_provider_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_provider_id_type" parent="row_slots_provider_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -455,7 +455,7 @@
         <mxCell id="row_slots_start_at" parent="table_slots" vertex="1" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;strokeColor=#E2E8F0;">
           <mxGeometry y="90" width="280" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="cell_slots_start_at_key" parent="row_slots_start_at" vertex="1" value="UK" style="shape=partialRectangle;fontStyle=1;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=center;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#059669;">
+        <mxCell id="cell_slots_start_at_key" parent="row_slots_start_at" vertex="1" value="" style="shape=partialRectangle;fontStyle=1;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=center;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#059669;">
           <mxGeometry width="35" height="30" as="geometry">
             <mxRectangle width="35" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -465,7 +465,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_start_at_type" parent="row_slots_start_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_start_at_type" parent="row_slots_start_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -483,7 +483,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_end_at_type" parent="row_slots_end_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_end_at_type" parent="row_slots_end_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -537,7 +537,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_locked_by_type" parent="row_slots_locked_by" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_locked_by_type" parent="row_slots_locked_by" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -555,7 +555,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_slots_locked_until_type" parent="row_slots_locked_until" vertex="1" value="DateTime?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_slots_locked_until_type" parent="row_slots_locked_until" vertex="1" value="Timestamp?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -576,7 +576,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_menu_items_id_type" parent="row_menu_items_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_menu_items_id_type" parent="row_menu_items_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -594,7 +594,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_menu_items_provider_id_type" parent="row_menu_items_provider_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_menu_items_provider_id_type" parent="row_menu_items_provider_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -612,7 +612,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_menu_items_name_type" parent="row_menu_items_name" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
+        <mxCell id="cell_menu_items_name_type" parent="row_menu_items_name" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=11;fontStyle=1;fontColor=#1E293B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -648,7 +648,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_menu_items_image_url_type" parent="row_menu_items_image_url" vertex="1" value="String?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_menu_items_image_url_type" parent="row_menu_items_image_url" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -705,7 +705,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_id_type" parent="row_group_lobbies_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_id_type" parent="row_group_lobbies_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -723,7 +723,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_host_id_type" parent="row_group_lobbies_host_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_host_id_type" parent="row_group_lobbies_host_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -741,7 +741,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_slot_id_type" parent="row_group_lobbies_slot_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_slot_id_type" parent="row_group_lobbies_slot_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -759,7 +759,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_fnb_provider_id_type" parent="row_group_lobbies_fnb_provider_id" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_fnb_provider_id_type" parent="row_group_lobbies_fnb_provider_id" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -777,7 +777,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_invite_code_type" parent="row_group_lobbies_invite_code" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_invite_code_type" parent="row_group_lobbies_invite_code" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -813,7 +813,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_deadline_at_type" parent="row_group_lobbies_deadline_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_deadline_at_type" parent="row_group_lobbies_deadline_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -849,7 +849,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_voucher_id_type" parent="row_group_lobbies_voucher_id" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_voucher_id_type" parent="row_group_lobbies_voucher_id" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -867,7 +867,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_locked_at_type" parent="row_group_lobbies_locked_at" vertex="1" value="DateTime?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_locked_at_type" parent="row_group_lobbies_locked_at" vertex="1" value="Timestamp?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -885,7 +885,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_group_lobbies_created_at_type" parent="row_group_lobbies_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_group_lobbies_created_at_type" parent="row_group_lobbies_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -906,7 +906,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_lobby_members_lobby_id_type" parent="row_lobby_members_lobby_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_lobby_members_lobby_id_type" parent="row_lobby_members_lobby_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -924,7 +924,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_lobby_members_user_id_type" parent="row_lobby_members_user_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_lobby_members_user_id_type" parent="row_lobby_members_user_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -996,7 +996,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_lobby_members_joined_at_type" parent="row_lobby_members_joined_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_lobby_members_joined_at_type" parent="row_lobby_members_joined_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1017,7 +1017,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_cart_items_id_type" parent="row_cart_items_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_cart_items_id_type" parent="row_cart_items_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1035,7 +1035,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_cart_items_lobby_id_type" parent="row_cart_items_lobby_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_cart_items_lobby_id_type" parent="row_cart_items_lobby_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1053,7 +1053,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_cart_items_user_id_type" parent="row_cart_items_user_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_cart_items_user_id_type" parent="row_cart_items_user_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1071,7 +1071,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_cart_items_menu_item_id_type" parent="row_cart_items_menu_item_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_cart_items_menu_item_id_type" parent="row_cart_items_menu_item_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1125,7 +1125,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_cart_items_created_at_type" parent="row_cart_items_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_cart_items_created_at_type" parent="row_cart_items_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1146,7 +1146,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_vouchers_id_type" parent="row_vouchers_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_vouchers_id_type" parent="row_vouchers_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1164,7 +1164,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_vouchers_code_type" parent="row_vouchers_code" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_vouchers_code_type" parent="row_vouchers_code" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1290,7 +1290,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_vouchers_valid_from_type" parent="row_vouchers_valid_from" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_vouchers_valid_from_type" parent="row_vouchers_valid_from" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1308,7 +1308,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_vouchers_valid_to_type" parent="row_vouchers_valid_to" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_vouchers_valid_to_type" parent="row_vouchers_valid_to" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1365,7 +1365,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_split_bills_id_type" parent="row_split_bills_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_split_bills_id_type" parent="row_split_bills_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1383,7 +1383,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_split_bills_lobby_id_type" parent="row_split_bills_lobby_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_split_bills_lobby_id_type" parent="row_split_bills_lobby_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1401,7 +1401,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_split_bills_user_id_type" parent="row_split_bills_user_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_split_bills_user_id_type" parent="row_split_bills_user_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1527,7 +1527,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_split_bills_vietqr_url_type" parent="row_split_bills_vietqr_url" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_split_bills_vietqr_url_type" parent="row_split_bills_vietqr_url" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1563,7 +1563,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_split_bills_paid_at_type" parent="row_split_bills_paid_at" vertex="1" value="DateTime?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_split_bills_paid_at_type" parent="row_split_bills_paid_at" vertex="1" value="Timestamp?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1584,7 +1584,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_id_type" parent="row_escrow_transactions_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_escrow_transactions_id_type" parent="row_escrow_transactions_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1602,7 +1602,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_lobby_id_type" parent="row_escrow_transactions_lobby_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_escrow_transactions_lobby_id_type" parent="row_escrow_transactions_lobby_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1620,7 +1620,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_split_bill_id_type" parent="row_escrow_transactions_split_bill_id" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_escrow_transactions_split_bill_id_type" parent="row_escrow_transactions_split_bill_id" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1710,7 +1710,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_payee_provider_id_type" parent="row_escrow_transactions_payee_provider_id" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_escrow_transactions_payee_provider_id_type" parent="row_escrow_transactions_payee_provider_id" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1746,7 +1746,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_idempotency_key_type" parent="row_escrow_transactions_idempotency_key" vertex="1" value="String" style="shape=partialRectangle;fontStyle=1;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=center;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#059669;">
+        <mxCell id="cell_escrow_transactions_idempotency_key_type" parent="row_escrow_transactions_idempotency_key" vertex="1" value="Text" style="shape=partialRectangle;fontStyle=1;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=center;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#059669;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1764,7 +1764,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_escrow_transactions_created_at_type" parent="row_escrow_transactions_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_escrow_transactions_created_at_type" parent="row_escrow_transactions_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1785,7 +1785,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_id_type" parent="row_disputes_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_id_type" parent="row_disputes_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1803,7 +1803,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_lobby_id_type" parent="row_disputes_lobby_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_lobby_id_type" parent="row_disputes_lobby_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1821,7 +1821,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_reporter_id_type" parent="row_disputes_reporter_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_reporter_id_type" parent="row_disputes_reporter_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1839,7 +1839,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_target_provider_id_type" parent="row_disputes_target_provider_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_target_provider_id_type" parent="row_disputes_target_provider_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1857,7 +1857,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_reason_type" parent="row_disputes_reason" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_reason_type" parent="row_disputes_reason" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1875,7 +1875,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_evidence_urls_type" parent="row_disputes_evidence_urls" vertex="1" value="String[]" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_evidence_urls_type" parent="row_disputes_evidence_urls" vertex="1" value="Text[]" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1929,7 +1929,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_resolved_by_type" parent="row_disputes_resolved_by" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_resolved_by_type" parent="row_disputes_resolved_by" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1947,7 +1947,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_resolved_at_type" parent="row_disputes_resolved_at" vertex="1" value="DateTime?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_resolved_at_type" parent="row_disputes_resolved_at" vertex="1" value="Timestamp?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1965,7 +1965,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_disputes_created_at_type" parent="row_disputes_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_disputes_created_at_type" parent="row_disputes_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1986,7 +1986,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_id_type" parent="row_audit_logs_id" vertex="1" value="UUID" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_id_type" parent="row_audit_logs_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2004,7 +2004,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_actor_id_type" parent="row_audit_logs_actor_id" vertex="1" value="UUID?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_actor_id_type" parent="row_audit_logs_actor_id" vertex="1" value="Text?" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2022,7 +2022,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_action_type" parent="row_audit_logs_action" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_action_type" parent="row_audit_logs_action" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2040,7 +2040,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_entity_type" parent="row_audit_logs_entity" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_entity_type" parent="row_audit_logs_entity" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2058,7 +2058,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_entity_id_type" parent="row_audit_logs_entity_id" vertex="1" value="String" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_entity_id_type" parent="row_audit_logs_entity_id" vertex="1" value="Text" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2112,7 +2112,7 @@
             <mxRectangle width="135" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="cell_audit_logs_created_at_type" parent="row_audit_logs_created_at" vertex="1" value="DateTime" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
+        <mxCell id="cell_audit_logs_created_at_type" parent="row_audit_logs_created_at" vertex="1" value="Timestamp" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=right;spacingRight=6;overflow=hidden;whiteSpace=wrap;html=1;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#64748B;">
           <mxGeometry x="170" width="100" height="30" as="geometry">
             <mxRectangle width="100" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -2159,7 +2159,7 @@
         <mxCell id="rel_providers_disputes" parent="1" edge="1" source="row_providers_id" target="row_disputes_target_provider_id" value="targeted_in" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;strokeColor=#334155;strokeWidth=1.2;exitX=1;exitY=0.95;entryX=0;entryY=0.5;">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="470" y="498" /><mxPoint x="470" y="325" /><mxPoint x="860" y="325" /><mxPoint x="860" y="235" /></Array></mxGeometry>
         </mxCell>
-        <mxCell id="rel_slots_lobbies" parent="1" edge="1" source="row_slots_id" target="row_group_lobbies_slot_id" value="bound_to (1:1)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;strokeColor=#334155;strokeWidth=1.2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+        <mxCell id="rel_slots_lobbies" parent="1" edge="1" source="row_slots_id" target="row_group_lobbies_slot_id" value="bound_to" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToOne;endFill=0;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;strokeColor=#334155;strokeWidth=1.2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="425" y="945" /><mxPoint x="425" y="455" /></Array></mxGeometry>
         </mxCell>
         <mxCell id="rel_vouchers_lobbies" parent="1" edge="1" source="row_vouchers_id" target="row_group_lobbies_voucher_id" value="applied_to" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;startArrow=ERzeroToOne;startFill=0;endArrow=ERzeroToMany;endFill=0;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;strokeColor=#334155;strokeWidth=1.2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">

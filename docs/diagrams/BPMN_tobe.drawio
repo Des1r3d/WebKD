@@ -1,173 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<mxfile host="app.diagrams.net" pages="5">
-  <diagram id="tobe_tab1" name="Quy trình tổng thể E2E">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1200" background="#ffffff" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="tobe1_lane_host" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Lane 1: HOST (Trưởng nhóm)" vertex="1">
-          <mxGeometry x="60" y="40" width="2460" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tobe1_lane_member" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Lane 2: MEMBER (Thành viên)" vertex="1">
-          <mxGeometry x="60" y="220" width="2460" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tobe1_lane_sys" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Lane 3: Hệ thống SyncHub &amp;amp; Ví Escrow" vertex="1">
-          <mxGeometry x="60" y="400" width="2460" height="240" as="geometry" />
-        </mxCell>
-        <mxCell id="tobe1_lane_prov" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Lane 4: PROVIDER (Venue &amp;amp; FNB)" vertex="1">
-          <mxGeometry x="60" y="640" width="2460" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_start" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1.5;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Bắt đầu" vertex="1">
-          <mxGeometry x="100" y="100" width="45" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h1" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Tìm sân trên Leaflet Map &amp;amp; Chọn giờ" vertex="1">
-          <mxGeometry x="180" y="85" width="140" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h2" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giữ chỗ 10' (BR-SLT-01)" vertex="1">
-          <mxGeometry x="350" y="85" width="140" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h3" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Mở phòng ghép kèo &amp;amp; Chia sẻ QR (BR-INT-01)" vertex="1">
-          <mxGeometry x="620" y="85" width="150" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h4" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chọn Quán FNB gợi ý &amp;amp; Áp mã CROSS (BR-INT-05)" vertex="1">
-          <mxGeometry x="1160" y="85" width="160" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h5" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Bấm Chốt phòng &amp;amp; Chia bill (BR-INT-04)" vertex="1">
-          <mxGeometry x="1360" y="85" width="150" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_h6" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Quét VietQR thanh toán phần Host" vertex="1">
-          <mxGeometry x="1720" y="85" width="150" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m1" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Quét mã QR vào phòng" vertex="1">
-          <mxGeometry x="620" y="270" width="150" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m2_gw" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" vertex="1">
-          <mxGeometry x="810" y="275" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m_err" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chặn vào phòng (403)" vertex="1">
-          <mxGeometry x="800" y="350" width="130" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m3" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đóng cọc (0/30/100%) &amp;amp; Vào phòng" vertex="1">
-          <mxGeometry x="910" y="270" width="140" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m4" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chọn món vào Giỏ hàng chung Realtime" vertex="1">
-          <mxGeometry x="1080" y="270" width="150" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_m5" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Nhận Bill cá nhân &amp;amp; Quét VietQR Napas 247" vertex="1">
-          <mxGeometry x="1720" y="270" width="150" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s1" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khóa Slot nguyên tử 10 phút (BR-SLT-02)" vertex="1">
-          <mxGeometry x="350" y="460" width="160" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s2" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đồng bộ Giỏ hàng WebSocket &amp;amp; Khóa khi LOCKED" vertex="1">
-          <mxGeometry x="1160" y="460" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s3" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="SplitBill Largest Remainder + Sinh VietQR (BR-INT-02)" vertex="1">
-          <mxGeometry x="1460" y="460" width="180" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s4" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Nhận Webhook -&amp;gt; Giữ tiền Escrow HOLD (BR-ESC-01)" vertex="1">
-          <mxGeometry x="1710" y="460" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s_gw" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" vertex="1">
-          <mxGeometry x="1940" y="470" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s6" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đóng băng FROZEN -&amp;gt; Admin phân xử REFUND (BR-DSP-01)" vertex="1">
-          <mxGeometry x="2040" y="430" width="180" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_s7" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giải ngân Idempotent 92/88% + Điểm uy tín (BR-ESC-02/03)" vertex="1">
-          <mxGeometry x="2040" y="520" width="180" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_p_checkin" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="VENUE quét QR Check-in &amp;amp; Điểm danh" vertex="1">
-          <mxGeometry x="1800" y="690" width="160" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_p1" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="VENUE nhận 92% tiền sân (trừ 8% sàn)" vertex="1">
-          <mxGeometry x="2240" y="660" width="150" height="65" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_p2" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="FNB nhận 88% tiền nước (trừ 12% sàn)" vertex="1">
-          <mxGeometry x="2240" y="735" width="150" height="65" as="geometry" />
-        </mxCell>
-        <mxCell id="tb1_end" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Kết thúc phiên (COMPLETED)" vertex="1">
-          <mxGeometry x="2440" y="700" width="45" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_1" parent="1" source="tb1_start" target="tb1_h1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_2" parent="1" source="tb1_h1" target="tb1_h2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_3" parent="1" source="tb1_h2" target="tb1_s1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Yêu cầu khóa slot" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_4" parent="1" source="tb1_s1" target="tb1_h3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khóa thành công 10:00" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_5" parent="1" source="tb1_h3" target="tb1_m1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chia sẻ invite QR" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_6" parent="1" source="tb1_m1" target="tb1_m2_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_err" parent="1" source="tb1_m2_gw" target="tb1_m_err" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="&amp;lt; 50 FLAGGED" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_ok" parent="1" source="tb1_m2_gw" target="tb1_m3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="&amp;gt;= 50 Hạng A/B/C" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_7" parent="1" source="tb1_m3" target="tb1_m4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_8" parent="1" source="tb1_m4" target="tb1_s2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Socket cart:add" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_9" parent="1" source="tb1_h4" target="tb1_s2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Áp mã CROSS" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_10" parent="1" source="tb1_h5" target="tb1_s3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Lệnh chốt phòng" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_11" parent="1" source="tb1_s3" target="tb1_m5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="VietQR Napas 247" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_12" parent="1" source="tb1_s3" target="tb1_h6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="VietQR Host" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_13" parent="1" source="tb1_m5" target="tb1_s4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chuyển khoản thành công" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_14" parent="1" source="tb1_h6" target="tb1_s4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=1;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="Chuyển khoản thành công" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1900" y="120" /><mxPoint x="1900" y="555" /></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="f_tb1_15" parent="1" source="tb1_s4" target="tb1_p_checkin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="100% PAID -&amp;gt; Sân sẵn sàng" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_16" parent="1" source="tb1_p_checkin" target="tb1_s_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Xác nhận Check-in" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_17" parent="1" source="tb1_s_gw" target="tb1_s6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Có tranh chấp OPEN" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_18" parent="1" source="tb1_s_gw" target="tb1_s7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Không tranh chấp" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_19" parent="1" source="tb1_s7" target="tb1_p1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="92% giải ngân" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_20" parent="1" source="tb1_s7" target="tb1_p2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=1;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="88% giải ngân" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2430" y="555" /><mxPoint x="2430" y="767" /></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="f_tb1_21" parent="1" source="tb1_p1" target="tb1_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_22" parent="1" source="tb1_p2" target="tb1_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb1_23" parent="1" source="tb1_s6" target="tb1_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="Sau phân xử REFUND" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2680" y="515" /><mxPoint x="2680" y="545" /></Array></mxGeometry>
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="tobe_tab2" name="Khóa Slot nguyên tử 10 phút &amp; Tạo phòng ghép kèo">
+<mxfile host="app.diagrams.net" pages="2">
+  <diagram id="tobe_tab2" name="Giữ chỗ, tạo phòng và giải phóng slot">
     <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1100" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -193,7 +26,7 @@
         <mxCell id="tb2_c_req" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cùng gửi request khóa slot đồng thời" vertex="1">
           <mxGeometry x="210" y="270" width="160" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_db_lock" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Thực thi UPDATE slots SET status='LOCKED' có điều kiện (BR-SLT-02)" vertex="1">
+        <mxCell id="tb2_db_lock" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khóa slot AVAILABLE hoặc đã hết hạn. Loại slot gắn với phòng CANCELLED." vertex="1">
           <mxGeometry x="430" y="450" width="220" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tb2_gw_race" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" vertex="1">
@@ -205,22 +38,22 @@
         <mxCell id="tb2_c_fail" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Nhận lỗi 409 Conflict (SLOT_TAKEN) -&amp;gt; Báo bận" vertex="1">
           <mxGeometry x="830" y="270" width="170" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_h_lobby" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="POST /api/lobbies -&amp;gt; Tạo mã mời 6 ký tự &amp;amp; QR" vertex="1">
+        <mxCell id="tb2_h_lobby" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="POST /api/lobbies {slotId}; client hiển thị QR mời" vertex="1">
           <mxGeometry x="1060" y="85" width="170" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_db_lobby" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Insert group_lobbies (status=OPEN, UNIQUE slot_id)" vertex="1">
+        <mxCell id="tb2_db_lobby" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Tạo phòng OPEN (slot_id duy nhất) và thêm Host" vertex="1">
           <mxGeometry x="1060" y="450" width="190" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_gw_timer" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1.5;strokeColor=#1E293B;fillColor=#EFF6FF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Hết hạn 10'?" vertex="1">
+        <mxCell id="tb2_gw_timer" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1.5;strokeColor=#1E293B;fillColor=#EFF6FF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Slot đã BOOKED?" vertex="1">
           <mxGeometry x="1310" y="460" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_h_paid" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Thanh toán kịp thời -&amp;gt; Chuyển PAID" vertex="1">
+        <mxCell id="tb2_h_paid" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Tất cả bill đã PAID, slot BOOKED" vertex="1">
           <mxGeometry x="1430" y="85" width="160" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_w_sweep" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Worker quét định kỳ 60s: locked_until &amp;lt; now()" vertex="1">
+        <mxCell id="tb2_w_sweep" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Mỗi 60s quét slot LOCKED đã hết hạn" vertex="1">
           <mxGeometry x="1310" y="660" width="190" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb2_db_rel" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="UPDATE slots SET status='AVAILABLE', locked_by=NULL" vertex="1">
+        <mxCell id="tb2_db_rel" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Trả slot AVAILABLE, xóa locked_by và locked_until" vertex="1">
           <mxGeometry x="1560" y="450" width="210" height="75" as="geometry" />
         </mxCell>
         <mxCell id="tb2_ws_rel" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Broadcast WebSocket slot:released tới toàn mạng" vertex="1">
@@ -253,13 +86,12 @@
         <mxCell id="f_tb2_6" parent="1" source="tb2_h_lobby" target="tb2_db_lobby" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Mở phòng" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f_tb2_7" parent="1" source="tb2_db_lobby" target="tb2_gw_timer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đếm ngược 10:00" edge="1">
+        <mxCell id="f_tb2_7" parent="1" source="tb2_h_win" target="tb2_gw_timer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Theo dõi trạng thái slot" edge="1">
+          <mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_tb2_paid" parent="1" source="tb2_gw_timer" target="tb2_h_paid" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Có" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f_tb2_paid" parent="1" source="tb2_gw_timer" target="tb2_h_paid" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Thanh toán xong" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb2_exp" parent="1" source="tb2_gw_timer" target="tb2_w_sweep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Quá 10 phút" edge="1">
+        <mxCell id="f_tb2_exp" parent="1" source="tb2_gw_timer" target="tb2_w_sweep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chưa đặt, đã hết hạn" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="f_tb2_8" parent="1" source="tb2_w_sweep" target="tb2_db_rel" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giải phóng slot" edge="1">
@@ -274,117 +106,7 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="tobe_tab3" name="Ghép giỏ hàng Realtime &amp; Áp Voucher chéo">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1100" background="#ffffff" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="tb3_lane_member" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Thành viên tham gia (Members)" vertex="1">
-          <mxGeometry x="60" y="40" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_lane_host" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Trưởng nhóm (Host)" vertex="1">
-          <mxGeometry x="60" y="220" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_lane_ws" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="WebSocket Server &amp;amp; Recommender Engine" vertex="1">
-          <mxGeometry x="60" y="400" width="2260" height="220" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_lane_db" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Database &amp;amp; State Machine" vertex="1">
-          <mxGeometry x="60" y="620" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_m_join" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Quét QR / Mở link -&amp;gt; POST /api/lobbies/:id/join" vertex="1">
-          <mxGeometry x="140" y="85" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_db_rep" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Thẩm định điểm tín nhiệm reputation_score (BR-REP-01)" vertex="1">
-          <mxGeometry x="140" y="660" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_gw_rep" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" vertex="1">
-          <mxGeometry x="380" y="460" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_m_block" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Bị chặn truy cập (403 FLAGGED)" vertex="1">
-          <mxGeometry x="350" y="85" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_m_dep" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Nộp cọc bắt buộc (Hạng B: 30%, Hạng C: 100%)" vertex="1">
-          <mxGeometry x="530" y="85" width="160" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_m_free" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Miễn cọc hoàn toàn (Hạng A: 0%) -&amp;gt; Vào phòng" vertex="1">
-          <mxGeometry x="710" y="85" width="160" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_m_cart" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chọn món, gửi socket cart:add {menuItemId, qty}" vertex="1">
-          <mxGeometry x="910" y="85" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_ws_sync" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Kiểm tra lobby OPEN -&amp;gt; Insert cart_items &amp;amp; Broadcast &amp;lt; 1000ms" vertex="1">
-          <mxGeometry x="910" y="450" width="190" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_h_rec" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Xem gợi ý quán FNB: Haversine &amp;lt;= 1000m, giờ mở, voucher" vertex="1">
-          <mxGeometry x="1140" y="270" width="180" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_h_code" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Nhập voucher CROSS15 (BR-INT-05)" vertex="1">
-          <mxGeometry x="1360" y="270" width="160" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_gw_dist" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cự ly &amp;lt;= 1km?" vertex="1">
-          <mxGeometry x="1560" y="460" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_v_ok" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Áp dụng giảm giá chéo thành công" vertex="1">
-          <mxGeometry x="1660" y="440" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_h_lock" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Host bấm 'Chốt phòng' -&amp;gt; POST /api/lobbies/:id/lock" vertex="1">
-          <mxGeometry x="1850" y="270" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_ws_lock" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Broadcast lobby:locked -&amp;gt; Vô hiệu hóa nút thêm món (BR-INT-04)" vertex="1">
-          <mxGeometry x="1850" y="450" width="180" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tb3_end" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giỏ hàng đã khóa" vertex="1">
-          <mxGeometry x="2100" y="470" width="45" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_1" parent="1" source="tb3_m_join" target="tb3_db_rep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_2" parent="1" source="tb3_db_rep" target="tb3_gw_rep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_flg" parent="1" source="tb3_gw_rep" target="tb3_m_block" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="&amp;lt; 50" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_dep" parent="1" source="tb3_gw_rep" target="tb3_m_dep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="50-89" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_fre" parent="1" source="tb3_gw_rep" target="tb3_m_free" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="&amp;gt;= 90" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_3" parent="1" source="tb3_m_dep" target="tb3_m_cart" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=0.5;exitY=1;entryX=0.2;entryY=1;labelBackgroundColor=#FFFFFF;" value="Nộp cọc xong" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="610" y="185" /><mxPoint x="944" y="185" /></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="f_tb3_4" parent="1" source="tb3_m_free" target="tb3_m_cart" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cấp quyền" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_5" parent="1" source="tb3_m_cart" target="tb3_ws_sync" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="cart:add" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_6" parent="1" source="tb3_ws_sync" target="tb3_h_rec" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giỏ hàng cập nhật" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_7" parent="1" source="tb3_h_rec" target="tb3_h_code" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_8" parent="1" source="tb3_h_code" target="tb3_gw_dist" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Kiểm tra Haversine" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_dist_ok" parent="1" source="tb3_gw_dist" target="tb3_v_ok" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Hợp lệ" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_9" parent="1" source="tb3_v_ok" target="tb3_h_lock" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_10" parent="1" source="tb3_h_lock" target="tb3_ws_lock" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khóa phòng" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb3_11" parent="1" source="tb3_ws_lock" target="tb3_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="tobe_tab4" name="Chia bill Largest Remainder &amp; Thanh toán VietQR Napas 247">
+  <diagram id="tobe_tab4" name="Chia bill, VietQR và thanh toán giả lập">
     <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1100" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -398,10 +120,10 @@
         <mxCell id="tb4_lane_engine" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Thuật toán Chia tiền SyncHub (Split Engine)" vertex="1">
           <mxGeometry x="60" y="400" width="2260" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_lane_bank" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Cổng thanh toán &amp;amp; Ngân hàng Napas 247" vertex="1">
+        <mxCell id="tb4_lane_bank" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="API thanh toán giả lập" vertex="1">
           <mxGeometry x="60" y="620" width="2260" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_h_split" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Kích hoạt lệnh chia bill sau khi chốt phòng" vertex="1">
+        <mxCell id="tb4_h_split" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Host chốt phòng và yêu cầu chia bill" vertex="1">
           <mxGeometry x="140" y="85" width="170" height="75" as="geometry" />
         </mxCell>
         <mxCell id="tb4_e_raw" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Tính slot_net/N + food_i + adj_share (BR-INT-02)" vertex="1">
@@ -411,21 +133,21 @@
           <mxGeometry x="380" y="450" width="220" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tb4_e_deduct" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khấu trừ cọc: payable_i = max(0, gross_i - deposit_paid_i)" vertex="1">
-          <mxGeometry x="650" y="450" width="210" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tb4_e_assert" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Assert bảo toàn tổng: Σgross_i === GrandTotal" vertex="1">
           <mxGeometry x="910" y="450" width="180" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_e_qr" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Sinh link ảnh VietQR: SYNCHUB {inviteCode} {userId}" vertex="1">
+        <mxCell id="tb4_e_assert" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khẳng định tổng gross_i bằng GrandTotal" vertex="1">
+          <mxGeometry x="650" y="450" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="tb4_e_qr" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Lưu split_bills, sinh VietQR và chuyển phòng AWAITING_PAYMENT" vertex="1">
           <mxGeometry x="1140" y="450" width="190" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_h_pay" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Host quét VietQR Napas 247 trên Mobile Banking" vertex="1">
+        <mxCell id="tb4_h_pay" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Host xem hóa đơn, bấm Giả lập thanh toán" vertex="1">
           <mxGeometry x="1380" y="85" width="170" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_m_pay" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Member quét VietQR Napas 247 trên Mobile Banking" vertex="1">
+        <mxCell id="tb4_m_pay" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Thành viên xem hóa đơn, bấm Giả lập thanh toán" vertex="1">
           <mxGeometry x="1380" y="270" width="170" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_b_hook" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cổng Napas gửi Webhook chuyển khoản thành công" vertex="1">
+        <mxCell id="tb4_b_hook" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="POST /api/payments/webhook-mock {splitBillId}" vertex="1">
           <mxGeometry x="1600" y="660" width="190" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tb4_e_hold" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cập nhật split_bills=PAID &amp;amp; Ghi nhận Escrow HOLD (BR-ESC-01)" vertex="1">
@@ -434,8 +156,8 @@
         <mxCell id="tb4_gw_all" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="100% PAID?" vertex="1">
           <mxGeometry x="2070" y="460" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="tb4_end" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Lobby PAID &amp;amp; Slot BOOKED" vertex="1">
-          <mxGeometry x="2180" y="470" width="45" height="45" as="geometry" />
+        <mxCell id="tb4_end" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Lobby PAID &amp;amp; Slot BOOKED" vertex="1">
+          <mxGeometry x="2160" y="450" width="130" height="80" as="geometry" />
         </mxCell>
         <mxCell id="f_tb4_1" parent="1" source="tb4_h_split" target="tb4_e_raw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Yêu cầu chia bill" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -443,28 +165,25 @@
         <mxCell id="f_tb4_2" parent="1" source="tb4_e_raw" target="tb4_e_round" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f_tb4_3" parent="1" source="tb4_e_round" target="tb4_e_deduct" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Largest Remainder" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb4_4" parent="1" source="tb4_e_deduct" target="tb4_e_assert" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb4_5" parent="1" source="tb4_e_assert" target="tb4_e_qr" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khớp bất biến" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
+        <mxCell id="f_tb4_3" parent="1" source="tb4_e_round" target="tb4_e_assert" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" value="Largest Remainder" edge="1">
+          <mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_tb4_4" parent="1" source="tb4_e_assert" target="tb4_e_deduct" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" value="Khớp bất biến" edge="1">
+          <mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_tb4_5" parent="1" source="tb4_e_deduct" target="tb4_e_qr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" value="" edge="1">
+          <mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="f_tb4_6" parent="1" source="tb4_e_qr" target="tb4_h_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Gửi VietQR Host" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="f_tb4_7" parent="1" source="tb4_e_qr" target="tb4_m_pay" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Gửi VietQR Member" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f_tb4_8" parent="1" source="tb4_h_pay" target="tb4_b_hook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=1;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="Chuyển tiền" edge="1">
+        <mxCell id="f_tb4_8" parent="1" source="tb4_h_pay" target="tb4_b_hook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=1;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="Xác nhận hóa đơn" edge="1">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1580" y="122" /><mxPoint x="1580" y="677" /></Array></mxGeometry>
         </mxCell>
-        <mxCell id="f_tb4_9" parent="1" source="tb4_m_pay" target="tb4_b_hook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chuyển tiền" edge="1">
+        <mxCell id="f_tb4_9" parent="1" source="tb4_m_pay" target="tb4_b_hook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Xác nhận hóa đơn" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f_tb4_10" parent="1" source="tb4_b_hook" target="tb4_e_hold" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Webhook trigger" edge="1">
+        <mxCell id="f_tb4_10" parent="1" source="tb4_b_hook" target="tb4_e_hold" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Xử lý thanh toán" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="f_tb4_11" parent="1" source="tb4_e_hold" target="tb4_gw_all" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
@@ -473,96 +192,7 @@
         <mxCell id="f_tb4_12" parent="1" source="tb4_gw_all" target="tb4_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đủ 100%" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-      </root>
+      <mxCell id="f_tb4_wait" value="Chưa đủ, tiếp tục chờ" edge="1" parent="1" source="tb4_gw_all" target="tb4_b_hook" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;"><mxGeometry relative="1" as="geometry" /></mxCell></root>
     </mxGraphModel>
   </diagram>
-  <diagram id="tobe_tab5" name="Check-in, Giải ngân đa bên &amp; Phân xử tranh chấp">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1100" background="#ffffff" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="tb5_lane_cust" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Khách hàng (Host &amp;amp; Members)" vertex="1">
-          <mxGeometry x="60" y="40" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_lane_venue" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Chủ sân thể thao (Venue Provider)" vertex="1">
-          <mxGeometry x="60" y="220" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_lane_escrow" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Hệ thống Ví Escrow &amp;amp; Quản trị viên (Admin)" vertex="1">
-          <mxGeometry x="60" y="400" width="2260" height="220" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_lane_fnb" parent="1" style="shape=swimlane;horizontal=0;startSize=30;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.2;fontFamily=Helvetica, Arial, sans-serif;fontStyle=1;fontSize=12;fontColor=#1E293B;" value="Quán nước (F&amp;amp;B Provider)" vertex="1">
-          <mxGeometry x="60" y="620" width="2260" height="180" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_c_arrive" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1.5;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đến sân thể thao đúng giờ hẹn" vertex="1">
-          <mxGeometry x="140" y="85" width="160" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_v_checkin" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Venue quét QR Check-in &amp;amp; Điểm danh danh sách" vertex="1">
-          <mxGeometry x="140" y="270" width="170" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_gw_disp" parent="1" style="shape=rhombus;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Có khiếu nại OPEN? (BR-ESC-04)" vertex="1">
-          <mxGeometry x="380" y="470" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_e_idem" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Khóa Idempotency key = release:{lobbyId}:{providerId} (BR-ESC-03)" vertex="1">
-          <mxGeometry x="520" y="430" width="230" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_p_venue" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giải ngân 92% tiền sân cho Venue (Sàn giữ 8% hoa hồng)" vertex="1">
-          <mxGeometry x="800" y="270" width="200" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_p_fnb" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Giải ngân 88% tiền nước cho FNB (Sàn giữ 12% hoa hồng)" vertex="1">
-          <mxGeometry x="800" y="660" width="200" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_e_rep" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Cộng +2 uy tín CHECKED_IN, Phạt -15 uy tín NO_SHOW (BR-REP-02/03)" vertex="1">
-          <mxGeometry x="1050" y="430" width="220" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_c_disp" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Member gửi khiếu nại kèm ảnh chứng cứ (sân hỏng/thiếu nước)" vertex="1">
-          <mxGeometry x="520" y="85" width="200" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_e_freeze" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Đóng băng Escrow FROZEN đối tác bị kiện (BR-ESC-04)" vertex="1">
-          <mxGeometry x="770" y="530" width="190" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_adm_res" parent="1" style="shape=rectangle;rounded=1;arcSize=10;whiteSpace=wrap;html=1;strokeColor=#334155;strokeWidth=1.2;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Admin thẩm định chứng cứ, duyệt REFUND &amp;amp; Ghi Audit Logs (BR-DSP-01)" vertex="1">
-          <mxGeometry x="1050" y="530" width="220" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="tb5_end" parent="1" style="shape=ellipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;strokeColor=#1E293B;fillColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chuyển Lobby COMPLETED" vertex="1">
-          <mxGeometry x="1340" y="480" width="45" height="45" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_1" parent="1" source="tb5_c_arrive" target="tb5_v_checkin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Có mặt tại sân" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_2" parent="1" source="tb5_v_checkin" target="tb5_gw_disp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="POST /api/lobbies/:id/checkin" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_no" parent="1" source="tb5_gw_disp" target="tb5_e_idem" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Không tranh chấp" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_yes" parent="1" source="tb5_gw_disp" target="tb5_c_disp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Có sự cố" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_3" parent="1" source="tb5_e_idem" target="tb5_p_venue" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chuyển tiền sân" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_4" parent="1" source="tb5_e_idem" target="tb5_p_fnb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=0;exitY=0.5;entryX=0;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="Chuyển tiền nước" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="440" y="467" /><mxPoint x="440" y="647" /></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="f_tb5_5" parent="1" source="tb5_p_venue" target="tb5_e_rep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_6" parent="1" source="tb5_p_fnb" target="tb5_e_rep" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;exitX=1;exitY=0.5;entryX=1;entryY=0.5;labelBackgroundColor=#FFFFFF;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1420" y="647" /><mxPoint x="1420" y="467" /></Array></mxGeometry>
-        </mxCell>
-        <mxCell id="f_tb5_7" parent="1" source="tb5_e_rep" target="tb5_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_8" parent="1" source="tb5_c_disp" target="tb5_e_freeze" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=6 6;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Tạo Dispute" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_9" parent="1" source="tb5_e_freeze" target="tb5_adm_res" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Chuyển Admin" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="f_tb5_10" parent="1" source="tb5_adm_res" target="tb5_end" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;strokeColor=#334155;strokeWidth=1.2;endArrow=classic;labelBackgroundColor=#FFFFFF;fontFamily=Helvetica, Arial, sans-serif;fontSize=10;fontColor=#1E293B;" value="Hoàn tất phân xử" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>
+  </mxfile>

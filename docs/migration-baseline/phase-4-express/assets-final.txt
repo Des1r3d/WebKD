@@ -1,7 +1,0 @@
-PASS Leaflet rendered map and marker popup
-PASS Socket.io JWT handshake: polling ['polling', 'INVALID_TOKEN', 'UNAUTHORIZED']
-PASS Socket.io JWT handshake: websocket ['websocket', 'INVALID_TOKEN', 'UNAUTHORIZED']
-Invite QR loads: 220
-PASS split deep-link reload
-VietQR loads: 540
-PASS upload and read exact evidence bytes: /uploads/evidence-1794642597269-phase4.jpg

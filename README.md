@@ -78,17 +78,6 @@ npm test
 
 Các test tích hợp nạp lại fixture trên `TEST_DATABASE_URL` trước mỗi ca.
 
-Smoke test trên bản demo đang chạy dùng Python Playwright và Chromium. Đặt `SYNCHUB_SEED_PASSWORD` theo tài khoản demo. Mặc định script dùng cổng 5000. Có thể đặt `SYNCHUB_BASE_URL` và `SYNCHUB_BROWSER` để đổi origin và executable trình duyệt.
-
-```bash
-node scripts/verify_phase4_http.mjs
-python3 scripts/verify_phase3_browser.py
-SYNCHUB_LOBBY_ARTIFACTS=/tmp/synchub-lobby python3 scripts/verify_phase3_lobby.py
-SYNCHUB_CAPTURE_DIR=/tmp/synchub-capture python3 scripts/capture_phase3_scenarios.py
-```
-
-Script lobby khóa phòng `SYNC01` trong DB demo. Chụp giao diện trước khi chạy script đó hoặc nạp lại fixture đã xác minh. Khi so sánh ảnh, dùng cùng `SYNCHUB_CAPTURE_TIME` theo ISO 8601 và cùng DB demo cho hai origin. `SYNCHUB_BASELINE_URL` là tùy chọn để script lobby chụp thêm mốc đối chiếu.
-
 ### 7. Deploy với cấu hình hiện hành
 
 Đưa cả `server/` và `client/` lên máy triển khai theo cấu trúc repo. Xác minh `DATABASE_URL` đích trước khi áp dụng migration.
@@ -127,12 +116,16 @@ WebKD/
 ├── server/          # Express, REST API và Socket.io cùng origin
 │   ├── prisma/      # Schema 12 bảng & seed script
 │   ├── src/         # Controllers, services, routes, middleware
-│   └── tests/       # 65 ca kiểm thử JavaScript
-├── docs/            # Tài liệu dự án
-├── scripts/         # Script kiểm chứng trình duyệt và công cụ dự án
-├── CONTEXT.md       # Nguồn sự thật (Source of Truth) về nghiệp vụ & schema
-└── design.md        # Hướng dẫn thiết kế và hệ thống Design Tokens
+│   └── tests/       # Kiểm thử JavaScript
+└── docs/diagrams/   # Sơ đồ Draw.io
 ```
+
+---
+
+## Sơ đồ
+
+- [ERD của 12 bảng PostgreSQL](docs/diagrams/ERD.drawio)
+- [Luồng giữ chỗ, tạo phòng, chia bill và thanh toán giả lập](docs/diagrams/BPMN_tobe.drawio)
 
 ---
 

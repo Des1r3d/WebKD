@@ -929,7 +929,7 @@ export async function seed(opts) {
 
   await prisma.lobbyMember.createMany({ data: membersData });
 
-  // Giỏ hàng cá nhân đúng ca 5.2 trong CONTEXT.md:
+  // Giỏ hàng cá nhân cho ca chia bill chuẩn 215.000 VND (BR-INT-02):
   // A: 25.000 (Trà đào cam sả)
   // B: 30.000 (Hồng trà sữa trân châu)
   // C: 0 (không đặt món)
