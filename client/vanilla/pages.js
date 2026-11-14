@@ -1,5 +1,6 @@
-import { Badge, Button, Card, EmptyState, formatVnd, PageHeader, StatCard, QRCard, ChatBubble, MemberAvatar, createCountdown } from './components.js';
+import { Badge, Button, Card, EmptyState, formatVnd, PageHeader, StatCard, QRCard, ChatBubble, MemberAvatar, LobbyIcon, createCountdown } from './components.js';
 import 'leaflet/dist/leaflet.css';
+import { io } from 'socket.io-client';
 
 const esc = (v = '') => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let activeController = null;
@@ -46,20 +47,42 @@ async function venue(id,user) { const p=dataOf(await api(`/api/providers/${encod
 async function join(code,user) { if(!user)return page(`Bạn được mời vào phòng ${esc(code)}`,'Đăng nhập để kiểm tra điểm uy tín, tiền cọc và xác nhận tham gia.',`<div class="business-card invite-card"><p>Phòng mời: <b>#${esc(code)}</b></p><a class="btn btn-primary" href="/login" data-link data-login-from="/join/${esc(code)}">Đăng nhập để tiếp tục</a><a class="btn btn-outline" href="/" data-link>Về trang khám phá</a></div>`); const info=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=info.lobby||info; const provider=info.slot?.provider||l.slot?.provider; const members=info.members||[]; const est=Math.floor((info.slot?.price||120000)/4); const score=user?.reputation_score??100; const deposit=score>=90?0:score>=70?Math.round(est*.3):score>=50?est:0;
  return page(`Lời mời phòng #${esc(code)}`,'Kiểm tra sân, thời gian và mức cọc trước khi tham gia.',`<div class="split-grid"><div>${section('Thông tin buổi chơi',`<h3>${esc(provider?.name||'SyncHub')}</h3><p>${esc(provider?.address||'')}</p><p>Trạng thái: ${Badge(l.status||'OPEN')} · Thành viên: ${members.length}</p><p>Hạn tham gia: ${date(l.deadline_at)}</p>`)}${section('Uy tín & cọc',`<p>Điểm uy tín: <b>${score}/100</b> · Hạng ${score>=90?'A':score>=70?'B':score>=50?'C':'FLAGGED'}</p><p>Tiền cọc dự kiến: <b>${formatVnd(deposit)}</b></p>${score<50?alert('Điểm uy tín dưới 50, tài khoản không thể tham gia phòng.'):''}<button class="btn btn-primary" data-join-lobby="${esc(code)}" ${score<50?'disabled':''}>Xác nhận tham gia</button><p data-action-message role="status"></p>`)}</div><aside>${section('Thành viên',members.length?members.map(m=>`<p>${esc(m.full_name)} · ${m.status}</p>`).join(''):empty('Chưa có thành viên','Bạn có thể là người đầu tiên tham gia.'))}</aside></div>`); }
 
-async function lobby(code,user) { const r=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=r.lobby||r; const members=r.members||[]; const items=r.cart_items||r.cartItems||[]; const rec=dataOf(await api(`/api/recommend?lobbyId=${encodeURIComponent(l.id)}`).catch(()=>({data:[]})))||[]; const menus=rec.flatMap(x=>x.menu_items||[]);
- const menu=rec.length?rec.map(x=>`<article class="slot-item"><div><b>${esc(x.name)}</b><small>${x.distance_m} m · ${x.is_open?'Đang mở':'Đóng cửa'} ${x.voucher_code?`· Voucher ${esc(x.voucher_code)}`:''}</small>${(x.popular_items||[]).map(m=>`<div>${esc(m.name)} · ${formatVnd(m.price)} <button class="btn btn-outline btn-sm" data-cart-add="${esc(m.id)}" ${l.status!=='OPEN'?'disabled':''}>Thêm</button></div>`).join('')}</div></article>`).join(''):empty('Chưa có gợi ý quán','Hệ thống chưa tìm thấy quán FNB quanh sân.');
- return page(`Phòng ghép kèo #${esc(code)}`,`${esc(l.status)} · Hạn phòng ${date(l.deadline_at)}`,`<div class="lobby-grid"><div>${section('Thành viên',members.map(m=>`<p>${esc(m.full_name)} ${m.user_id===l.host_id?'<b>· Host</b>':''} · ${m.status}</p>`).join(''))}${section('Gợi ý quán & món',menu)}${user?.id===l.host_id&&l.status==='OPEN'?`<button class="btn btn-outline" data-lock-lobby="${esc(l.id)}">Khóa giỏ hàng</button>`:''}${user?.id===l.host_id&&l.status!=='OPEN'?`<button class="btn btn-primary" data-create-split="${esc(l.id)}" data-code="${esc(code)}">Tạo hóa đơn & chia bill</button>`:''}<a class="btn btn-outline btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Chia bill & VietQR</a><p data-action-message role="status"></p></div><div>${section('Giỏ hàng',items.length?items.map(i=>`<div class="slot-item"><span>${esc(i.name||i.menu_item?.name)} · ${i.qty} × ${formatVnd(i.unit_price_snapshot||i.menu_item?.price||0)}</span><button class="btn btn-outline btn-sm" data-cart-remove="${esc(i.id)}" ${l.status!=='OPEN'?'disabled':''}>Xóa</button></div>`).join(''):empty('Giỏ hàng trống','Chọn món từ danh sách gợi ý.'))}${section('Chat trực tiếp',`<div class="chat-messages" data-chat-messages></div><form data-chat-form class="chat-form"><input name="text" required maxlength="500" placeholder="Nhắn tin trong phòng"><button class="btn btn-primary btn-sm">Gửi</button></form>`)}</div></div>`, `<button class="btn btn-outline btn-sm" data-copy="${location.origin}/join/${esc(code)}">Sao chép lời mời</button>`); }
-
 async function lobbyFull(code,user) {
   const detail=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=detail.lobby||detail; const slot=detail.slot||{}; const members=detail.members||[]; const items=detail.cart_items||[]; const rec=dataOf(await api(`/api/recommend?lobbyId=${encodeURIComponent(l.id)}`).catch(()=>({data:[]})))||[]; const host=user?.id===l.host_id; const isMember=members.some(m=>m.user_id===user?.id&&m.status!=='LEFT'); const provider=slot.provider||{}; const inviteUrl=`${location.origin}/join/${encodeURIComponent(code)}`; const qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(inviteUrl)}`;
-  const picks=rec.slice(0,5).map((x,i)=>`<article class="recommendation"><div class="recommendation-head"><span class="rank">#${i+1}</span><strong>${esc(x.name)}</strong></div><p>${esc(x.address)}</p><small>Điểm ${x.score} · Cách sân ${x.distance_m} m · ${x.is_open?'Đang mở cửa':'Đóng cửa trong giờ chơi'}</small><div class="recommendation-tags">${(x.reasons||[]).map(r=>`<span>${esc(r)}</span>`).join('')}</div>${x.voucher_code?`<button class="btn btn-secondary btn-sm" data-apply-voucher-code="${esc(x.voucher_code)}">Áp mã ${esc(x.voucher_code)}</button>`:''}<div class="menu-picks">${(x.popular_items||[]).map(m=>`<div class="menu-pick"><div><b>${esc(m.name)}</b><small>${m.order_count} lượt đặt · ${formatVnd(m.price)}</small></div><button class="btn btn-primary btn-sm" data-cart-add="${esc(m.id)}" ${l.status!=='OPEN'?'disabled':''}>+ Thêm</button></div>`).join('')}</div></article>`).join('');
-  const memberRows=members.map(m=>`<div class="member-row">${MemberAvatar({name:m.full_name,score:m.reputation_score,host:m.user_id===l.host_id})}<div class="member-meta"><b>${esc(m.full_name)}${m.user_id===l.host_id?' (Host)':''}</b><small>Uy tín ${m.reputation_score}/100 · ${esc(m.status)}</small></div><div class="member-deposit"><small>Đã cọc</small><b>${formatVnd(m.deposit_paid||0)}</b></div></div>`).join('');
-  const cartSubtotal=items.reduce((n,i)=>n+(i.qty||0)*(i.unit_price_snapshot||0),0);
-  const cartRows=items.map(i=>`<div class="cart-item"><span class="food-icon" aria-hidden="true">♨</span><div><b>${esc(i.name)}</b><small>${esc(members.find(m=>m.user_id===i.user_id)?.full_name||'Thành viên')}</small><strong>${i.qty} × ${formatVnd(i.unit_price_snapshot)}</strong></div><div class="cart-controls"><button type="button" data-cart-qty="-1" data-cart-id="${esc(i.id)}" aria-label="Giảm ${esc(i.name)}" ${l.status!=='OPEN'?'disabled':''}>−</button><span>${i.qty}</span><button type="button" data-cart-qty="1" data-cart-id="${esc(i.id)}" aria-label="Tăng ${esc(i.name)}" ${l.status!=='OPEN'?'disabled':''}>+</button></div></div>`).join('');
-  const cartSection=section(`Giỏ hàng GroupOrder · ${items.length} món`,`${items.length?cartRows:empty('Giỏ hàng trống','Thêm món từ các gợi ý F&B.')}<div class="cart-total"><span>Tổng đồ ăn${detail.fnb_provider?` · Ship ${formatVnd(l.ship_fee||0)}`:''}</span><b>${formatVnd(cartSubtotal)}</b></div>`);
-  const actions=`${!isMember&&l.status==='OPEN'?`<a class="btn btn-primary btn-sm" href="/join/${encodeURIComponent(code)}" data-link>Tham gia phòng</a>`:''}${isMember&&!host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(l.id)}">Rời phòng</button>`:''}${host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(l.id)}">Khóa giỏ hàng</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(l.id)}" data-code="${esc(code)}">Chốt &amp; Chia Bill</button>`:''}${host&&['LOCKED','AWAITING_PAYMENT'].includes(l.status)?`<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`:''}`;
-  const body=`<div class="lobby-summary"><div><b>MÃ PHÒNG: ${esc(code)}</b><span>Khung giờ: ${date(slot.start_at)}</span><span>Giá sân: ${formatVnd(slot.price||0)}</span></div><div><small>Hạn chốt kèo</small><span data-countdown-until="${esc(l.deadline_at)}">${date(l.deadline_at)}</span>${Badge(l.status)}${detail.voucher?`<span class="badge">Voucher ${esc(detail.voucher.code)}</span>`:''}</div></div><div class="lobby-grid"><div class="lobby-main">${cartSection}${section('Gợi ý quán F&B quanh sân',picks||empty('Chưa có gợi ý quán','Không tìm thấy quán F&B phù hợp quanh sân.'))}${host&&l.status==='OPEN'?section('Áp mã giảm giá',`<form data-voucher-form class="chat-form"><input name="code" placeholder="Nhập mã voucher" required><button class="btn btn-outline btn-sm">Áp dụng</button></form>`):''}${actions}<p data-action-message role="status"></p></div><aside class="lobby-aside">${section(`Thành viên · ${members.length}`,memberRows||empty('Chưa có thành viên','Chia sẻ mã phòng để mời nhóm.'))}${section(`Mời bạn vào phòng #${esc(code)}`,QRCard({title:'Mã QR lời mời',imageUrl:qrUrl,copyText:inviteUrl,copyLabel:'Sao chép link mời',hint:'Bạn bè quét mã để xem thông tin phòng.'}))}${section('Trò chuyện trong phòng',`<div class="chat-messages" data-chat-messages></div><form data-chat-form class="chat-form"><input name="text" required maxlength="500" placeholder="Nhắn cho cả nhóm…"><button class="btn btn-primary btn-sm">Gửi</button></form>`)}</aside></div>`;
-  return page(provider.name||`Phòng #${esc(code)}`,`MÃ PHÒNG: ${esc(code)} · Khung giờ ${date(slot.start_at)} · Giá sân ${formatVnd(slot.price||0)}`,body,actions);
+  const picks=rec.slice(0,5).map((x,i)=>`<article class="recommendation"><div class="recommendation-head"><span class="rank">#${i+1}</span><strong>${esc(x.name)}</strong></div><p>${esc(x.address)}</p><small>Điểm ${x.score} · Cách sân ${x.distance_m} m · ${x.is_open?'Đang mở cửa':'Đóng cửa trong giờ chơi'}</small><div class="recommendation-tags">${(x.reasons||[]).map(r=>`<span>${esc(r)}</span>`).join('')}</div>${x.voucher_code?`<button class="btn btn-secondary btn-sm" data-apply-voucher-code="${esc(x.voucher_code)}">Áp mã ${esc(x.voucher_code)}</button>`:''}<div class="menu-picks">${(x.popular_items||[]).map(m=>`<div class="menu-pick"><div><b>${esc(m.name)}</b><small>${m.order_count} lượt đặt</small></div><div class="menu-pick-actions"><strong>${formatVnd(m.price)}</strong><button class="btn btn-primary btn-sm" data-cart-add="${esc(m.id)}" ${l.status!=='OPEN'?'disabled':''}>+ Thêm</button></div></div>`).join('')}</div></article>`).join('');
+  const cartSubtotal = items.reduce((total, item) => total + item.qty * item.unit_price_snapshot, 0);
+  const locked = l.status !== 'OPEN';
+  const cartSection = `<section class="business-card lobby-cart" data-lobby-cart data-status="${esc(l.status)}">
+    <div class="lobby-cart-heading"><h2>Giỏ hàng GroupOrder</h2><div class="lobby-cart-totals">
+      <span>Tổng đồ uống: <b data-cart-subtotal>${formatVnd(cartSubtotal)}</b></span>
+      <span>Ship: <b>${formatVnd(l.ship_fee || 0)}</b></span><span>Món: <b data-cart-count>${items.length}</b></span>
+    </div></div>
+    <div class="lobby-lock-notice" data-lobby-lock-notice ${locked ? '' : 'hidden'}>Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.</div>
+    <div data-cart-rows>${renderLobbyCart(items, members, locked)}</div>
+    <form data-voucher-form class="lobby-voucher">${LobbyIcon('Tag')}<input name="code" aria-label="Mã voucher" placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)" required><button class="btn btn-secondary btn-sm">Áp dụng</button></form>
+  </section>`;
+  const actions=`${!isMember&&l.status==='OPEN'?`<a class="btn btn-primary btn-sm" href="/join/${encodeURIComponent(code)}" data-link>Tham gia phòng</a>`:''}${isMember&&!host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(l.id)}">Rời phòng</button>`:''}${host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(l.id)}">${LobbyIcon('Lock')}Khóa giỏ hàng (BR-INT-04)</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(l.id)}" data-code="${esc(code)}">${LobbyIcon('Calculator')}Chốt &amp; Chia Bill</button>`:''}${host&&['LOCKED','AWAITING_PAYMENT'].includes(l.status)?`<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`:''}`;
+  const summary = `<div class="lobby-summary"><div><b>MÃ PHÒNG: ${esc(code)}</b><span>Khung giờ: ${date(slot.start_at)}</span><span>Giá sân: <strong>${formatVnd(slot.price || 0)}</strong></span></div><div><small>Hạn chốt kèo</small><span data-countdown-until="${esc(l.deadline_at)}"></span><span data-lobby-status>${Badge(l.status)}</span>${detail.voucher ? `<span class="badge lobby-voucher-badge">Voucher ${esc(detail.voucher.code)}</span>` : ''}</div></div>`;
+  const body = `<div class="lobby-grid">
+    <div class="lobby-main">${cartSection}
+      <section class="lobby-recommendations"><div class="lobby-section-heading"><h2>${LobbyIcon('Sparkles')} Gợi ý quán F&B</h2><small>Rule-based scoring · WBS-4.2</small></div>${picks || '<p class="business-card">Không có quán gợi ý trong bán kính 3 km.</p>'}</section>
+      <p data-action-message role="status"></p>
+    </div>
+    <aside class="lobby-aside">
+      <section class="business-card"><div class="lobby-section-heading"><h2>${LobbyIcon('Users')} Thành viên</h2><span data-member-count>${members.length}</span></div><div data-member-rows data-host-id="${esc(l.host_id)}">${renderLobbyMembers(members,l.host_id)}</div></section>
+      ${section(`Mời bạn vào phòng #${esc(code)}`,QRCard({title:'Mã QR lời mời',imageUrl:qrUrl,copyText:inviteUrl,copyLabel:'Sao chép link mời',hint:'Bạn bè quét mã để xem thông tin phòng.'}))}
+      ${section('Trò chuyện trong phòng',`<div class="chat-messages lobby-chat" data-chat-messages>${ChatBubble({kind:'system',text:'Bắt đầu thảo luận chọn nước & chốt kèo'})}</div><form data-chat-form class="chat-form"><input name="text" aria-label="Tin nhắn" required maxlength="500" placeholder="Nhắn cho cả nhóm…"><button class="btn btn-primary btn-sm">Gửi</button></form>`)}
+    </aside></div>`;
+  return `<div class="business-page lobby-page"><header class="page-header"><div><h1>${esc(provider.name || `Phòng #${code}`)}</h1>${summary}</div><div class="page-actions" data-lobby-actions>${actions}</div></header>${body}</div>`;
+}
+
+function renderLobbyMembers(members, hostId) {
+  return members.map(m=>`<div class="member-row">${MemberAvatar({name:m.full_name,score:m.reputation_score,host:m.user_id===hostId})}<div class="member-meta"><b>${esc(m.full_name)}${m.user_id===hostId?' (Host)':''}</b><small>Uy tín ${m.reputation_score}/100 · ${esc(m.status)}</small></div><div class="member-deposit"><small>Đã cọc</small><b>${formatVnd(m.deposit_paid||0)}</b></div></div>`).join('');
+}
+
+function renderLobbyCart(items, members, locked) {
+  if (!items.length) return '<div class="lobby-cart-empty">Chưa có món nào trong giỏ. Chọn món từ các quán gợi ý bên dưới.</div>';
+  return items.map(i=>`<div class="cart-item"><span class="food-icon" aria-hidden="true">${LobbyIcon('UtensilsCrossed')}</span><div><b>${esc(i.name)}</b><small>${esc(members.find(m=>m.user_id===i.user_id)?.full_name||'Thành viên')}</small><strong>${formatVnd(i.unit_price_snapshot)}</strong></div><div class="cart-controls"><button type="button" data-cart-qty="-1" data-cart-id="${esc(i.id)}" aria-label="Giảm ${esc(i.name)}" ${locked?'disabled':''}>${LobbyIcon('Minus')}</button><span>${i.qty}</span><button type="button" data-cart-qty="1" data-cart-id="${esc(i.id)}" aria-label="Tăng ${esc(i.name)}" ${locked?'disabled':''}>${LobbyIcon('Plus')}</button></div></div>`).join('');
 }
 
 async function split(code,user) { const r=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=r.lobby||r; let bills=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/bills`).catch(()=>({data:[]})))||[]; if(!bills.length&&l.status==='LOCKED'&&user?.id===l.host_id){const s=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/split`,{method:'POST'})); bills=s.bills||[];}
@@ -79,8 +102,135 @@ async function adminDashboard() { const [sr,dr]=await Promise.all([api('/api/adm
 
 async function admin(user) { const [sr,dr]=await Promise.all([api('/api/admin/stats'),api('/api/disputes')]); const s=dataOf(sr)||{}, ds=dataOf(dr)||[]; return page('Admin Dashboard','Thống kê hệ thống, danh sách FLAGGED, phân xử khiếu nại và audit log.',`<div class="stat-grid">${Object.entries(s).filter(([,v])=>typeof v==='number').map(([k,v])=>StatCard({label:k.replaceAll('_',' '),value:String(v)})).join('')}</div>${section('Người dùng cần chú ý',(s.flagged_users||s.flaggedUsers||[]).length?(s.flagged_users||s.flaggedUsers).map(u=>`<div class="slot-item"><span>${esc(u.full_name)} · ${esc(u.email)} · ${u.reputation_score} điểm</span><button class="btn btn-outline btn-sm" data-restore-user="${esc(u.id)}">Khôi phục 60đ</button></div>`).join(''):empty('Không có người dùng FLAGGED','Danh sách trạng thái cần chú ý đang trống.'))}${section('Phân xử khiếu nại',ds.length?ds.map(d=>`<article class="slot-item"><div><b>${esc(d.target_provider_name)}</b> ${Badge(d.status)}<p>${esc(d.reason)} · ${formatVnd(d.refund_amount)}</p></div>${d.status==='OPEN'?`<button class="btn btn-primary btn-sm" data-resolve="${esc(d.id)}" data-amount="${Number(d.refund_amount)||0}">Duyệt</button><button class="btn btn-outline btn-sm" data-reject="${esc(d.id)}">Từ chối</button>`:''}</article>`).join(''):empty('Chưa có khiếu nại','Yêu cầu mới sẽ xuất hiện tại đây.'))}${section('Nhật ký kiểm toán',s.recent_audit_logs?.length?`<div class="table-scroll"><table><thead><tr><th>Thời gian</th><th>Hành động</th><th>Thực thể</th><th>Actor</th><th>After</th></tr></thead><tbody>${s.recent_audit_logs.map(x=>`<tr><td>${date(x.created_at)}</td><td>${esc(x.action)}</td><td>${esc(x.entity)} (${esc(x.entity_id)})</td><td>${esc(x.actor_id||'system')}</td><td>${esc(JSON.stringify(x.after))}</td></tr>`).join('')}</tbody></table></div>`:empty('Chưa có audit log','Thao tác quản trị được ghi nhận tự động.'))}`); }
 
+function mountLobbySocket(root, code, user, navigate, status) {
+  const cart = root.querySelector('[data-lobby-cart]');
+  const rows = root.querySelector('[data-cart-rows]');
+  const memberRows = root.querySelector('[data-member-rows]');
+  const chat = root.querySelector('[data-chat-messages]');
+  const lifetime = new AbortController();
+  const seenMessages = new Set();
+  let members = [];
+  let cartSnapshot;
+  let connection = 0;
+  let ready = false;
+  let synchronized = false;
+  const identity = { lobbyId: code, userId: user?.id };
+  const socket = io({ autoConnect: false, auth: { token: localStorage.getItem('synchub.token') } });
+
+  const updateControls = () => {
+    const disabled = !ready || cart.dataset.status !== 'OPEN';
+    root.querySelectorAll('[data-cart-add], [data-cart-qty]').forEach(button => { button.disabled = disabled; });
+  };
+  const finishSync = () => {
+    ready = synchronized && Boolean(cartSnapshot);
+    updateControls();
+  };
+  const renderCart = () => {
+    if (!cartSnapshot) return;
+    const focused = rows.contains(document.activeElement) ? document.activeElement.dataset : null;
+    const { items, subtotal } = cartSnapshot;
+    rows.innerHTML = renderLobbyCart(items, members, !ready || cart.dataset.status !== 'OPEN');
+    root.querySelector('[data-cart-subtotal]').textContent = formatVnd(subtotal);
+    root.querySelector('[data-cart-count]').textContent = items.length;
+    if (focused) {
+      const replacement = [...rows.querySelectorAll('[data-cart-qty]')].find(button =>
+        button.dataset.cartId === focused.cartId && button.dataset.cartQty === focused.cartQty);
+      replacement?.focus({ preventScroll: true });
+    }
+  };
+  const setStatus = next => {
+    if (next === 'OPEN' || next === cart.dataset.status) return;
+    cart.dataset.status = next;
+    root.querySelector('[data-lobby-status]').innerHTML = Badge(next);
+    root.querySelector('[data-lobby-lock-notice]').hidden = false;
+    const actions = root.querySelector('[data-lobby-actions]');
+    const canSplit = actions.querySelector('[data-lock-and-split]');
+    actions.innerHTML = canSplit && ['LOCKED', 'AWAITING_PAYMENT'].includes(next)
+      ? `<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`
+      : '';
+    updateControls();
+  };
+
+  socket.on('connect', async () => {
+    const current = ++connection;
+    socket.emit('lobby:join', identity);
+    try {
+      const detail = dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`, { signal: lifetime.signal }));
+      if (current !== connection || lifetime.signal.aborted) return;
+      setStatus((detail.lobby || detail).status);
+      synchronized = true;
+      finishSync();
+    } catch (error) {
+      if (!lifetime.signal.aborted) status(`Không thể đồng bộ trạng thái phòng: ${error.message}`);
+    }
+  });
+  socket.on('disconnect', () => {
+    connection++;
+    ready = false;
+    synchronized = false;
+    cartSnapshot = undefined;
+    updateControls();
+  });
+  socket.on('lobby:members', snapshot => {
+    members = snapshot.members;
+    memberRows.innerHTML = renderLobbyMembers(members, memberRows.dataset.hostId);
+    memberRows.dataset.receivedSnapshot = 'true';
+    root.querySelector('[data-member-count]').textContent = members.length;
+    renderCart();
+  });
+  socket.on('cart:updated', snapshot => {
+    cartSnapshot = snapshot;
+    renderCart();
+    finishSync();
+  });
+  socket.on('lobby:locked', () => setStatus('LOCKED'));
+  socket.on('bill:ready', () => navigate(`/lobby/${encodeURIComponent(code)}/split`));
+  socket.on('notify', message => status(message.message));
+  socket.on('chat:message', message => {
+    if (seenMessages.has(message.id)) return;
+    seenMessages.add(message.id);
+    chat.querySelector('.chat-system')?.remove();
+    chat.insertAdjacentHTML('beforeend', ChatBubble({
+      kind: message.userId === user?.id ? 'me' : 'other',
+      name: message.fullName,
+      text: message.text,
+      time: new Date(message.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+    }));
+    chat.scrollTop = chat.scrollHeight;
+  });
+
+  root.addEventListener('click', event => {
+    const button = event.target.closest('[data-cart-add], [data-cart-qty]');
+    if (!button || button.disabled || !ready || cart.dataset.status !== 'OPEN') return;
+    if (button.dataset.cartAdd) {
+      socket.emit('cart:add', { ...identity, menuItemId: button.dataset.cartAdd, qty: 1 });
+      return;
+    }
+    const item = cartSnapshot?.items.find(entry => entry.id === button.dataset.cartId);
+    if (!item) return;
+    const qty = item.qty + Number(button.dataset.cartQty);
+    socket.emit(qty <= 0 ? 'cart:remove' : 'cart:update', { ...identity, cartItemId: item.id, ...(qty > 0 && { qty }) });
+  }, { signal: lifetime.signal });
+  const form = root.querySelector('[data-chat-form]');
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const text = new FormData(form).get('text').trim();
+    if (!text || !socket.connected) return;
+    socket.emit('chat:send', { ...identity, text });
+    form.reset();
+  }, { signal: lifetime.signal });
+
+  updateControls();
+  socket.connect();
+  return () => {
+    lifetime.abort();
+    socket.removeAllListeners();
+    socket.disconnect();
+  };
+}
+
 export function mountBusiness(path,user,navigate) {
-  const cleanups=[]; let roomSocket=null; const socketSend=(event,payload)=>roomSocket?.emit(event,{lobbyId:path.split('/')[2],userId:user?.id,...payload}); const on=(selector,event,fn)=>document.querySelectorAll(selector).forEach(el=>el.addEventListener(event,fn)); const status=msg=>{const n=document.querySelector('[data-action-message]');if(n)n.textContent=msg;};
+  const cleanups=[]; const on=(selector,event,fn)=>document.querySelectorAll(selector).forEach(el=>el.addEventListener(event,fn)); const status=msg=>{const n=document.querySelector('[data-action-message]');if(n)n.textContent=msg;};
   const call=async(url,method='POST',body)=>api(url,{method,body}).then(()=>{status('Đã cập nhật thành công.');setTimeout(()=>location.reload(),350);}).catch(e=>status(`Lỗi: ${e.message}`));
   on('[data-discover]','submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget),q=new URLSearchParams();for(const [k,v] of f)if(v&&!(k==='type'&&v==='ALL')&&!(k==='category'&&v==='ALL'))q.set(k,v);navigate(`/?${q}`);});
   on('[data-reset-filters]','click',()=>navigate('/'));
@@ -91,11 +241,19 @@ export function mountBusiness(path,user,navigate) {
   on('[data-release-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.releaseSlot}/release`));
   on('[data-create-lobby]','click',async e=>{try{const r=dataOf(await api('/api/lobbies',{method:'POST',body:{slotId:e.currentTarget.dataset.createLobby}}));navigate(`/lobby/${r.lobby.invite_code}`);}catch(x){status(`Không thể mở phòng: ${x.message}`);}});
   on('[data-join-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.joinLobby}/join`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.joinLobby}`);}catch(x){status(`Không thể tham gia: ${x.message}`);}});
-  on('[data-lock-lobby]','click',e=>call(`/api/lobbies/${e.currentTarget.dataset.lockLobby}/lock`));
+  on('[data-lock-lobby]', 'click', async event => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      await api(`/api/lobbies/${button.dataset.lockLobby}/lock`, { method: 'POST' });
+    } catch (error) {
+      status(`Không thể khóa giỏ hàng: ${error.message}`);
+      button.disabled = false;
+    }
+  });
   on('[data-lock-and-split]','click',async e=>{const b=e.currentTarget;b.disabled=true;try{await api(`/api/lobbies/${b.dataset.lockAndSplit}/lock`,{method:'POST'});await api(`/api/lobbies/${b.dataset.lockAndSplit}/split`,{method:'POST'});navigate(`/lobby/${b.dataset.code}/split`);}catch(x){status(`Không thể chốt phòng: ${x.message}`);b.disabled=false;}});
   on('[data-create-split]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.createSplit}/split`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.code}/split`);}catch(x){status(`Không thể tạo bill: ${x.message}`);}});
   on('[data-leave-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.leaveLobby}/leave`,{method:'POST'});navigate('/');}catch(x){status(`Không thể rời phòng: ${x.message}`);}});
-  on('[data-cart-qty]','click',e=>{const b=e.currentTarget, row=b.closest('.cart-item'), value=Number(row?.querySelector('.cart-controls span')?.textContent||0)+Number(b.dataset.cartQty);if(value<=0)socketSend('cart:remove',{cartItemId:b.dataset.cartId});else socketSend('cart:update',{cartItemId:b.dataset.cartId,qty:value});});
   on('[data-voucher-form]','submit',async e=>{e.preventDefault();const code=new FormData(e.currentTarget).get('code')?.trim();const lobbyId=location.pathname.split('/')[2];try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng voucher${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
   on('[data-apply-voucher-code]','click',async e=>{const code=e.currentTarget.dataset.applyVoucherCode,lobbyId=location.pathname.split('/')[2];try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng ${code}${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
   on('[data-pay-bill]','click',e=>call('/api/payments/webhook-mock','POST',{splitBillId:e.currentTarget.dataset.payBill}));
@@ -108,7 +266,14 @@ export function mountBusiness(path,user,navigate) {
   on('[data-restore-user]','click',e=>call(`/api/admin/users/${e.currentTarget.dataset.restoreUser}/status`,'PATCH',{status:'ACTIVE',reputationScore:60}));
   on('[data-resolve]','click',e=>call(`/api/admin/disputes/${e.currentTarget.dataset.resolve}`,'PATCH',{status:'RESOLVED',refundAmount:Number(e.currentTarget.dataset.amount)}));
   on('[data-reject]','click',e=>call(`/api/admin/disputes/${e.currentTarget.dataset.reject}`,'PATCH',{status:'REJECTED',refundAmount:0}));
-  if(path.startsWith('/lobby/')) { const code=path.split('/')[2]; let socket; let disposed=false; const script=document.createElement('script');script.src='/socket.io/socket.io.js';script.onload=()=>{if(disposed||!window.io)return;socket=window.io({auth:{token:localStorage.getItem('synchub.token')}});roomSocket=socket;socket.emit('lobby:join',{lobbyId:code,userId:user?.id});socket.on('chat:message',m=>{const box=document.querySelector('[data-chat-messages]');if(box){const div=document.createElement('div');div.textContent=`${m.fullName||m.full_name||m.name||'Thành viên'}: ${m.text}`;box.append(div);box.scrollTop=box.scrollHeight;}});socket.on('cart:updated',payload=>{const container=[...document.querySelectorAll('.business-card')].find(x=>x.querySelector('h2')?.textContent.includes('Giỏ hàng'));if(container){const rows=payload.items?.map(i=>`<div class="cart-item"><span class="food-icon" aria-hidden="true">♨</span><div><b>${esc(i.name)}</b><strong>${i.qty} × ${formatVnd(i.unit_price_snapshot)}</strong></div><div class="cart-controls"><button type="button" data-cart-qty="-1" data-cart-id="${esc(i.id)}">−</button><span>${i.qty}</span><button type="button" data-cart-qty="1" data-cart-id="${esc(i.id)}">+</button></div></div>`).join('')||'<p>Giỏ hàng trống</p>';container.innerHTML=`<h2>Giỏ hàng · ${payload.items?.length||0} món</h2>${rows}<div class="cart-total"><span>Tổng đồ ăn</span><b>${formatVnd(payload.subtotal||0)}</b></div>`;container.querySelectorAll('[data-cart-qty]').forEach(b=>b.addEventListener('click',()=>{const row=b.closest('.cart-item'),qty=Number(row.querySelector('.cart-controls span').textContent)+Number(b.dataset.cartQty);if(qty<=0)socket.emit('cart:remove',{lobbyId:code,cartItemId:b.dataset.cartId});else socket.emit('cart:update',{lobbyId:code,cartItemId:b.dataset.cartId,qty});}));}});socket.on('lobby:members',payload=>{const box=[...document.querySelectorAll('.business-card')].find(x=>x.querySelector('h2')?.textContent.startsWith('Thành viên'));if(box){box.querySelectorAll('.member-row').forEach(n=>n.remove());for(const m of payload.members||[]){const p=document.createElement('p');p.textContent=`${m.full_name}${m.is_host?' · Host':''} · ${m.status}`;box.append(p);}}});socket.on('bill:ready',()=>navigate(`/lobby/${code}/split`));socket.on('payment:confirmed',()=>{if(location.pathname.endsWith('/split'))location.reload();});socket.on('notify',m=>status(m.message));socket.on('lobby:locked',()=>{document.querySelectorAll('[data-cart-add],[data-cart-qty]').forEach(x=>x.setAttribute('disabled',''));status('Phòng đã khóa.');});};document.head.append(script);const form=document.querySelector('[data-chat-form]');form?.addEventListener('submit',e=>{e.preventDefault();const text=new FormData(form).get('text')?.trim();if(text&&socket){socket.emit('chat:send',{lobbyId:code,userId:user?.id,text});form.reset();}});document.querySelectorAll('[data-cart-add]').forEach(b=>b.addEventListener('click',()=>socket?.emit('cart:add',{lobbyId:code,userId:user?.id,menuItemId:b.dataset.cartAdd,qty:1})));document.querySelectorAll('[data-cart-qty]').forEach(b=>b.addEventListener('click',()=>{const row=b.closest('.cart-item'),qty=Number(row.querySelector('.cart-controls span').textContent)+Number(b.dataset.cartQty);if(qty<=0)socketSend('cart:remove',{cartItemId:b.dataset.cartId});else socketSend('cart:update',{cartItemId:b.dataset.cartId,qty});}));cleanups.push(()=>{disposed=true;socket?.emit('lobby:leave',{lobbyId:code});socket?.disconnect();roomSocket=null;script.remove();}); }
+  const lobby = document.querySelector('.lobby-page');
+  if (lobby) cleanups.push(mountLobbySocket(lobby, decodeURIComponent(path.split('/')[2]), user, navigate, status));
+  if (path.startsWith('/lobby/') && path.endsWith('/split')) {
+    const socket = io({ auth: { token: localStorage.getItem('synchub.token') } });
+    socket.on('connect', () => socket.emit('lobby:join', { lobbyId: decodeURIComponent(path.split('/')[2]), userId: user?.id }));
+    socket.on('payment:confirmed', () => location.reload());
+    cleanups.push(() => { socket.removeAllListeners(); socket.disconnect(); });
+  }
   let disposed=false;
   document.querySelectorAll('[data-countdown-until]').forEach(el=>{const timer=createCountdown(el.dataset.countdownUntil);el.replaceWith(timer);cleanups.push(()=>timer.destroy?.());});
   if(path==='/'||path==='/discover') import('leaflet').then(L=>{const el=document.querySelector('#provider-map');if(disposed||!el)return;const map=L.default.map(el).setView([10.8752,106.8007],14);L.default.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const layer=L.default.layerGroup().addTo(map);document.querySelectorAll('[data-provider-lat]').forEach(card=>{const marker=L.default.circleMarker([Number(card.dataset.providerLat),Number(card.dataset.providerLng)],{radius:8,fillColor:'#059669',color:'#fff',weight:2,fillOpacity:.95}).addTo(layer);const popup=document.createElement('div');const strong=document.createElement('strong');strong.textContent=card.dataset.providerName;const address=document.createElement('p');address.textContent=card.dataset.providerAddress;const a=document.createElement('a');a.href=`/venues/${encodeURIComponent(card.dataset.providerId)}`;a.dataset.link='';a.textContent='Xem chi tiết →';popup.append(strong,address,a);marker.bindPopup(popup);});cleanups.push(()=>map.remove());}).catch(()=>{});

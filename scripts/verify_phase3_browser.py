@@ -39,12 +39,17 @@ async def main():
     # Keyboard focus, dialog lifecycle and native validation.
     ctx=await context_for(); page=await ctx.new_page(); await page.goto(BASE+'/styleguide'); await page.locator('[data-open-modal]').click(); dialog=page.locator('[role=dialog]'); opened=await dialog.count()==1; await page.keyboard.press('Escape'); closed=await dialog.count()==0; focus_return=await page.evaluate("document.activeElement?.hasAttribute('data-open-modal')"); results.append({'check':'modal Escape and focus return','pass':opened and closed and focus_return,'opened':opened,'closed':closed,'focusReturn':focus_return}); await page.goto(BASE+'/register'); validity=await page.locator('[data-auth-form]').evaluate('(f)=>!f.checkValidity()'); results.append({'check':'register native form validation','pass':validity,'blankFormInvalid':validity}); await ctx.close()
 
-    # Read-only socket join: verify server sends initial room state.
-    ctx=await context_for('HOST'); page=await ctx.new_page(); frames=[]; sockets=[]
-    page.on('websocket',lambda ws:(sockets.append(ws),ws.on('framereceived',lambda frame:frames.append(frame if isinstance(frame,str) else str(frame)))))
-    await page.goto(BASE+'/lobby/SYNC01'); await page.wait_for_timeout(1500); frame_text=' '.join(frames); socket_ok=bool(sockets) and 'cart:updated' in frame_text and 'lobby:members' in frame_text
-    results.append({'check':'Socket.IO lobby join initial state','pass':socket_ok,'websocketCount':len(sockets),'receivedCartUpdated':'cart:updated' in frame_text,'receivedMembers':'lobby:members' in frame_text})
-    await page.goto(BASE+'/'); await page.wait_for_timeout(200); results.append({'check':'socket cleanup on route change','pass':bool(sockets) and any(getattr(ws,'is_closed',False) for ws in sockets),'closed':any(getattr(ws,'is_closed',False) for ws in sockets)})
+    # Initial Socket.io packets may arrive through polling before the websocket upgrades.
+    ctx=await context_for('HOST'); page=await ctx.new_page(); sockets=[]
+    page.on('websocket', lambda ws: sockets.append(ws) if '/socket.io/' in ws.url else None)
+    await page.goto(BASE+'/lobby/SYNC01')
+    await page.locator('[data-received-snapshot="true"]').wait_for(timeout=10000)
+    await page.locator('[data-cart-qty]:enabled').first.wait_for(timeout=10000)
+    results.append({'check':'Socket.IO lobby join initial state','pass':True})
+    await page.locator('aside.sidebar a[href="/wallet"]').click()
+    await page.wait_for_url('**/wallet')
+    if sockets and not sockets[0].is_closed(): await sockets[0].wait_for_event('close', timeout=5000)
+    results.append({'check':'socket cleanup on route change','pass':bool(sockets) and all(ws.is_closed() for ws in sockets)})
     await ctx.close(); await browser.close()
   print(json.dumps(results,ensure_ascii=False,indent=2))
   if any(not x['pass'] for x in results): raise SystemExit(1)

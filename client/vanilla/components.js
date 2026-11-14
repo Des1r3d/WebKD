@@ -34,3 +34,5 @@ export const createModal = ({ title, content, close }) => {
   const destroy = () => { document.removeEventListener('keydown', onKey); backdrop.remove(); previous?.focus?.(); close?.(); };
   backdrop.addEventListener('click', (event) => { if (event.target === backdrop || event.target.closest('[data-close]')) destroy(); }); document.addEventListener('keydown', onKey); document.body.append(backdrop); (focusable()[0] || modal).focus(); return destroy;
 };
+
+export const LobbyIcon = name => `<svg class="lobby-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="/lobby-icons.svg#${name}"></use></svg>`;

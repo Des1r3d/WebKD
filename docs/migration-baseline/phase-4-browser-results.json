@@ -1,0 +1,67 @@
+[
+  {
+    "check": "login redirect",
+    "pass": true,
+    "url": "http://127.0.0.1:5180/login"
+  },
+  {
+    "check": "login returns to from route",
+    "pass": true,
+    "url": "http://127.0.0.1:5180/wallet"
+  },
+  {
+    "check": "Back/Forward + deep-link reload",
+    "pass": true,
+    "back": true,
+    "forward": true,
+    "reload": true
+  },
+  {
+    "check": "role guard MEMBER → /provider",
+    "pass": true,
+    "actual": "/",
+    "expected": "/"
+  },
+  {
+    "check": "role guard PROVIDER → /admin",
+    "pass": true,
+    "actual": "/provider",
+    "expected": "/provider"
+  },
+  {
+    "check": "role guard ADMIN → /provider",
+    "pass": true,
+    "actual": "/admin",
+    "expected": "/admin"
+  },
+  {
+    "check": "role guard HOST → /profile",
+    "pass": true,
+    "actual": "/profile",
+    "expected": "/profile"
+  },
+  {
+    "check": "modal Escape and focus return",
+    "pass": true,
+    "opened": true,
+    "closed": true,
+    "focusReturn": true
+  },
+  {
+    "check": "register native form validation",
+    "pass": true,
+    "blankFormInvalid": true
+  },
+  {
+    "check": "Socket.IO lobby join initial state",
+    "pass": false,
+    "websocketCount": 2,
+    "receivedCartUpdated": true,
+    "receivedMembers": false
+  },
+  {
+    "check": "socket cleanup on route change",
+    "pass": true,
+    "closed": true
+  }
+]

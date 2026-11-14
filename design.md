@@ -4,6 +4,8 @@
 > **Phiên bản:** 1.0.0 — Khóa theo WBS-2.0 & Hallmark Floor  
 > **Mục tiêu:** Giao diện thể thao năng động, tin cậy về tài chính (Escrow/Chia bill), thao tác tối ưu trên Mobile (≤ 3 click từ đặt sân sang giỏ hàng F&B).
 
+> **Công cụ:** Bản React hiện hành dùng Tailwind và `lucide-react`. Bản vanilla đối chiếu dùng chung `tokens.css`, với CSS theo thành phần và biểu tượng SVG.
+
 ---
 
 ## 1. Triết lý thiết kế & Tiêu chuẩn Hallmark (The Floor)

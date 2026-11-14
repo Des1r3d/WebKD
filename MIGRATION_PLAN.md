@@ -1,6 +1,6 @@
 # Kế hoạch đơn giản hóa SyncHub
 
-Ngày lập: 14/11/2026. Trạng thái: đã nghiệm thu giai đoạn 1.
+Ngày lập: 14/11/2026. Giai đoạn 3 đã được người dùng nghiệm thu. Giai đoạn 4 đủ điều kiện bắt đầu.
 
 ## 1. Mục tiêu và phạm vi đã chốt
 
@@ -136,7 +136,11 @@ Nghiệm thu: `/styleguide` và layout khớp baseline ở ba kích thước, kh
 
 Mỗi nhóm phải đạt đối chiếu giao diện và chức năng trước khi sang nhóm tiếp theo. Bản cũ giữ trên nhánh/mốc baseline; môi trường so sánh không chạy hai backend cùng ghi dữ liệu tiền hoặc cùng quét slot trên một database.
 
+**Nghiệm thu ngày 14/11/2026.** Người dùng chấp nhận giao diện vanilla hiện tại và các sai khác trực quan đã ghi nhận. Smoke browser đạt 11/11, luồng realtime hai phiên đạt và lần kiểm chứng backend gần nhất đạt 65/65. [Biên bản giai đoạn 3](docs/migration-baseline/phase-3-results.md)
+
 ### Giai đoạn 4 — Gỡ Vite và công cụ cũ hoàn toàn
+
+**Trạng thái ngày 14/11/2026: đủ điều kiện bắt đầu, chưa triển khai.** [Biên bản giai đoạn 3](docs/migration-baseline/phase-3-results.md)
 
 1. Express phục vụ frontend mới, `/api`, `/uploads` và `/socket.io` cùng origin; bỏ proxy Vite.
 2. Thay `scripts/dev.js` và các npm script để `npm run dev` khởi động một server. Giữ lệnh setup/generate/deploy/seed rõ ràng; bỏ bước compile frontend/backend không còn cần thiết.

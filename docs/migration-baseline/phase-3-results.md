@@ -1,6 +1,6 @@
 # Giai đoạn 3 — Chuyển trang nghiệp vụ sang vanilla
 
-Ngày cập nhật: 14/11/2026. Trạng thái: **chưa nghiệm thu**. Các route nghiệp vụ đã có bản triển khai vanilla và đã được chụp bằng Playwright, nhưng kiểm chứng socket còn lỗi, chưa chạy lại bộ 65 test trên database test riêng và còn sai khác trực quan cần đối chiếu.
+Ngày cập nhật 14/11/2026. Trạng thái **đã nghiệm thu giai đoạn 3 theo xác nhận của người dùng**. Người dùng chấp nhận giao diện vanilla hiện tại, gồm các sai khác trực quan đã ghi nhận. Lần chạy backend gần nhất đạt 65/65 trên PostgreSQL riêng. Lần chạy browser mới đạt 11/11 và xác nhận realtime hai phiên. [Log backend](phase-4-test-results.txt) · [Kiểm chứng lobby](phase-3-lobby-recheck.md)
 
 ## Thay đổi
 
@@ -30,10 +30,10 @@ Log smoke/build và dữ liệu đo ảnh: [phase-3-test-results.txt](phase-3-te
 
 So sánh ảnh phase-3 với React baseline cho thấy còn sai khác bố cục ở các trang nghiệp vụ, đáng chú ý là lobby mobile: khu vực recommendations/giỏ, vị trí nav cố định và trạng thái hạn chốt không trùng ảnh tham chiếu. Countdown của fixture hiện về `00:00` vì thời hạn API đã qua; không thay dữ liệu fixture bằng dữ liệu giả. Xem ví dụ [lobby vanilla 390×844](screenshots/phase-3/lobby-host-390x844.png) và [lobby baseline 390](screenshots/390/lobby-host.png). Đây chưa phải đối chiếu pixel hoàn tất cho toàn bộ route.
 
-## Còn mở trước nghiệm thu
+## Căn cứ nghiệm thu
 
-1. Điều tra vì sao client phiên chạy nhận `cart:updated` nhưng không nhận sự kiện khởi tạo `lobby:members`; kiểm tra lại trên API/socket service đã khởi động đúng phiên và xác minh hai client.
-2. Chạy `npm test` với `TEST_DATABASE_URL` trỏ tới database test riêng; lưu log mới, đối chiếu 65 test với Giai đoạn 1/2 và xác nhận ba gate BR-SLT-01/02, BR-INT-02, BR-ESC-03.
-3. So sánh trực quan đủ route/trạng thái với baseline; hoàn thiện các sai khác responsive đã ghi nhận, kiểm tra các form/thao tác nghiệp vụ và thao tác mobile theo design.
+1. Đã xác minh cả snapshot thành viên và giỏ trong hai phiên, đồng bộ giỏ/chat, reconnect và khóa giỏ. Smoke mới kiểm tra snapshot mà ứng dụng nhận được qua Socket.io, bao gồm trường hợp transport ban đầu là polling.
+2. Đã đối chiếu lại 65 test và ba ca bắt buộc trên database test riêng trong [lần kiểm tra điều kiện giai đoạn 4](phase-4-results.md).
+3. Người dùng chấp nhận bản giao diện hiện tại dựa trên bộ ảnh giai đoạn 3 và lượt đối chiếu lobby mới. Lượt đối chiếu mới bao phủ lobby Host đang mở ở ba viewport. Các sai khác và giới hạn của phép đo được lưu trong [biên bản đối chiếu lobby](phase-3-lobby-recheck.md).
 
 Không thay backend, schema Prisma 12 bảng, business rules, seed, migration hoặc xử lý các sai lệch đã được baseline dành cho Giai đoạn 5.

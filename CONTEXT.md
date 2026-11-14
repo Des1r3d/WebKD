@@ -7,7 +7,7 @@
 
 ## 1. Kiến trúc & Quy ước Chung
 
-- **Stack:** React 18 + Vite + TypeScript + TailwindCSS (Client) · Node.js + Express + TypeScript + Socket.io (Server) · PostgreSQL 16 + Prisma (Database).
+- **Stack:** React 19 + Vite + TypeScript + TailwindCSS + Leaflet (Client hiện hành, có bản HTML/CSS/JavaScript thuần đang đối chiếu) · Node.js + Express + JavaScript + Socket.io (Server) · PostgreSQL 16 + Prisma (Database).
 - **Tiền tệ:** Lưu kiểu `Int` (VND, không có phần thập phân). Mọi phép chia dùng `Math.floor` + phân phối phần dư theo thuật toán **Largest Remainder** (Mục 5).
 - **Thời gian:** Lưu UTC (`TIMESTAMPTZ` / `DateTime`), hiển thị `Asia/Ho_Chi_Minh` (`UTC+7`).
 - **Tỷ lệ hoa hồng mặc định:** `VENUE = 0.08` (8%), `FNB = 0.12` (12%).
