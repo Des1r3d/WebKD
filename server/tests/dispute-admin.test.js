@@ -37,6 +37,22 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
     });
   });
 
+  it('does not freeze or reopen a payout that has already been released', async () => {
+    const post = (path, token = hostToken) => request(app).post(`/api${path}`).set('Authorization', `Bearer ${token}`);
+    await post('/lobbies/lob-01/split').expect(200);
+    const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
+    for (const bill of bills) await post('/payments/webhook-mock').send({ splitBillId: bill.id }).expect(200);
+    await post('/lobbies/lob-01/checkin').send({}).expect(200);
+    await post('/disputes', memberToken).send({
+      lobbyId: 'lob-01', targetProviderId: 'prv-fnb-01', reason: 'Quán giao thiếu món',
+    }).expect(409);
+    const payout = await prisma.escrowTransaction.findUniqueOrThrow({
+      where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
+    });
+    assert.equal(payout.status, 'RELEASED');
+    assert.equal(await prisma.dispute.count({ where: { lobby_id: 'lob-01' } }), 0);
+  });
+
   describe('1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04)', () => {
     it('gửi khiếu nại -> tạo dispute OPEN, đóng băng tiền Escrow của target provider và chuyển lobby sang DISPUTED', async () => {
       await request(app)
@@ -52,11 +68,6 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
           .send({ splitBillId: b.id });
       }
 
-      await request(app)
-        .post('/api/lobbies/lob-01/checkin')
-        .set('Authorization', `Bearer ${hostToken}`)
-        .send({});
-
       const disputeRes = await request(app)
         .post('/api/disputes')
         .set('Authorization', `Bearer ${memberToken}`)
@@ -68,6 +79,11 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
           evidenceUrls: ['https://example.com/receipt.jpg'],
         })
         .expect(201);
+
+      await request(app)
+        .post('/api/lobbies/lob-01/checkin')
+        .set('Authorization', `Bearer ${hostToken}`)
+        .send({});
 
       assert.strictEqual(disputeRes.body.success, true);
       assert.strictEqual(disputeRes.body.data.dispute.status, DisputeStatus.OPEN);
@@ -89,6 +105,7 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
 
   describe('2. Phân xử Khiếu nại Admin (BR-DSP-01)', () => {
     let disputeId;
+    let nextDisputeId;
 
     beforeEach(async () => {
       await request(app)
@@ -103,11 +120,6 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
           .send({ splitBillId: b.id });
       }
 
-      await request(app)
-        .post('/api/lobbies/lob-01/checkin')
-        .set('Authorization', `Bearer ${hostToken}`)
-        .send({});
-
       const dispRes = await request(app)
         .post('/api/disputes')
         .set('Authorization', `Bearer ${memberToken}`)
@@ -118,7 +130,19 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
           refundAmount: 25000,
         });
 
+      assert.equal(dispRes.status, 201);
       disputeId = dispRes.body.data.dispute.id;
+      const another = await request(app).post('/api/disputes')
+        .set('Authorization', `Bearer ${memberToken}`)
+        .send({ lobbyId: 'lob-01', targetProviderId: 'prv-fnb-01', reason: 'Thiếu một món khác' })
+        .expect(201);
+      nextDisputeId = another.body.data.dispute.id;
+      await request(app)
+        .post('/api/lobbies/lob-01/checkin')
+        .set('Authorization', `Bearer ${hostToken}`)
+        .send({});
+
+
     });
 
     it('Admin duyệt RESOLVED: hoàn tiền từ Escrow (REFUNDED), giải ngân phần còn lại cho quán, ghi audit log', async () => {
@@ -148,7 +172,7 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       const fnbTx = await prisma.escrowTransaction.findUnique({
         where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
       });
-      assert.strictEqual(fnbTx?.status, EscrowStatus.RELEASED);
+      assert.strictEqual(fnbTx?.status, EscrowStatus.FROZEN);
       assert.strictEqual(fnbTx?.net_amount, 83600 - 25000);
 
       const auditLogs = await prisma.auditLog.findMany({
@@ -178,30 +202,26 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       assert.equal(await prisma.escrowTransaction.count({ where: { lobby_id: 'lob-01', type: 'REFUND' } }), 0);
     });
 
-    async function openAnotherDispute() {
-      const response = await request(app)
-        .post('/api/disputes')
-        .set('Authorization', `Bearer ${memberToken}`)
-        .send({ lobbyId: 'lob-01', targetProviderId: 'prv-fnb-01', reason: 'Thiếu một món khác' })
-        .expect(201);
-      disputeId = response.body.data.dispute.id;
-    }
-
     it('uses only previously unrefunded bills for a later decision', async () => {
       const first = await resolve(1).expect(200);
       assert.equal(first.body.data.refundTxs.length, 1);
       const firstBill = first.body.data.refundTxs[0].split_bill_id;
-      await openAnotherDispute();
+      disputeId = nextDisputeId;
       const second = await resolve(25000).expect(200);
       const refunds = second.body.data.refundTxs;
       assert.equal(refunds.reduce((total, row) => total + row.amount, 0), 25000);
       assert.ok(refunds.every(row => row.split_bill_id !== firstBill));
+      const payout = await prisma.escrowTransaction.findUniqueOrThrow({
+        where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
+      });
+      assert.equal(payout.status, 'RELEASED');
+      assert.equal(payout.net_amount, 83600 - 25001);
     });
 
     it('leaves a later decision open when all eligible bills have already been refunded', async () => {
       const first = await resolve(25000).expect(200);
       assert.equal(first.body.data.refundTxs.length, 3);
-      await openAnotherDispute();
+      disputeId = nextDisputeId;
       const response = await resolve(1).expect(409);
       assert.equal(response.body.error, 'REFUND_EXCEEDS_AVAILABLE');
       assert.equal((await prisma.dispute.findUniqueOrThrow({ where: { id: disputeId } })).status, 'OPEN');

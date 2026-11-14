@@ -56,6 +56,10 @@ export async function handleCreateDispute(req, res) {
       data: result,
     });
   } catch (error) {
+    if (['ESCROW_ALREADY_RELEASED', 'INVALID_STATUS'].includes(error.message)) {
+      res.status(409).json({ error: error.message, message: 'Phòng hoặc khoản ký quỹ không còn đủ điều kiện đóng băng' });
+      return;
+    }
     if (error.message === 'LOBBY_NOT_FOUND' || error.message === 'PROVIDER_NOT_FOUND') {
       res.status(404).json({ error: 'NOT_FOUND', message: error.message });
       return;
@@ -180,6 +184,7 @@ export async function handleResolveDispute(req, res) {
     }
     const refundErrors = {
       INVALID_REFUND_AMOUNT: [400, 'Số tiền hoàn phải là số nguyên không âm'],
+      ESCROW_NOT_READY: [409, 'Chưa có khoản ký quỹ đóng băng để phân xử'],
       REFUND_EXCEEDS_AVAILABLE: [409, 'Số tiền hoàn vượt khoản ký quỹ có thể hoàn'],
       REFUND_REQUIRES_REVIEW: [409, 'Phòng đã có giao dịch hoàn tiền cần đối chiếu'],
     };

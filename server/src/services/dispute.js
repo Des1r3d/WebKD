@@ -20,7 +20,15 @@ export async function createDisputeService(input) {
 
   return prisma.$transaction(async (tx) => {
     const current = await lockLobbyRow(tx, lobby.id);
-    if (current.status === LobbyStatus.CANCELLED) throw new Error('INVALID_STATUS');
+    if (!['PAID', 'DISPUTED', 'COMPLETED'].includes(current.status)) throw new Error('INVALID_STATUS');
+    const slot = await tx.slot.findUniqueOrThrow({ where: { id: current.slot_id } });
+    if (![slot.provider_id, current.fnb_provider_id].includes(targetProviderId)) throw new Error('INVALID_STATUS');
+    const payout = await tx.escrowTransaction.findUnique({
+      where: { idempotency_key: `release:${lobby.id}:${targetProviderId}` },
+    });
+    if (current.status === LobbyStatus.COMPLETED || payout?.status === EscrowStatus.RELEASED) {
+      throw new Error('ESCROW_ALREADY_RELEASED');
+    }
 
     // 1. Tạo bản ghi Dispute
     const dispute = await tx.dispute.create({
@@ -40,7 +48,8 @@ export async function createDisputeService(input) {
       where: {
         lobby_id: lobby.id,
         payee_provider_id: targetProviderId,
-        status: { not: EscrowStatus.REFUNDED },
+        type: EscrowTxType.RELEASE,
+        status: { in: [EscrowStatus.HELD, EscrowStatus.FROZEN] },
       },
     });
 
@@ -118,10 +127,16 @@ export async function resolveDisputeService(
       orderBy: { id: 'asc' },
     });
     const refundTxs = [];
+    const otherOpen = await tx.dispute.count({
+      where: { lobby_id: dispute.lobby_id, target_provider_id: dispute.target_provider_id,
+        status: DisputeStatus.OPEN, id: { not: dispute.id } },
+    });
+    const settledStatus = otherOpen ? EscrowStatus.FROZEN : EscrowStatus.RELEASED;
+    const frozen = escrowTxs.filter(row => row.type === EscrowTxType.RELEASE &&
+      row.payee_provider_id === dispute.target_provider_id && row.status === EscrowStatus.FROZEN);
+    if (!frozen.length) throw new Error('ESCROW_NOT_READY');
 
     if (input.status === DisputeStatus.RESOLVED) {
-      const frozen = escrowTxs.filter(row =>
-        row.payee_provider_id === dispute.target_provider_id && row.status === EscrowStatus.FROZEN);
       const available = frozen.reduce((total, row) => total + row.net_amount, 0);
 
       if (refundAmount > 0) {
@@ -173,7 +188,7 @@ export async function resolveDisputeService(
         const debit = Math.min(row.net_amount, remainingDebit);
         const changed = await tx.escrowTransaction.updateMany({
           where: { id: row.id, status: EscrowStatus.FROZEN },
-          data: { status: EscrowStatus.RELEASED, net_amount: row.net_amount - debit },
+          data: { status: settledStatus, net_amount: row.net_amount - debit },
         });
         if (changed.count !== 1) throw new Error('REFUND_REQUIRES_REVIEW');
         remainingDebit -= debit;
@@ -196,8 +211,9 @@ export async function resolveDisputeService(
           lobby_id: dispute.lobby_id,
           payee_provider_id: dispute.target_provider_id,
           status: EscrowStatus.FROZEN,
+          type: EscrowTxType.RELEASE,
         },
-        data: { status: EscrowStatus.RELEASED },
+        data: { status: settledStatus },
       });
 
       await tx.dispute.update({
