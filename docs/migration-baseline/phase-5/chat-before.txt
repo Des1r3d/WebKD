@@ -1,0 +1,65 @@
+✖ chat replays only the latest 50 messages in order, separately for each lobby (578.466094ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 851.624499
+
+✖ failing tests:
+
+test at tests/chat-history.test.js:9:1
+✖ chat replays only the latest 50 messages in order, separately for each lobby (578.466094ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'Tin 1',
+  +   'Tin 2',
+  +   'Tin 3',
+  +   'Tin 4',
+  +   'Tin 5',
+      'Tin 6',
+      'Tin 7',
+      'Tin 8',
+      'Tin 9',
+      'Tin 10',
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/chat-history.test.js:41:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'Tin 1',  'Tin 2',  'Tin 3',  'Tin 4',  'Tin 5',
+      'Tin 6',  'Tin 7',  'Tin 8',  'Tin 9',  'Tin 10',
+      'Tin 11', 'Tin 12', 'Tin 13', 'Tin 14', 'Tin 15',
+      'Tin 16', 'Tin 17', 'Tin 18', 'Tin 19', 'Tin 20',
+      'Tin 21', 'Tin 22', 'Tin 23', 'Tin 24', 'Tin 25',
+      'Tin 26', 'Tin 27', 'Tin 28', 'Tin 29', 'Tin 30',
+      'Tin 31', 'Tin 32', 'Tin 33', 'Tin 34', 'Tin 35',
+      'Tin 36', 'Tin 37', 'Tin 38', 'Tin 39', 'Tin 40',
+      'Tin 41', 'Tin 42', 'Tin 43', 'Tin 44', 'Tin 45',
+      'Tin 46', 'Tin 47', 'Tin 48', 'Tin 49', 'Tin 50',
+      'Tin 51', 'Tin 52', 'Tin 53', 'Tin 54', 'Tin 55'
+    ],
+    expected: [
+      'Tin 6',  'Tin 7',  'Tin 8',  'Tin 9',
+      'Tin 10', 'Tin 11', 'Tin 12', 'Tin 13',
+      'Tin 14', 'Tin 15', 'Tin 16', 'Tin 17',
+      'Tin 18', 'Tin 19', 'Tin 20', 'Tin 21',
+      'Tin 22', 'Tin 23', 'Tin 24', 'Tin 25',
+      'Tin 26', 'Tin 27', 'Tin 28', 'Tin 29',
+      'Tin 30', 'Tin 31', 'Tin 32', 'Tin 33',
+      'Tin 34', 'Tin 35', 'Tin 36', 'Tin 37',
+      'Tin 38', 'Tin 39', 'Tin 40', 'Tin 41',
+      'Tin 42', 'Tin 43', 'Tin 44', 'Tin 45',
+      'Tin 46', 'Tin 47', 'Tin 48', 'Tin 49',
+      'Tin 50', 'Tin 51', 'Tin 52', 'Tin 53',
+      'Tin 54', 'Tin 55'
+    ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

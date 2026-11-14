@@ -1,0 +1,18 @@
+
+> synchub@1.0.0 seed
+> npm run prisma:seed --prefix server
+
+
+> synchub-server@1.0.0 prisma:seed
+> node prisma/seed.js
+
+🌱 [SyncHub Seed] Bắt đầu khởi tạo dữ liệu mẫu...
+  🧹 Đã dọn sạch dữ liệu cũ
+  👤 Đã tạo 8 người dùng mẫu
+  🏟️  Đã tạo 10 sân/phòng học (VENUE)
+  🧋 Đã tạo 15 quán ăn/uống (FNB)
+  📋 Đã tạo 18 món trong thực đơn FNB
+  ⏰ Đã tạo 355 khung giờ slot trong 7 ngày tới cho 10 sân
+  🎟️  Đã tạo 4 mã voucher (có mã CROSS và FNB)
+  👥 Đã tạo Group Lobby mẫu (SYNC01) kèm 4 thành viên và giỏ hàng chuẩn 100k
+✅ [SyncHub Seed] Hoàn thành khởi tạo dữ liệu mẫu thành công!

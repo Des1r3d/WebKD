@@ -1,0 +1,92 @@
+▶ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3)
+  ▶ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04)
+    ✔ gửi khiếu nại -> tạo dispute OPEN, đóng băng tiền Escrow của target provider và chuyển lobby sang DISPUTED (847.730236ms)
+  ✔ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04) (850.46995ms)
+  ▶ 2. Phân xử Khiếu nại Admin (BR-DSP-01)
+    ✔ Admin duyệt RESOLVED: hoàn tiền từ Escrow (REFUNDED), giải ngân phần còn lại cho quán, ghi audit log (391.810636ms)
+    ✔ commits one refund effect for concurrent and repeated decisions (346.731581ms)
+    ✔ rejects decisions over available frozen funds without moving money (325.798368ms)
+    ✖ uses only previously unrefunded bills for a later decision (334.977926ms)
+    ✖ leaves a later decision open when all eligible bills have already been refunded (361.577572ms)
+    ✔ does not create a second refund when the old dispute key exists (338.368651ms)
+    ✔ người dùng thường không có quyền phân xử khiếu nại (chỉ ADMIN) (312.372033ms)
+  ✖ 2. Phân xử Khiếu nại Admin (BR-DSP-01) (2413.789848ms)
+  ▶ 3. Provider Portal & Admin Dashboard (WBS-5.3)
+    ✔ Provider có thể thêm slot mới và món mới (183.413964ms)
+    ✔ GET /api/providers/:id/stats trả về số liệu doanh thu và slot thực tế (163.748727ms)
+    ✔ GET /api/admin/stats trả về GMV, danh sách FLAGGED và audit logs (133.692929ms)
+    ✔ Admin có thể cập nhật trạng thái user và tự động sinh audit_logs (131.156486ms)
+  ✔ 3. Provider Portal & Admin Dashboard (WBS-5.3) (613.079643ms)
+✖ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3) (3879.384884ms)
+✔ only the owning HOST can cancel (483.653642ms)
+✔ cancellation refunds held payments once and rejects a late webhook (288.93805ms)
+✔ cancel rolls back all changes if its audit insert fails (224.100156ms)
+✔ cancellation wins or refunds a concurrent payment, with no held balance left (175.805001ms)
+✔ cancellation and release cannot both succeed on a paid lobby (267.198396ms)
+✔ cannot cancel a completed lobby (110.491937ms)
+✖ a cancelled lobby preserves its slot history and prevents rebooking (202.462539ms)
+ℹ tests 19
+ℹ suites 4
+ℹ pass 16
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6846.722114
+
+✖ failing tests:
+
+test at tests/dispute-admin.test.js:190:5
+✖ uses only previously unrefunded bills for a later decision (334.977926ms)
+  Error: expected 200 "OK", got 409 "Conflict"
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:195:43)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ----
+      at Test._assertStatus (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:404:14)
+      at /home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:302:23)
+      at localAssert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:227:13)
+      at Server.wrapper (node:events:639:12)
+      at Server.emit (node:events:514:28)
+      at emitCloseNT (node:net:2941:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+
+test at tests/dispute-admin.test.js:201:5
+✖ leaves a later decision open when all eligible bills have already been refunded (361.577572ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 4
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:203:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/lobby-cancel.test.js:85:1
+✖ a cancelled lobby preserves its slot history and prevents rebooking (202.462539ms)
+  Error: expected 409 "Conflict", got 200 "OK"
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/lobby-cancel.test.js:92:63)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ----
+      at Test._assertStatus (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:404:14)
+      at /home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:302:23)
+      at localAssert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:227:13)
+      at Server.wrapper (node:events:639:12)
+      at Server.emit (node:events:514:28)
+      at emitCloseNT (node:net:2941:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21)

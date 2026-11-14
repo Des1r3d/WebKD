@@ -1,0 +1,4 @@
+PASS SYNC00 COMPLETED: page opens with zero POST split; explicit POST returns 409 INVALID_STATUS
+PASS cancellation realtime and responsive layout 390x844
+PASS cancellation realtime and responsive layout 768x1024
+PASS cancellation realtime and responsive layout 1440x900

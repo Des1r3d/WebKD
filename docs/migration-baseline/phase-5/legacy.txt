@@ -1,0 +1,5 @@
+      idempotency_key      | split_bill_id | amount 
+---------------------------+---------------+--------
+ refund:lob-00-prev:dsp-01 |               |  25000
+(1 row)
+

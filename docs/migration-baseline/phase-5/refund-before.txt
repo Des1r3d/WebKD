@@ -1,0 +1,112 @@
+▶ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3)
+  ▶ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04)
+    ✔ gửi khiếu nại -> tạo dispute OPEN, đóng băng tiền Escrow của target provider và chuyển lobby sang DISPUTED (668.882022ms)
+  ✔ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04) (671.16064ms)
+  ▶ 2. Phân xử Khiếu nại Admin (BR-DSP-01)
+    ✖ Admin duyệt RESOLVED: hoàn tiền từ Escrow (REFUNDED), giải ngân phần còn lại cho quán, ghi audit log (322.505927ms)
+    ✖ commits one refund effect for concurrent and repeated decisions (312.006277ms)
+    ✖ rejects decisions over available frozen funds without moving money (379.483835ms)
+    ✖ does not create a second refund when the old dispute key exists (349.777862ms)
+    ✔ người dùng thường không có quyền phân xử khiếu nại (chỉ ADMIN) (339.919326ms)
+  ✖ 2. Phân xử Khiếu nại Admin (BR-DSP-01) (1705.166997ms)
+  ▶ 3. Provider Portal & Admin Dashboard (WBS-5.3)
+    ✔ Provider có thể thêm slot mới và món mới (183.492017ms)
+    ✔ GET /api/providers/:id/stats trả về số liệu doanh thu và slot thực tế (166.35439ms)
+    ✔ GET /api/admin/stats trả về GMV, danh sách FLAGGED và audit logs (125.90236ms)
+    ✔ Admin có thể cập nhật trạng thái user và tự động sinh audit_logs (129.773674ms)
+  ✔ 3. Provider Portal & Admin Dashboard (WBS-5.3) (606.634342ms)
+✖ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3) (2984.462837ms)
+ℹ tests 10
+ℹ suites 4
+ℹ pass 6
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3694.652287
+
+✖ failing tests:
+
+test at tests/dispute-admin.test.js:124:5
+✖ Admin duyệt RESOLVED: hoàn tiền từ Escrow (REFUNDED), giải ngân phần còn lại cho quán, ghi audit log (322.505927ms)
+  PrismaClientValidationError: 
+  Invalid `prisma.splitBill.findUniqueOrThrow()` invocation:
+  
+  {
+    where: {
+  +   id: String
+    }
+  }
+  
+  Argument `id` must not be null.
+      at wn (/home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:29:1363)
+      at $n.handleRequestError (/home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:121:6958)
+      at $n.handleAndLogRequestError (/home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:121:6623)
+      at $n.request (/home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:121:6307)
+      at async l (/home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:130:9633)
+      at async /home/dat/Desktop/WebKD/server/node_modules/@prisma/client/runtime/library.js:31:5086
+      at async TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:142:22)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1905:7)
+
+test at tests/dispute-admin.test.js:165:5
+✖ commits one refund effect for concurrent and repeated decisions (312.006277ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      200,
+  +   500
+  -   400
+    ]
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:167:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 200, 500 ],
+    expected: [ 200, 400 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/dispute-admin.test.js:175:5
+✖ rejects decisions over available frozen funds without moving money (379.483835ms)
+  Error: expected 409 "Conflict", got 200 "OK"
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:176:28)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ----
+      at Test._assertStatus (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:404:14)
+      at /home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:302:23)
+      at localAssert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:227:13)
+      at Server.wrapper (node:events:639:12)
+      at Server.emit (node:events:514:28)
+      at emitCloseNT (node:net:2941:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+
+test at tests/dispute-admin.test.js:181:5
+✖ does not create a second refund when the old dispute key exists (349.777862ms)
+  Error: expected 409 "Conflict", got 200 "OK"
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:186:28)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ----
+      at Test._assertStatus (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:404:14)
+      at /home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:302:23)
+      at localAssert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:227:13)
+      at Server.wrapper (node:events:639:12)
+      at Server.emit (node:events:514:28)
+      at emitCloseNT (node:net:2941:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21)

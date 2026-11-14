@@ -1,0 +1,149 @@
+▶ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3)
+  ✖ does not freeze or reopen a payout that has already been released (843.755945ms)
+  ▶ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04)
+    ✔ gửi khiếu nại -> tạo dispute OPEN, đóng băng tiền Escrow của target provider và chuyển lobby sang DISPUTED (381.544636ms)
+  ✔ 1. Khiếu nại & Đóng băng Escrow từng phần (BR-ESC-04) (382.576564ms)
+  ▶ 2. Phân xử Khiếu nại Admin (BR-DSP-01)
+    ✔ Admin duyệt RESOLVED: hoàn tiền từ Escrow (REFUNDED), giải ngân phần còn lại cho quán, ghi audit log (386.81787ms)
+    ✔ commits one refund effect for concurrent and repeated decisions (450.793953ms)
+    ✔ rejects decisions over available frozen funds without moving money (407.568932ms)
+    ✔ uses only previously unrefunded bills for a later decision (415.221573ms)
+    ✔ leaves a later decision open when all eligible bills have already been refunded (393.501594ms)
+    ✔ does not create a second refund when the old dispute key exists (336.386482ms)
+    ✔ người dùng thường không có quyền phân xử khiếu nại (chỉ ADMIN) (357.042115ms)
+  ✔ 2. Phân xử Khiếu nại Admin (BR-DSP-01) (2749.89513ms)
+  ▶ 3. Provider Portal & Admin Dashboard (WBS-5.3)
+    ✔ Provider có thể thêm slot mới và món mới (141.21766ms)
+    ✔ GET /api/providers/:id/stats trả về số liệu doanh thu và slot thực tế (133.086824ms)
+    ✔ GET /api/admin/stats trả về GMV, danh sách FLAGGED và audit logs (249.917239ms)
+    ✔ Admin có thể cập nhật trạng thái user và tự động sinh audit_logs (185.848847ms)
+  ✔ 3. Provider Portal & Admin Dashboard (WBS-5.3) (711.240472ms)
+✖ Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) & Portals (WBS-5.2..5.3) (4691.174685ms)
+▶ Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, BR-REP-02..03)
+  ▶ 1. Webhook Giả Lập & Giữ Tiền Escrow (BR-ESC-01)
+    ✔ thanh toán split bill -> cập nhật PAID và tạo Escrow HELD với idempotency key (575.151393ms)
+    ✔ khi tất cả các thành viên đều thanh toán -> phòng chuyển sang PAID, slot thành BOOKED (280.291588ms)
+  ✔ 1. Webhook Giả Lập & Giữ Tiền Escrow (BR-ESC-01) (858.138538ms)
+  ✖ releases the amounts locked into the split for vch-venue-10 (379.050304ms)
+  ✖ releases the amounts locked into the split for vch-cross-15 (335.477369ms)
+  ▶ 2. Check-in & Giải Ngân Đa Bên (BR-ESC-02 & BR-ESC-03 Gate)
+    ✔ giải ngân tách VENUE (8% hoa hồng) và FNB (12% hoa hồng) chính xác (310.29994ms)
+    ✔ GATE BẮT BUỘC (BR-ESC-03): Gọi giải ngân lần 2 bị chặn với HTTP 409 IDEMPOTENCY_DUPLICATE_RELEASE và DB chỉ có 1 giao dịch (379.290146ms)
+  ✔ 2. Check-in & Giải Ngân Đa Bên (BR-ESC-02 & BR-ESC-03 Gate) (690.40225ms)
+  ▶ 3. Đánh Giá Uy Tín Check-in & Bùng Kèo (BR-REP-02, BR-REP-03)
+    ✔ CHECKED_IN: cộng +2 điểm uy tín (tối đa 100đ) (325.655336ms)
+    ✔ NO_SHOW (Bùng kèo): trừ 15 điểm uy tín và tịch thu tiền cọc PENALTY cho chủ sân (328.021458ms)
+  ✔ 3. Đánh Giá Uy Tín Check-in & Bùng Kèo (BR-REP-02, BR-REP-03) (654.523132ms)
+✖ Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, BR-REP-02..03) (2919.783824ms)
+✔ only the owning HOST can cancel (494.229847ms)
+✔ cancellation refunds held payments once and rejects a late webhook (281.860506ms)
+✔ cancel rolls back all changes if its audit insert fails (216.524505ms)
+✔ cancellation wins or refunds a concurrent payment, with no held balance left (237.049427ms)
+✔ cancellation and release cannot both succeed on a paid lobby (279.99233ms)
+✔ cannot cancel a completed lobby (121.689091ms)
+✔ a cancelled lobby preserves its slot history and prevents rebooking (199.264719ms)
+✖ leaving after lock retains the paid court share once and credits the remaining bills (143.084466ms)
+ℹ tests 29
+ℹ suites 8
+ℹ pass 25
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11265.791791
+
+✖ failing tests:
+
+test at tests/dispute-admin.test.js:40:3
+✖ does not freeze or reopen a payout that has already been released (843.755945ms)
+  Error: expected 409 "Conflict", got 201 "Created"
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/dispute-admin.test.js:48:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1905:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ----
+      at Test._assertStatus (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:404:14)
+      at /home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:460:13
+      at Test._assertFunction (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:437:13)
+      at Test.assert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:302:23)
+      at localAssert (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:220:38)
+      at Server.<anonymous> (/home/dat/Desktop/WebKD/server/node_modules/supertest/lib/test.js:227:13)
+      at Server.wrapper (node:events:639:12)
+      at Server.emit (node:events:514:28)
+      at emitCloseNT (node:net:2941:8)
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+
+test at tests/escrow.test.js:93:5
+✖ releases the amounts locked into the split for vch-venue-10 (379.050304ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   120000,
+  +   95000
+  -   108000,
+  -   115000
+    ]
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/escrow.test.js:101:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 120000, 95000 ],
+    expected: [ 108000, 115000 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/escrow.test.js:93:5
+✖ releases the amounts locked into the split for vch-cross-15 (335.477369ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   120000,
+  +   95000
+  -   102000,
+  -   115000
+    ]
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/escrow.test.js:101:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 120000, 95000 ],
+    expected: [ 102000, 115000 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/lobby-cancel.test.js:101:1
+✖ leaving after lock retains the paid court share once and credits the remaining bills (143.084466ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   [
+  -     'PENALTY',
+  -     'HELD',
+  -     9000
+  -   ]
+  - ]
+  
+      at TestContext.<anonymous> (file:///home/dat/Desktop/WebKD/server/tests/lobby-cancel.test.js:108:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ [ 'PENALTY', 'HELD', 9000 ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
