@@ -1,4 +1,5 @@
 import { Prisma, EscrowTxType, EscrowStatus, LobbyMemberStatus, LobbyStatus, SlotStatus, SplitBillStatus } from '@prisma/client';
+import { lockLobbyRow } from './lobby.js';
 import { prisma } from '../prisma.js';
 import { applyNoShowPenalty, applyCheckInReward } from './reputation.js';
 
@@ -17,6 +18,15 @@ export async function handlePaymentWebhook(
   const idempotencyKey = `hold:${bill.lobby_id}:${bill.id}`;
 
   return prisma.$transaction(async (tx) => {
+    const lobby = await lockLobbyRow(tx, bill.lobby_id);
+    if (lobby.status === LobbyStatus.CANCELLED) throw new Error('INVALID_STATUS');
+    const existingHold = await tx.escrowTransaction.findUnique({ where: { idempotency_key: idempotencyKey } });
+    if (existingHold) {
+      const splitBill = await tx.splitBill.findUniqueOrThrow({ where: { id: bill.id } });
+      return { splitBill, escrowHoldTx: existingHold, lobbyStatus: lobby.status, allPaid: lobby.status === LobbyStatus.PAID };
+    }
+    if (lobby.status !== LobbyStatus.AWAITING_PAYMENT) throw new Error('INVALID_STATUS');
+
     // Cập nhật trạng thái split bill
     const updatedBill = await tx.splitBill.update({
       where: { id: bill.id },
@@ -24,28 +34,23 @@ export async function handlePaymentWebhook(
     });
 
     // Tạo giao dịch Escrow HOLD (BR-ESC-01) — idempotent theo key
-    const escrowHoldTx =
-      (await tx.escrowTransaction.findUnique({ where: { idempotency_key: idempotencyKey } })) ??
-      (await tx.escrowTransaction.create({
-        data: {
-          lobby_id: bill.lobby_id,
-          split_bill_id: bill.id,
-          type: EscrowTxType.HOLD,
-          amount: bill.total,
-          platform_fee: 0,
-          net_amount: bill.total,
-          payee_provider_id: null,
-          status: EscrowStatus.HELD,
-          idempotency_key: idempotencyKey,
-        },
-      }));
+    const escrowHoldTx = await tx.escrowTransaction.create({
+      data: {
+        lobby_id: bill.lobby_id,
+        split_bill_id: bill.id,
+        type: EscrowTxType.HOLD,
+        amount: updatedBill.total,
+        net_amount: updatedBill.total,
+        status: EscrowStatus.HELD,
+        idempotency_key: idempotencyKey,
+      },
+    });
 
     // Kiểm tra xem tất cả các bill của phòng đã thanh toán chưa
     const allBills = await tx.splitBill.findMany({ where: { lobby_id: bill.lobby_id } });
     const allPaid = allBills.length > 0 && allBills.every((b) => b.status === SplitBillStatus.PAID);
 
     let lobbyStatus = LobbyStatus.AWAITING_PAYMENT;
-    const lobby = await tx.groupLobby.findUnique({ where: { id: bill.lobby_id } });
 
     if (allPaid && lobby) {
       await tx.groupLobby.update({ where: { id: lobby.id }, data: { status: LobbyStatus.PAID } });
@@ -114,13 +119,16 @@ export async function checkInAndReleaseEscrow(
   }
 
   const currentMembers = await prisma.lobbyMember.findMany({ where: { lobby_id: lobby.id } });
-  const openDisputes = await prisma.dispute.findMany({
-    where: { lobby_id: lobby.id, status: 'OPEN' },
-  });
   const cartItems = fnbProvider ? await prisma.cartItem.findMany({ where: { lobby_id: lobby.id } }) : [];
 
   try {
     return await prisma.$transaction(async (tx) => {
+      const current = await lockLobbyRow(tx, lobby.id);
+      if (await tx.escrowTransaction.findUnique({ where: { idempotency_key: venueKey } })) throw duplicate();
+      if (current.status !== LobbyStatus.PAID && current.status !== LobbyStatus.DISPUTED) {
+        throw new Error('INVALID_STATUS');
+      }
+      const openDisputes = await tx.dispute.findMany({ where: { lobby_id: lobby.id, status: 'OPEN' } });
       const releasedTransactions = [];
 
       // 3. Giải ngân đa bên tách VENUE (8%) và FNB (12%) (BR-ESC-02)

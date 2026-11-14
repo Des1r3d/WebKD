@@ -1,5 +1,5 @@
 import { prisma } from '../prisma.js';
-import { findLobby } from './lobby.js';
+import { findLobby, lockLobbyRow } from './lobby.js';
 
 /**
  * BR-INT-02: Thuật toán chia bill chuẩn với Largest Remainder (Hamilton Method)
@@ -162,6 +162,7 @@ export async function executeSplitBillForLobby(
 ) {
   const lobby = await findLobby(lobbyId);
   if (!lobby) throw new Error('LOBBY_NOT_FOUND');
+  if (!['OPEN', 'LOCKED'].includes(lobby.status)) throw new Error('INVALID_STATUS');
 
   const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
   if (!slot) throw new Error('SLOT_NOT_FOUND');
@@ -225,11 +226,13 @@ export async function executeSplitBillForLobby(
   });
 
   // Lưu split_bills (thay bill cũ của lobby) + chuyển lobby sang AWAITING_PAYMENT
-  await prisma.$transaction([
-    prisma.splitBill.deleteMany({ where: { lobby_id: lobby.id } }),
-    prisma.splitBill.createMany({ data: result.bills }),
-    prisma.groupLobby.update({ where: { id: lobby.id }, data: { status: 'AWAITING_PAYMENT' } }),
-  ]);
+  await prisma.$transaction(async (tx) => {
+    const current = await lockLobbyRow(tx, lobby.id);
+    if (!['OPEN', 'LOCKED'].includes(current.status)) throw new Error('INVALID_STATUS');
+    await tx.splitBill.deleteMany({ where: { lobby_id: lobby.id } });
+    await tx.splitBill.createMany({ data: result.bills });
+    await tx.groupLobby.update({ where: { id: lobby.id }, data: { status: 'AWAITING_PAYMENT' } });
+  });
 
   return result;
 }

@@ -57,11 +57,14 @@ async function lobbyFull(code,user) {
       <span>Tổng đồ uống: <b data-cart-subtotal>${formatVnd(cartSubtotal)}</b></span>
       <span>Ship: <b>${formatVnd(l.ship_fee || 0)}</b></span><span>Món: <b data-cart-count>${items.length}</b></span>
     </div></div>
-    <div class="lobby-lock-notice" data-lobby-lock-notice ${locked ? '' : 'hidden'}>Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.</div>
+    <div class="lobby-lock-notice" data-lobby-lock-notice ${locked ? '' : 'hidden'}>${l.status === 'CANCELLED' ? 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.' : 'Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.'}</div>
     <div data-cart-rows>${renderLobbyCart(items, members, locked)}</div>
-    <form data-voucher-form class="lobby-voucher">${LobbyIcon('Tag')}<input name="code" aria-label="Mã voucher" placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)" required><button class="btn btn-secondary btn-sm">Áp dụng</button></form>
+    <form data-voucher-form class="lobby-voucher" ${l.status === 'CANCELLED' ? 'hidden' : ''}>${LobbyIcon('Tag')}<input name="code" aria-label="Mã voucher" placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)" required><button class="btn btn-secondary btn-sm">Áp dụng</button></form>
   </section>`;
-  const actions=`${!isMember&&l.status==='OPEN'?`<a class="btn btn-primary btn-sm" href="/join/${encodeURIComponent(code)}" data-link>Tham gia phòng</a>`:''}${isMember&&!host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(l.id)}">Rời phòng</button>`:''}${host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(l.id)}">${LobbyIcon('Lock')}Khóa giỏ hàng (BR-INT-04)</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(l.id)}" data-code="${esc(code)}">${LobbyIcon('Calculator')}Chốt &amp; Chia Bill</button>`:''}${host&&['LOCKED','AWAITING_PAYMENT'].includes(l.status)?`<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`:''}`;
+  const cancelAction = user?.role === 'HOST' && host && ['OPEN', 'LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(l.status)
+    ? `<button class="btn btn-outline btn-sm" data-cancel-lobby="${esc(l.id)}">Hủy phòng</button>`
+    : '';
+  const actions=`${cancelAction}${!isMember&&l.status==='OPEN'?`<a class="btn btn-primary btn-sm" href="/join/${encodeURIComponent(code)}" data-link>Tham gia phòng</a>`:''}${isMember&&!host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(l.id)}">Rời phòng</button>`:''}${host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(l.id)}">${LobbyIcon('Lock')}Khóa giỏ hàng (BR-INT-04)</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(l.id)}" data-code="${esc(code)}">${LobbyIcon('Calculator')}Chốt &amp; Chia Bill</button>`:''}${host&&['LOCKED','AWAITING_PAYMENT'].includes(l.status)?`<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`:''}`;
   const summary = `<div class="lobby-summary"><div><b>MÃ PHÒNG: ${esc(code)}</b><span>Khung giờ: ${date(slot.start_at)}</span><span>Giá sân: <strong>${formatVnd(slot.price || 0)}</strong></span></div><div><small>Hạn chốt kèo</small><span data-countdown-until="${esc(l.deadline_at)}"></span><span data-lobby-status>${Badge(l.status)}</span>${detail.voucher ? `<span class="badge lobby-voucher-badge">Voucher ${esc(detail.voucher.code)}</span>` : ''}</div></div>`;
   const body = `<div class="lobby-grid">
     <div class="lobby-main">${cartSection}
@@ -86,9 +89,9 @@ function renderLobbyCart(items, members, locked) {
 }
 
 async function split(code,user) { const r=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=r.lobby||r; let bills=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/bills`).catch(()=>({data:[]})))||[]; if(!bills.length&&l.status==='LOCKED'&&user?.id===l.host_id){const s=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/split`,{method:'POST'})); bills=s.bills||[];}
- const mine=bills.find(b=>b.user_id===user?.id); const rows=bills.map(b=>`<tr><td>${esc(b.full_name||b.user?.full_name||b.user_id)}</td><td>${formatVnd(b.slot_share)}</td><td>${formatVnd(b.food_amount)}</td><td>${formatVnd(b.ship_share-b.discount_share)}</td><td><b>${formatVnd(b.total)}</b></td><td>${Badge(b.status)} ${b.status==='PENDING'?`<button class="btn btn-outline btn-sm" data-pay-bill="${esc(b.id)}">Giả lập thanh toán</button>`:''}</td></tr>`).join('');
- const qr=mine?QRCard({title:'VietQR thanh toán',imageUrl:mine.vietqr_url,copyText:`SYNCHUB ${code} ${mine.user_id}`,copyLabel:'Sao chép nội dung CK',hint:`Số tiền: ${formatVnd(mine.total)}`}):`<p>Chưa có hóa đơn VietQR.</p>`;
- return page(`Chia bill #${esc(code)}`,'Chia tiền theo dữ liệu máy chủ; mỗi thành viên thanh toán phần của mình.',`${bills.length?section('Hóa đơn thành viên',`<div class="table-scroll"><table><thead><tr><th>Thành viên</th><th>Sân</th><th>Món</th><th>Ship/Voucher</th><th>Tổng</th><th>Trạng thái</th></tr></thead><tbody>${rows}</tbody></table></div>`):section('Hóa đơn',empty('Chưa có hóa đơn','Host cần chốt phòng để tạo bill.'))}<div class="split-grid">${section('Hóa đơn của bạn',qr)}${user?.id===l.host_id?section('Điểm danh & giải ngân',`${(r.members||[]).map(m=>`<label>${esc(m.full_name)}<select data-attendance="${esc(m.user_id)}"><option value="CHECKED_IN">Có mặt (+2)</option><option value="NO_SHOW">Bùng kèo (-15, mất cọc)</option></select></label>`).join('')}<button class="btn btn-primary" data-release="${esc(l.id)}">Xác nhận check-in & giải ngân</button>`):''}</div><p data-action-message role="status"></p>`); }
+ const mine=bills.find(b=>b.user_id===user?.id); const rows=bills.map(b=>`<tr><td>${esc(b.full_name||b.user?.full_name||b.user_id)}</td><td>${formatVnd(b.slot_share)}</td><td>${formatVnd(b.food_amount)}</td><td>${formatVnd(b.ship_share-b.discount_share)}</td><td><b>${formatVnd(b.total)}</b></td><td>${Badge(b.status)} ${l.status!=='CANCELLED'&&b.status==='PENDING'?`<button class="btn btn-outline btn-sm" data-pay-bill="${esc(b.id)}">Giả lập thanh toán</button>`:''}</td></tr>`).join('');
+ const qr=l.status==='CANCELLED'?'<p>Phòng đã hủy.</p>':mine?QRCard({title:'VietQR thanh toán',imageUrl:mine.vietqr_url,copyText:`SYNCHUB ${code} ${mine.user_id}`,copyLabel:'Sao chép nội dung CK',hint:`Số tiền: ${formatVnd(mine.total)}`}):`<p>Chưa có hóa đơn VietQR.</p>`;
+ return page(`Chia bill #${esc(code)}`,'Chia tiền theo dữ liệu máy chủ; mỗi thành viên thanh toán phần của mình.',`${bills.length?section('Hóa đơn thành viên',`<div class="table-scroll"><table><thead><tr><th>Thành viên</th><th>Sân</th><th>Món</th><th>Ship/Voucher</th><th>Tổng</th><th>Trạng thái</th></tr></thead><tbody>${rows}</tbody></table></div>`):section('Hóa đơn',empty('Chưa có hóa đơn','Host cần chốt phòng để tạo bill.'))}<div class="split-grid">${section('Hóa đơn của bạn',qr)}${user?.id===l.host_id&&l.status!=='CANCELLED'?section('Điểm danh & giải ngân',`${(r.members||[]).map(m=>`<label>${esc(m.full_name)}<select data-attendance="${esc(m.user_id)}"><option value="CHECKED_IN">Có mặt (+2)</option><option value="NO_SHOW">Bùng kèo (-15, mất cọc)</option></select></label>`).join('')}<button class="btn btn-primary" data-release="${esc(l.id)}">Xác nhận check-in & giải ngân</button>`):''}</div><p data-action-message role="status"></p>`); }
 
 function profile(user) { const score=user?.reputation_score??0, grade=score>=90?'A':score>=70?'B':score>=50?'C':'FLAGGED'; return page('Hồ sơ & hạng uy tín','Điểm uy tín quyết định mức đặt cọc khi vào phòng ghép kèo.',`<div class="split-grid">${section(esc(user?.full_name),`<p>${esc(user?.email)} · ${esc(user?.phone)}</p><p>${esc(user?.role)} · ${Badge(user?.status||'ACTIVE')}</p><p>Điểm uy tín: <b>${score}/100</b> · ${Badge(grade)}</p><progress max="100" value="${score}"></progress>`)}${section('Quyền lợi theo hạng',`<p>A · 90–100: Miễn cọc</p><p>B · 70–89: Cọc 30% sân</p><p>C · 50–69: Cọc 100% sân</p><p>FLAGGED · dưới 50: Chặn tham gia</p><p>Check-in +2 · NO_SHOW -15</p>`)}</div>`); }
 
@@ -139,14 +142,22 @@ function mountLobbySocket(root, code, user, navigate, status) {
     }
   };
   const setStatus = next => {
-    if (next === 'OPEN' || next === cart.dataset.status) return;
+    if (next === 'OPEN' || next === cart.dataset.status || cart.dataset.status === 'CANCELLED') return;
     cart.dataset.status = next;
     root.querySelector('[data-lobby-status]').innerHTML = Badge(next);
     root.querySelector('[data-lobby-lock-notice]').hidden = false;
     const actions = root.querySelector('[data-lobby-actions]');
+    const cancel = actions.querySelector('[data-cancel-lobby]');
     const canSplit = actions.querySelector('[data-lock-and-split]');
     actions.innerHTML = canSplit && ['LOCKED', 'AWAITING_PAYMENT'].includes(next)
       ? `<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`
+    if (cancel && ['LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(next)) actions.prepend(cancel);
+    if (next === 'CANCELLED') {
+      root.querySelector('[data-lobby-lock-notice]').textContent = 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.';
+      root.querySelector('[data-voucher-form]').hidden = true;
+      cartSnapshot = { items: [], subtotal: 0 };
+      renderCart();
+    }
       : '';
     updateControls();
   };
@@ -178,14 +189,20 @@ function mountLobbySocket(root, code, user, navigate, status) {
     root.querySelector('[data-member-count]').textContent = members.length;
     renderCart();
   });
+    if (cart.dataset.status === 'CANCELLED') return;
   socket.on('cart:updated', snapshot => {
     cartSnapshot = snapshot;
     renderCart();
     finishSync();
   });
   socket.on('lobby:locked', () => setStatus('LOCKED'));
-  socket.on('bill:ready', () => navigate(`/lobby/${encodeURIComponent(code)}/split`));
-  socket.on('notify', message => status(message.message));
+  socket.on('bill:ready', () => {
+    if (cart.dataset.status !== 'CANCELLED') navigate(`/lobby/${encodeURIComponent(code)}/split`);
+  });
+  socket.on('notify', message => {
+    status(message.message);
+    if (message.type === 'INFO' && message.message === 'Phòng đã hủy.') setStatus('CANCELLED');
+  });
   socket.on('chat:message', message => {
     if (seenMessages.has(message.id)) return;
     seenMessages.add(message.id);
@@ -240,6 +257,18 @@ export function mountBusiness(path,user,navigate) {
   on('[data-lock-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.lockSlot}/lock`));
   on('[data-release-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.releaseSlot}/release`));
   on('[data-create-lobby]','click',async e=>{try{const r=dataOf(await api('/api/lobbies',{method:'POST',body:{slotId:e.currentTarget.dataset.createLobby}}));navigate(`/lobby/${r.lobby.invite_code}`);}catch(x){status(`Không thể mở phòng: ${x.message}`);}});
+  on('[data-cancel-lobby]', 'click', async event => {
+    const button = event.currentTarget;
+    if (!window.confirm('Hủy phòng và hoàn các khoản đang giữ?')) return;
+    button.disabled = true;
+    try {
+      await api(`/api/lobbies/${button.dataset.cancelLobby}/cancel`, { method: 'POST' });
+      navigate(path, { replace: true });
+    } catch (error) {
+      button.disabled = false;
+      status(`Không thể hủy phòng: ${error.message}`);
+    }
+  });
   on('[data-join-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.joinLobby}/join`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.joinLobby}`);}catch(x){status(`Không thể tham gia: ${x.message}`);}});
   on('[data-lock-lobby]', 'click', async event => {
     const button = event.currentTarget;
@@ -271,6 +300,9 @@ export function mountBusiness(path,user,navigate) {
   if (path.startsWith('/lobby/') && path.endsWith('/split')) {
     const socket = io({ auth: { token: localStorage.getItem('synchub.token') } });
     socket.on('connect', () => socket.emit('lobby:join', { lobbyId: decodeURIComponent(path.split('/')[2]), userId: user?.id }));
+    socket.on('notify', message => {
+      if (message.type === 'INFO' && message.message === 'Phòng đã hủy.') navigate(path, { replace: true });
+    });
     socket.on('payment:confirmed', () => location.reload());
     cleanups.push(() => { socket.removeAllListeners(); socket.disconnect(); });
   }

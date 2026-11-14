@@ -19,6 +19,61 @@ export function generateInviteCode() {
 export const findLobby = (codeOrId) =>
   prisma.groupLobby.findFirst({ where: { OR: [{ id: codeOrId }, { invite_code: codeOrId.toUpperCase() }] } });
 
+// Serialize lifecycle changes before reading state or modifying escrow.
+export async function lockLobbyRow(tx, lobbyId) {
+  await tx.$queryRaw`SELECT id FROM group_lobbies WHERE id = ${lobbyId} FOR UPDATE`;
+  return tx.groupLobby.findUniqueOrThrow({ where: { id: lobbyId } });
+}
+
+export const cancellableLobbyStatuses = ['OPEN', 'LOCKED', 'AWAITING_PAYMENT', 'PAID'];
+
+export async function cancelLobby(codeOrId, actorId) {
+  const found = await findLobby(codeOrId);
+  if (!found) throw new Error('LOBBY_NOT_FOUND');
+  if (found.host_id !== actorId) throw new Error('FORBIDDEN');
+
+  return prisma.$transaction(async (tx) => {
+    const lobby = await lockLobbyRow(tx, found.id);
+    if (!cancellableLobbyStatuses.includes(lobby.status)) throw new Error('INVALID_STATUS');
+
+    const held = await tx.escrowTransaction.findMany({
+      where: { lobby_id: lobby.id, status: 'HELD' },
+      select: { id: true, split_bill_id: true },
+    });
+    await tx.escrowTransaction.updateMany({
+      where: { id: { in: held.map(row => row.id) }, status: 'HELD' },
+      data: { status: 'REFUNDED' },
+    });
+    await tx.splitBill.updateMany({
+      where: { id: { in: held.flatMap(row => row.split_bill_id ? [row.split_bill_id] : []) }, status: 'PAID' },
+      data: { status: 'REFUNDED' },
+    });
+    await tx.cartItem.deleteMany({ where: { lobby_id: lobby.id } });
+    const cancelled = await tx.groupLobby.update({
+      where: { id: lobby.id },
+      data: { status: 'CANCELLED', fnb_provider_id: null },
+    });
+    const slot = await tx.slot.updateMany({
+      where: {
+        id: lobby.slot_id,
+        OR: [{ status: 'BOOKED' }, { status: 'LOCKED', locked_by: actorId }],
+      },
+      data: { status: 'AVAILABLE', locked_by: null, locked_until: null },
+    });
+    await tx.auditLog.create({
+      data: {
+        actor_id: actorId,
+        action: 'LOBBY_CANCEL',
+        entity: 'group_lobbies',
+        entity_id: lobby.id,
+        before: { status: lobby.status, fnb_provider_id: lobby.fnb_provider_id },
+        after: { status: 'CANCELLED', refunded_transaction_ids: held.map(row => row.id) },
+      },
+    });
+    return { cancelled, slotReleased: slot.count > 0 };
+  });
+}
+
 /**
  * UC04 / BR-INT-01: Tạo phòng ghép kèo gắn với 1 slot đã giữ
  */

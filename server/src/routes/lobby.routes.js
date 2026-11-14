@@ -3,6 +3,7 @@ import { authenticateJWT, requireRole } from '../middlewares/auth.js';
 import { Role } from '@prisma/client';
 import {
   handleCreateLobby,
+  handleCancelLobby,
   handleGetLobby,
   handleJoinLobby,
   handleLeaveLobby,
@@ -108,3 +109,5 @@ lobbyRouter.post(
   authenticateJWT,
   handleCheckInLobby
 );
+
+lobbyRouter.post('/:id/cancel', authenticateJWT, requireRole(Role.HOST), handleCancelLobby);

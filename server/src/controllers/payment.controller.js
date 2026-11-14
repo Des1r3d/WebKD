@@ -50,6 +50,10 @@ export async function handleWebhookMock(req, res) {
       data: result,
     });
   } catch (error) {
+    if (error.message === 'INVALID_STATUS') {
+      res.status(409).json({ error: 'INVALID_STATUS', message: 'Phòng không nhận thanh toán ở trạng thái hiện tại' });
+      return;
+    }
     if (error.message === 'SPLIT_BILL_NOT_FOUND') {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy hóa đơn' });
       return;

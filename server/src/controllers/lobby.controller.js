@@ -1,6 +1,6 @@
 import { LobbyStatus } from '@prisma/client';
 import { prisma } from '../prisma.js';
-import { createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby } from '../services/lobby.js';
+import { cancelLobby, createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby } from '../services/lobby.js';
 
 /**
  * POST /api/lobbies
@@ -174,6 +174,24 @@ export async function handleLeaveLobby(req, res) {
  * POST /api/lobbies/:id/lock
  * BR-INT-04: Host chốt phòng -> khóa giỏ hàng tức thì + emit lobby:locked
  */
+export async function handleCancelLobby(req, res) {
+  try {
+    const { cancelled, slotReleased } = await cancelLobby(req.params.id, req.user.userId);
+    const io = req.app.get('io');
+    if (io) {
+      io.to(`lobby:${cancelled.id}`).emit('notify', { type: 'INFO', message: 'Phòng đã hủy.' });
+      if (slotReleased) {
+        const slot = await prisma.slot.findUniqueOrThrow({ where: { id: cancelled.slot_id } });
+        io.emit('slot:released', { slotId: slot.id, providerId: slot.provider_id });
+      }
+    }
+    res.json({ success: true, data: cancelled });
+  } catch (error) {
+    const status = { LOBBY_NOT_FOUND: 404, FORBIDDEN: 403, INVALID_STATUS: 409 }[error.message];
+    res.status(status || 500).json({ error: status ? error.message : 'SERVER_ERROR', message: error.message });
+  }
+}
+
 export async function handleLockLobby(req, res) {
   try {
     const userId = req.user?.userId;
@@ -207,7 +225,7 @@ export async function handleLockLobby(req, res) {
     }
 
     const updated = await prisma.groupLobby.update({
-      where: { id: lobby.id },
+      where: { id: lobby.id, status: LobbyStatus.OPEN },
       data: { status: LobbyStatus.LOCKED, locked_at: new Date() },
     });
     const io = req.app.get('io');
@@ -256,14 +274,6 @@ export async function handleSplitLobby(req, res) {
       return;
     }
 
-    // Tự động chuyển sang LOCKED nếu chưa khóa
-    if (lobby.status === 'OPEN') {
-      await prisma.groupLobby.update({
-        where: { id: lobby.id },
-        data: { status: LobbyStatus.LOCKED, locked_at: new Date() },
-      });
-    }
-
     const { executeSplitBillForLobby } = await import('../services/splitBill.js');
     const result = await executeSplitBillForLobby(lobby.id);
 
@@ -282,6 +292,10 @@ export async function handleSplitLobby(req, res) {
       data: result,
     });
   } catch (error) {
+    if (error.message === 'INVALID_STATUS') {
+      res.status(409).json({ error: 'INVALID_STATUS', message: 'Trạng thái phòng không cho phép thao tác này' });
+      return;
+    }
     if (error.message === 'SPLIT_SUM_MISMATCH') {
       res.status(500).json({
         error: 'SPLIT_SUM_MISMATCH',
@@ -463,6 +477,10 @@ export async function handleCheckInLobby(req, res) {
       data: result,
     });
   } catch (error) {
+    if (error.message === 'INVALID_STATUS') {
+      res.status(409).json({ error: 'INVALID_STATUS', message: 'Trạng thái phòng không cho phép thao tác này' });
+      return;
+    }
     if (error.code === 'IDEMPOTENCY_DUPLICATE_RELEASE') {
       res.status(409).json({
         error: 'IDEMPOTENCY_DUPLICATE_RELEASE',
