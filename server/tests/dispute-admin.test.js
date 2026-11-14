@@ -178,6 +178,36 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       assert.equal(await prisma.escrowTransaction.count({ where: { lobby_id: 'lob-01', type: 'REFUND' } }), 0);
     });
 
+    async function openAnotherDispute() {
+      const response = await request(app)
+        .post('/api/disputes')
+        .set('Authorization', `Bearer ${memberToken}`)
+        .send({ lobbyId: 'lob-01', targetProviderId: 'prv-fnb-01', reason: 'Thiếu một món khác' })
+        .expect(201);
+      disputeId = response.body.data.dispute.id;
+    }
+
+    it('uses only previously unrefunded bills for a later decision', async () => {
+      const first = await resolve(1).expect(200);
+      assert.equal(first.body.data.refundTxs.length, 1);
+      const firstBill = first.body.data.refundTxs[0].split_bill_id;
+      await openAnotherDispute();
+      const second = await resolve(25000).expect(200);
+      const refunds = second.body.data.refundTxs;
+      assert.equal(refunds.reduce((total, row) => total + row.amount, 0), 25000);
+      assert.ok(refunds.every(row => row.split_bill_id !== firstBill));
+    });
+
+    it('leaves a later decision open when all eligible bills have already been refunded', async () => {
+      const first = await resolve(25000).expect(200);
+      assert.equal(first.body.data.refundTxs.length, 3);
+      await openAnotherDispute();
+      const response = await resolve(1).expect(409);
+      assert.equal(response.body.error, 'REFUND_EXCEEDS_AVAILABLE');
+      assert.equal((await prisma.dispute.findUniqueOrThrow({ where: { id: disputeId } })).status, 'OPEN');
+      assert.equal(await prisma.escrowTransaction.count({ where: { lobby_id: 'lob-01', type: 'REFUND' } }), 3);
+    });
+
     it('does not create a second refund when the old dispute key exists', async () => {
       await prisma.escrowTransaction.create({ data: {
         lobby_id: 'lob-01', type: 'REFUND', amount: 25000, net_amount: 25000,

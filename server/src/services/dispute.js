@@ -126,11 +126,12 @@ export async function resolveDisputeService(
 
       if (refundAmount > 0) {
         // The historical dispute key does not identify which members were refunded.
-        const priorRefund = escrowTxs.some(row => row.type === EscrowTxType.REFUND);
-        if (priorRefund) throw new Error('REFUND_REQUIRES_REVIEW');
-
+        const priorRefunds = escrowTxs.filter(row => row.type === EscrowTxType.REFUND);
+        if (priorRefunds.some(row => !row.split_bill_id)) throw new Error('REFUND_REQUIRES_REVIEW');
+        const refundedBillIds = new Set(priorRefunds.map(row => row.split_bill_id));
         const paid = escrowTxs.filter(row =>
-          row.type === EscrowTxType.HOLD && row.split_bill_id && row.status === EscrowStatus.HELD);
+          row.type === EscrowTxType.HOLD && row.split_bill_id && row.status === EscrowStatus.HELD &&
+          !refundedBillIds.has(row.split_bill_id));
         const bills = await tx.splitBill.findMany({
           where: { lobby_id: dispute.lobby_id, status: 'PAID', id: { in: paid.map(row => row.split_bill_id) } },
           orderBy: { id: 'asc' },
