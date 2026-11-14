@@ -166,7 +166,7 @@ export async function getLobbyDetail(codeOrId) {
   const dbCart = await prisma.cartItem.findMany({
     where: { lobby_id: lobby.id },
     include: { menu_item: true },
-    orderBy: { created_at: 'asc' },
+    orderBy: [{ created_at: 'asc' }, { id: 'asc' }],
   });
   const cart = dbCart.map((c) => ({
     id: c.id,

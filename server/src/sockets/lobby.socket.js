@@ -8,7 +8,7 @@ async function loadFormattedCart(lobbyId) {
   const dbCart = await prisma.cartItem.findMany({
     where: { lobby_id: lobbyId },
     include: { menu_item: true },
-    orderBy: { created_at: 'asc' },
+    orderBy: [{ created_at: 'asc' }, { id: 'asc' }],
   });
   const items = dbCart.map((c) => ({
     id: c.id,
