@@ -236,7 +236,7 @@ export function setupLobbySocket(io) {
         };
         const list = chatMessages.get(lobby.id) || [];
         list.push(msg);
-        chatMessages.set(lobby.id, list.slice(-100));
+        chatMessages.set(lobby.id, list.slice(-50));
 
         io.to(`lobby:${lobby.id}`).emit('chat:message', {
           id: msg.id,
