@@ -49,12 +49,22 @@ export async function seed(opts) {
   const passwordHash = cachedPasswordHash || (cachedPasswordHash = await bcrypt.hash('Password123!', 10));
 
   // ==========================================
-  // 1. TẠO 8 USERS MẪU ĐỦ 4 ROLES & 3 HẠNG UY TÍN
+  // 1. TẠO NGƯỜI DÙNG MẪU
   // ==========================================
   const usersData = [
     {
-      id: 'usr-host-01',
+      id: 'usr-dat-01',
       email: 'dat.dt@synchub.vn',
+      password_hash: passwordHash,
+      full_name: 'Đào Tiến Đạt',
+      phone: '0909234567',
+      role: Role.HOST,
+      reputation_score: 98,
+      status: UserStatus.ACTIVE,
+    },
+    {
+      id: 'usr-host-01',
+      email: 'nguyen.minh.phat@synchub.vn',
       password_hash: passwordHash,
       full_name: 'Nguyễn Minh Phát',
       phone: '0901234567',
@@ -64,7 +74,7 @@ export async function seed(opts) {
     },
     {
       id: 'usr-mem-02',
-      email: 'minh.b@synchub.vn',
+      email: 'khuong.thao.vy@synchub.vn',
       password_hash: passwordHash,
       full_name: 'Khương Thảo Vy',
       phone: '0902234567',
@@ -74,7 +84,7 @@ export async function seed(opts) {
     },
     {
       id: 'usr-mem-03',
-      email: 'linh.c@synchub.vn',
+      email: 'tran.minh.quang@synchub.vn',
       password_hash: passwordHash,
       full_name: 'Trần Minh Quang',
       phone: '0903234567',
@@ -84,9 +94,9 @@ export async function seed(opts) {
     },
     {
       id: 'usr-mem-04',
-      email: 'kiet.d@synchub.vn',
+      email: 'tran.quang.bao@synchub.vn',
       password_hash: passwordHash,
-      full_name: 'Nguyễn Quang Bảo',
+      full_name: 'Trần Quang Bảo',
       phone: '0904234567',
       role: Role.MEMBER,
       reputation_score: 95, // Hạng A: cọc 0%

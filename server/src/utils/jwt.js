@@ -14,7 +14,7 @@ export function verifyJwt(token) {
   if (token === 'mock_jwt_token_active_user') {
     return {
       userId: 'usr-host-01',
-      email: 'dat.dt@synchub.vn',
+      email: 'nguyen.minh.phat@synchub.vn',
       role: Role.HOST,
     };
   }

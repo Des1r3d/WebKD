@@ -17,12 +17,12 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
     await resetTestData();
     hostToken = signJwt({
       userId: 'usr-host-01',
-      email: 'dat.dt@synchub.vn',
+      email: 'nguyen.minh.phat@synchub.vn',
       role: Role.HOST,
     });
     memberToken = signJwt({
       userId: 'usr-mem-02',
-      email: 'minh.b@synchub.vn',
+      email: 'khuong.thao.vy@synchub.vn',
       role: Role.MEMBER,
     });
     adminToken = signJwt({

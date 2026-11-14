@@ -11,19 +11,19 @@ import { expireOverdueSlots } from '../src/services/slotLock.js';
 describe('Khối 3 — BookSlot & Phòng ghép kèo (WBS-3.1, WBS-3.2, WBS-3.3)', () => {
   const hostToken = signJwt({
     userId: 'usr-host-01',
-    email: 'dat.dt@synchub.vn',
+    email: 'nguyen.minh.phat@synchub.vn',
     role: Role.HOST,
   });
 
   const memberBToken = signJwt({
     userId: 'usr-mem-02',
-    email: 'minh.b@synchub.vn',
+    email: 'khuong.thao.vy@synchub.vn',
     role: Role.MEMBER,
   });
 
   const memberCToken = signJwt({
     userId: 'usr-mem-03',
-    email: 'linh.c@synchub.vn',
+    email: 'tran.minh.quang@synchub.vn',
     role: Role.MEMBER,
   });
 

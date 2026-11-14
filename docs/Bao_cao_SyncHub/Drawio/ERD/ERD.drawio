@@ -1,0 +1,193 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram id="ERD-1" name="Tổng quan 12 bảng">
+    <mxGraphModel grid="0" page="1" pageScale="1" pageWidth="1020" pageHeight="897" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" value="users&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Provider" value="providers&#10;PK id&#10;owner_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Slot" value="slots&#10;PK id&#10;provider_id → providers (1)&#10;locked_by → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="MenuItem" value="menu_items&#10;PK id&#10;provider_id → providers (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="GroupLobby" value="group_lobbies&#10;PK id&#10;host_id → users (1)&#10;slot_id → slots (1)&#10;fnb_provider_id → providers (0..1)&#10;voucher_id → vouchers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="LobbyMember" value="lobby_members&#10;PK lobby_id + user_id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="CartItem" value="cart_items&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)&#10;menu_item_id → menu_items (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="446" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Voucher" value="vouchers&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="446" width="380" height="112" />
+        </mxCell>
+        <mxCell id="SplitBill" value="split_bills&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="588" width="380" height="112" />
+        </mxCell>
+        <mxCell id="EscrowTransaction" value="escrow_transactions&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;split_bill_id → split_bills (0..1)&#10;payee_provider_id → providers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="588" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Dispute" value="disputes&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;reporter_id → users (1)&#10;target_provider_id → providers (1)&#10;resolved_by → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="730" width="380" height="112" />
+        </mxCell>
+        <mxCell id="AuditLog" value="audit_logs&#10;PK id&#10;actor_id → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="730" width="380" height="112" />
+        </mxCell>
+        <mxCell id="e0" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="Provider" target="User">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="LobbyMember" target="GroupLobby">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" value="0..1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="EscrowTransaction" target="SplitBill">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="ERD-2" name="Tài khoản và nhà cung cấp">
+    <mxGraphModel grid="0" page="1" pageScale="1" pageWidth="1020" pageHeight="471" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" value="users&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Provider" value="providers&#10;PK id&#10;owner_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Slot" value="slots&#10;PK id&#10;provider_id → providers (1)&#10;locked_by → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="MenuItem" value="menu_items&#10;PK id&#10;provider_id → providers (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="AuditLog" value="audit_logs&#10;PK id&#10;actor_id → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="e0" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="Provider" target="User">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="ERD-3" name="Đặt chỗ và phòng nhóm">
+    <mxGraphModel grid="0" page="1" pageScale="1" pageWidth="1020" pageHeight="471" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" value="users&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Provider" value="providers&#10;PK id&#10;owner_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Slot" value="slots&#10;PK id&#10;provider_id → providers (1)&#10;locked_by → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="GroupLobby" value="group_lobbies&#10;PK id&#10;host_id → users (1)&#10;slot_id → slots (1)&#10;fnb_provider_id → providers (0..1)&#10;voucher_id → vouchers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="LobbyMember" value="lobby_members&#10;PK lobby_id + user_id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="e0" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="Provider" target="User">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="1 → 0..1" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="GroupLobby" target="Slot">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="ERD-4" name="Giỏ món và hóa đơn">
+    <mxGraphModel grid="0" page="1" pageScale="1" pageWidth="1020" pageHeight="471" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" value="users&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="GroupLobby" value="group_lobbies&#10;PK id&#10;host_id → users (1)&#10;slot_id → slots (1)&#10;fnb_provider_id → providers (0..1)&#10;voucher_id → vouchers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="MenuItem" value="menu_items&#10;PK id&#10;provider_id → providers (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="CartItem" value="cart_items&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)&#10;menu_item_id → menu_items (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Voucher" value="vouchers&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="SplitBill" value="split_bills&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="e0" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="GroupLobby" target="User">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e1" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="CartItem" target="MenuItem">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="ERD-5" name="Sổ cái và khiếu nại">
+    <mxGraphModel grid="0" page="1" pageScale="1" pageWidth="1020" pageHeight="613" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="User" value="users&#10;PK id&#10;" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="GroupLobby" value="group_lobbies&#10;PK id&#10;host_id → users (1)&#10;slot_id → slots (1)&#10;fnb_provider_id → providers (0..1)&#10;voucher_id → vouchers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="20" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Provider" value="providers&#10;PK id&#10;owner_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="SplitBill" value="split_bills&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;user_id → users (1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="162" width="380" height="112" />
+        </mxCell>
+        <mxCell id="EscrowTransaction" value="escrow_transactions&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;split_bill_id → split_bills (0..1)&#10;payee_provider_id → providers (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="Dispute" value="disputes&#10;PK id&#10;lobby_id → group_lobbies (1)&#10;reporter_id → users (1)&#10;target_provider_id → providers (1)&#10;resolved_by → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="620" y="304" width="380" height="112" />
+        </mxCell>
+        <mxCell id="AuditLog" value="audit_logs&#10;PK id&#10;actor_id → users (0..1)" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="20" y="446" width="380" height="112" />
+        </mxCell>
+        <mxCell id="e0" value="1 → 0..N" style="strokeColor=#000000;fillColor=#FFFFFF;fontColor=#000000;fontFamily=Arial;fontSize=17;whiteSpace=wrap;html=0;edgeStyle=segmentEdgeStyle;rounded=0;endArrow=none;labelBackgroundColor=#FFFFFF;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.25;" edge="1" parent="1" source="GroupLobby" target="User">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
