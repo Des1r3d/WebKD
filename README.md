@@ -19,16 +19,16 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 | Thành phần | Công nghệ |
 |------------|-----------|
 | **Frontend** | React 18, Vite, TypeScript, Tailwind CSS, Leaflet, Lucide Icons |
-| **Backend**  | Node.js, Express, TypeScript, Socket.io |
+| **Backend**  | Node.js, Express, JavaScript (ES modules), Socket.io |
 | **Database** | PostgreSQL 16, Prisma ORM |
-| **Kiểm thử** | Vitest, Supertest (65 integration tests bám sát 15 quy tắc nghiệp vụ BR) |
+| **Kiểm thử** | Node test runner, Supertest |
 
 ---
 
 ## Hướng dẫn cài đặt & khởi chạy
 
 ### 1. Yêu cầu môi trường
-- Node.js >= 18
+- Node.js >= 24
 - Docker & Docker Compose (cho PostgreSQL)
 
 ### 2. Khởi chạy cơ sở dữ liệu
@@ -62,6 +62,24 @@ npm run dev
 > **Sự cố thường gặp:** `/api/health` trả `ok` nhưng gọi API khác bị `500`/`502`
 > → kiểm tra `server/.env` có `DATABASE_URL` chưa và đã chạy `npm run setup` (bước migrate) chưa.
 > Nếu server tự tắt sau ~60s, đó là job quét slot hết hạn lỗi kết nối DB — xem log `[SlotJob]`.
+
+### 6. Chạy kiểm thử backend
+
+Tạo cơ sở dữ liệu PostgreSQL riêng cho kiểm thử. Sau đó cấu hình URL và áp dụng migration trước khi chạy test. Ví dụ với PowerShell:
+
+```powershell
+$env:TEST_DATABASE_URL = 'postgresql://synchub:synchub_password@localhost:5432/synchub_test?schema=public'
+$previousDatabaseUrl = $env:DATABASE_URL
+try {
+  $env:DATABASE_URL = $env:TEST_DATABASE_URL
+  npm run prisma:deploy --prefix server
+} finally {
+  $env:DATABASE_URL = $previousDatabaseUrl
+}
+npm test
+```
+
+Các test tích hợp nạp lại fixture trên `TEST_DATABASE_URL` trước mỗi ca.
 
 ---
 

@@ -1,0 +1,159 @@
+=== Lucide imports ===
+client/src\pages\Admin.tsx:2:import { Check, RefreshCw, ShieldAlert, Users, Wallet, X } from 'lucide-react';
+client/src\pages\Discover.tsx:3:import { ArrowRight, Clock, MapPin, Search, SlidersHorizontal, Users } from 'lucide-react';
+client/src\layouts\Shell.tsx:3:import {
+client/src\layouts\Shell.tsx:4:  ArrowRight,
+client/src\layouts\Shell.tsx:5:  Compass,
+client/src\layouts\Shell.tsx:6:  Feather,
+client/src\layouts\Shell.tsx:7:  KeyRound,
+client/src\layouts\Shell.tsx:8:  LayoutDashboard,
+client/src\layouts\Shell.tsx:9:  LogOut,
+client/src\layouts\Shell.tsx:10:  Menu,
+client/src\layouts\Shell.tsx:11:  ShieldAlert,
+client/src\layouts\Shell.tsx:12:  UserRound,
+client/src\layouts\Shell.tsx:13:  Wallet,
+client/src\layouts\Shell.tsx:14:  X,
+client/src\layouts\Shell.tsx:15:  type LucideIcon,
+client/src\layouts\Shell.tsx:16:} from 'lucide-react';
+client/src\pages\Disputes.tsx:2:import { AlertTriangle, CheckCircle2, Clock, Plus, ShieldAlert, XCircle } from 'lucide-react';
+client/src\ui\Button.tsx:2:import { Loader2 } from 'lucide-react';
+client/src\pages\Join.tsx:3:import { ArrowLeft, Clock, MapPin, ShieldAlert, Ticket, Users } from 'lucide-react';
+client/src\pages\Lobby.tsx:3:import { Calculator, Lock, LogOut as LeaveIcon, Send, Sparkles, Tag, Users } from 'lucide-react';
+client/src\ui\CartRow.tsx:1:import { Minus, Plus, UtensilsCrossed } from 'lucide-react';
+client/src\pages\Login.tsx:3:import { LogIn, ReceiptText, ShieldCheck, Timer } from 'lucide-react';
+client/src\pages\Profile.tsx:2:import { Award, CalendarCheck2, ShieldAlert, UserX, Wallet } from 'lucide-react';
+client/src\pages\Provider.tsx:2:import { CalendarPlus, Percent, Plus, RefreshCw, Store, TrendingUp, UtensilsCrossed, Wallet } from 'lucide-react';
+client/src\pages\Register.tsx:3:import { BadgeCheck, Sparkles, UserPlus, Users } from 'lucide-react';
+client/src\ui\EmptyState.tsx:2:import { Inbox } from 'lucide-react';
+client/src\pages\Split.tsx:3:import { ArrowLeft, CheckCircle2, CreditCard, ReceiptText, ShieldCheck, Users, Wallet } from 'lucide-react';
+client/src\ui\MemberAvatar.tsx:1:import { Crown } from 'lucide-react';
+client/src\pages\Styleguide.tsx:2:import { Calendar, Plus, Wallet } from 'lucide-react';
+client/src\ui\Modal.tsx:2:import { X } from 'lucide-react';
+client/src\pages\Wallet.tsx:3:import { ArrowUpRight, Coins, Lock, ReceiptText, Undo2, Wallet as WalletIcon } from 'lucide-react';
+client/src\pages\Venue.tsx:3:import { ArrowLeft, Clock, Info, Lock, MapPin, PlusCircle, ShieldCheck, Unlock } from 'lucide-react';
+client/src\ui\QRCard.tsx:2:import { Check, Copy, QrCode } from 'lucide-react';
+=== Sprite symbols ===
+2:  <symbol id="bluesky-icon" viewBox="0 0 16 17">
+6:  <symbol id="discord-icon" viewBox="0 0 20 19">
+9:  <symbol id="documentation-icon" viewBox="0 0 21 20">
+14:  <symbol id="github-icon" viewBox="0 0 19 19">
+17:  <symbol id="social-icon" viewBox="0 0 20 20">
+21:  <symbol id="x-icon" viewBox="0 0 19 19">
+=== Dynamic class bindings ===
+client/src\ui\ChatBubble.tsx:11:    <div className={cn('my-1 flex items-end gap-2', me && 'flex-row-reverse')}>
+client/src\ui\ChatBubble.tsx:13:      <div className={cn('max-w-[75%] rounded-lg px-3 py-2 text-sm', me ? 'bg-primary-light text-text-primary' : 'bg-bg-subtle text-text-primary')}>
+client/src\ui\CartRow.tsx:26:        <button className={b} disabled={disabled} onClick={onDec} aria-label={`Giảm ${name}`}><Minus className="size-4" aria-hidden /></button>
+client/src\ui\CartRow.tsx:28:        <button className={b} disabled={disabled} onClick={onInc} aria-label={`Tăng ${name}`}><Plus className="size-4" aria-hidden /></button>
+client/src\pages\Admin.tsx:214:                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${status.className}`}>{status.label}</span>
+client/src\ui\MemberAvatar.tsx:18:    <span className={cn('relative inline-flex shrink-0', className)}>
+client/src\ui\MemberAvatar.tsx:34:          className={cn('absolute -bottom-1 -right-1 grid size-4 place-items-center rounded-full border-2 border-bg-surface text-[9px] font-bold leading-none', GRADE_STYLE[grade])}
+client/src\ui\StatCard.tsx:22:    <div className={cn('rounded-xl border border-border-default bg-bg-surface p-4 shadow-sm', className)}>
+client/src\ui\StatCard.tsx:25:        {icon && <span className={cn('grid size-8 shrink-0 place-items-center rounded-lg', TONE[tone])}>{icon}</span>}
+client/src\pages\Wallet.tsx:122:                    <span className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold ${TX_TONE[tx.type] ?? 'bg-bg-subtle text-text-secondary'}`}>
+client/src\pages\Discover.tsx:155:              className={`group relative aspect-[4/3] overflow-hidden rounded-xl border text-left transition-colors ${
+client/src\pages\Discover.tsx:284:                      className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+client/src\pages\Disputes.tsx:136:                  <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${status.className}`}>{status.label}</span>
+client/src\pages\Disputes.tsx:162:                className={FIELD}
+client/src\pages\Disputes.tsx:178:                className={FIELD}
+client/src\pages\Disputes.tsx:192:              className={FIELD}
+client/src\pages\Disputes.tsx:205:              className={`${FIELD} h-auto py-2`}
+client/src\pages\Disputes.tsx:218:              className={FIELD}
+client/src\pages\Disputes.tsx:230:              className={FIELD}
+client/src\ui\Card.tsx:7:      className={cn('rounded-xl border border-border-default bg-bg-surface p-4 shadow-sm', interactive && 'transition-shadow hover:shadow-md', className)}
+client/src\ui\Countdown.tsx:21:      className={cn('font-mono font-semibold tabular-nums', s < 60 ? 'animate-pulse text-status-disputed' : s < 180 ? 'text-status-locked' : 'text-text-primary', className)}
+client/src\pages\Profile.tsx:113:              className={`h-full rounded-full ${grade === 'A' ? 'bg-primary' : grade === 'B' ? 'bg-accent' : grade === 'C' ? 'bg-status-cancelled' : 'bg-status-disputed'}`}
+client/src\pages\Profile.tsx:150:                <tr key={t.grade} className={current ? 'bg-primary-light' : undefined}>
+client/src\layouts\Shell.tsx:131:              className={({ isActive }) =>
+client/src\layouts\Shell.tsx:132:                cn(
+client/src\layouts\Shell.tsx:140:                  <Icon className={cn('size-[18px] shrink-0', isActive ? 'text-primary' : 'text-text-muted group-hover:text-text-secondary')} aria-hidden />
+client/src\layouts\Shell.tsx:214:        className={cn(
+client/src\layouts\Shell.tsx:271:        <main id="main-content" className={cn('mx-auto w-full max-w-[1240px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8', bottomNav && 'pb-24 lg:pb-8')}>
+client/src\layouts\Shell.tsx:294:                className={({ isActive }) =>
+client/src\layouts\Shell.tsx:295:                  cn('flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 text-[10px] font-medium', isActive ? 'text-primary' : 'text-text-secondary')
+client/src\layouts\Shell.tsx:300:                    <Icon className={cn('size-5', isActive ? 'text-primary' : 'text-text-muted')} aria-hidden />
+client/src\ui\PageHeader.tsx:14:    <header className={cn('flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
+client/src\ui\MoneyText.tsx:10:    <span className={cn('whitespace-nowrap font-mono text-[15px] font-semibold leading-5 tabular-nums', amount < 0 && 'text-status-completed', className)} style={{ fontFeatureSettings: '"tnum"' }}>
+client/src\ui\Badge.tsx:21:    <span className={cn('inline-flex items-center rounded-full border border-border-default bg-bg-surface px-2 py-0.5 text-xs font-medium', C[tone], className)}>
+client/src\ui\Button.tsx:28:      className={cn('inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50', V[variant], S[size], className)}
+client/src\pages\Styleguide.tsx:30:            <div key={c} className="text-xs"><div className={`h-10 rounded-md border border-border-default ${solid[c]}`} />{c}</div>
+client/src\pages\Provider.tsx:195:                      className={FIELD}
+client/src\pages\Provider.tsx:206:                      className={FIELD}
+client/src\pages\Provider.tsx:217:                      className={FIELD}
+client/src\pages\Provider.tsx:279:                      className={FIELD}
+client/src\pages\Provider.tsx:290:                      className={FIELD}
+client/src\pages\Provider.tsx:316:                          <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${m.is_available ? 'bg-primary-light text-primary' : 'bg-bg-subtle text-text-muted'}`}>
+=== Responsive / motion bindings ===
+client/src\index.css:31:  @media (prefers-reduced-motion: reduce) {
+client/src\index.css:55:    max-width: 100%;
+client/src\styles\tokens.css:58:  --radius-sm: 6px;
+client/src\styles\tokens.css:59:  --radius-md: 8px;
+client/src\styles\tokens.css:60:  --radius-lg: 12px;
+client/src\styles\tokens.css:61:  --radius-xl: 16px;
+client/src\styles\tokens.css:65:  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+client/src\styles\tokens.css:66:  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+client/src\styles\tokens.css:67:  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
+client/src\pages\Admin.tsx:101:      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+client/src\pages\Admin.tsx:139:        <div className="grid grid-cols-7 items-end gap-1.5 sm:gap-3" role="img" aria-label="Biểu đồ GMV theo ngày trong tuần">
+client/src\pages\Admin.tsx:159:      <div className="grid gap-6 lg:grid-cols-2">
+client/src\pages\Disputes.tsx:104:      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+client/src\pages\Discover.tsx:128:            className="flex w-full items-center gap-2 sm:w-auto"
+client/src\pages\Discover.tsx:136:              className="h-10 min-w-0 flex-1 rounded-md border border-border-default bg-bg-surface px-3 text-sm uppercase text-text-primary placeholder:normal-case placeholder:text-text-muted focus:border-primary focus:outline-none sm:w-56"
+client/src\pages\Discover.tsx:146:      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+client/src\pages\Discover.tsx:191:          <span className="ml-auto hidden items-center gap-1.5 text-[11px] text-text-muted sm:flex">
+client/src\pages\Discover.tsx:241:      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+client/src\pages\Discover.tsx:254:            <div className="grid gap-4 sm:grid-cols-2">
+client/src\pages\Discover.tsx:273:            <div className="grid gap-4 sm:grid-cols-2">
+client/src\pages\Discover.tsx:339:          <div className="lg:sticky lg:top-24">
+client/src\pages\Discover.tsx:341:              <div ref={mapContainerRef} className="h-64 w-full lg:h-[420px]" aria-label="Bản đồ địa điểm" />
+client/src\ui\Button.tsx:12:const S = { sm: 'h-8 px-3 text-xs', md: 'h-10 px-4 text-sm', lg: 'h-12 px-6 text-base' };
+client/src\layouts\Shell.tsx:115:          className="rounded-md p-1.5 text-text-secondary hover:bg-bg-subtle lg:hidden"
+client/src\layouts\Shell.tsx:215:          'fixed inset-y-0 left-0 z-50 flex w-[264px] flex-col border-r border-border-default bg-bg-sidebar transition-transform duration-200 lg:translate-x-0',
+client/src\layouts\Shell.tsx:227:          className="fixed inset-0 z-40 bg-overlay lg:hidden"
+client/src\layouts\Shell.tsx:231:      <div className="lg:pl-[264px]">
+client/src\layouts\Shell.tsx:233:          <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
+client/src\layouts\Shell.tsx:237:              className="grid size-9 place-items-center rounded-md border border-border-default text-text-secondary hover:bg-bg-subtle lg:hidden"
+client/src\layouts\Shell.tsx:245:              <Link to={homeFor(role)} className="hidden shrink-0 font-semibold text-text-secondary hover:text-primary sm:inline">
+client/src\layouts\Shell.tsx:248:              <span aria-hidden className="hidden text-border-strong sm:inline">/</span>
+client/src\layouts\Shell.tsx:253:              <span className="hidden text-xs text-text-muted md:inline">{today}</span>
+client/src\layouts\Shell.tsx:260:                  <span className="hidden max-w-[140px] truncate text-xs font-semibold text-text-primary sm:inline">{user.full_name}</span>
+client/src\layouts\Shell.tsx:271:        <main id="main-content" className={cn('mx-auto w-full max-w-[1240px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8', bottomNav && 'pb-24 lg:pb-8')}>
+client/src\layouts\Shell.tsx:286:        <nav aria-label="Di động" className="fixed inset-x-0 bottom-0 z-40 grid grid-flow-col border-t border-border-default bg-bg-surface px-1 py-1 lg:hidden">
+client/src\pages\Join.tsx:82:      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+client/src\pages\Join.tsx:85:            <div className="relative h-40 sm:h-48">
+client/src\pages\Join.tsx:97:            <div className="space-y-3 p-4 sm:p-5">
+client/src\pages\Join.tsx:108:                  <div className="grid gap-2 sm:grid-cols-2">
+client/src\pages\Lobby.tsx:250:      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+client/src\pages\Lobby.tsx:355:                    <div className="grid gap-2 sm:grid-cols-3">
+client/src\pages\Login.tsx:47:    <div className="grid gap-6 py-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:gap-10 lg:py-6">
+client/src\pages\Login.tsx:51:          <h1 className="mt-1 text-2xl font-bold leading-8 sm:text-[28px] sm:leading-9">Đăng nhập SyncHub</h1>
+client/src\pages\Login.tsx:57:        <Card className="p-5 sm:p-6">
+client/src\pages\Login.tsx:128:      <aside className="relative order-first min-h-[240px] overflow-hidden rounded-xl border border-border-default lg:order-last lg:min-h-full">
+client/src\pages\Login.tsx:131:        <div className="relative flex h-full flex-col justify-between gap-6 p-5 text-text-inverted sm:p-6">
+client/src\pages\Profile.tsx:63:      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+client/src\pages\Profile.tsx:123:        <div className="grid gap-2 sm:grid-cols-2">
+client/src\pages\Provider.tsx:148:          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+client/src\pages\Provider.tsx:178:            <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
+client/src\pages\Provider.tsx:261:            <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
+client/src\pages\Register.tsx:43:    <div className="grid gap-6 py-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:gap-10 lg:py-6">
+client/src\pages\Register.tsx:47:          <h1 className="mt-1 text-2xl font-bold leading-8 sm:text-[28px] sm:leading-9">Tạo tài khoản SyncHub</h1>
+client/src\pages\Register.tsx:53:        <Card className="p-5 sm:p-6">
+client/src\pages\Register.tsx:75:            <div className="grid gap-4 sm:grid-cols-2">
+client/src\pages\Register.tsx:133:      <aside className="relative order-first min-h-[240px] overflow-hidden rounded-xl border border-border-default lg:order-last lg:min-h-full">
+client/src\pages\Register.tsx:136:        <div className="relative flex h-full flex-col justify-between gap-6 p-5 text-text-inverted sm:p-6">
+client/src\ui\Modal.tsx:14:    <div className="fixed inset-0 z-50 flex items-end justify-center bg-overlay p-4 backdrop-blur-sm sm:items-center" onClick={onClose}>
+client/src\pages\Split.tsx:135:      <div className="grid gap-4 sm:grid-cols-3">
+client/src\pages\Split.tsx:213:              <div className="grid gap-2 sm:grid-cols-2">
+client/src\pages\Split.tsx:251:              <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+client/src\pages\Split.tsx:273:        <aside className="order-1 grid gap-4 sm:grid-cols-2 sm:items-start min-[1440px]:order-2 min-[1440px]:sticky min-[1440px]:top-24 min-[1440px]:block">
+client/src\pages\Venue.tsx:133:        <div className="relative h-44 sm:h-56">
+client/src\pages\Venue.tsx:136:          <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 p-4 sm:p-6">
+client/src\pages\Venue.tsx:156:      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+client/src\pages\Venue.tsx:175:                      <div className="grid gap-3 sm:grid-cols-2">
+client/src\pages\Venue.tsx:266:                <div className="grid gap-3 sm:grid-cols-2">
+client/src\ui\PageHeader.tsx:14:    <header className={cn('flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
+client/src\ui\PageHeader.tsx:17:        <h1 className="text-2xl font-bold leading-8 text-text-primary sm:text-[28px] sm:leading-9">{title}</h1>
+client/src\ui\PageHeader.tsx:20:      {actions && <div className="flex flex-wrap items-center gap-2 sm:shrink-0">{actions}</div>}
+client/src\pages\Styleguide.tsx:45:        <div className="grid gap-3 sm:grid-cols-2">
+client/src\pages\Styleguide.tsx:53:      <S t="Card"><div className="grid gap-3 sm:grid-cols-2"><Card>Card</Card><Card interactive>Interactive</Card></div></S>
+client/src\pages\Wallet.tsx:57:      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+client/src\pages\Wallet.tsx:77:          <div className="grid gap-3 sm:grid-cols-2">

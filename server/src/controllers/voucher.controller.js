@@ -1,0 +1,43 @@
+import { validateVoucher } from '../services/promo.js';
+
+/**
+ * POST /api/vouchers/validate
+ * UC07 / BR-INT-05: Kiểm tra và áp dụng voucher cho phòng
+ */
+export async function handleValidateVoucher(
+  req,
+  res
+) {
+  try {
+    const { code, lobbyId } = req.body;
+    if (!code || !lobbyId) {
+      res.status(400).json({
+        error: 'MISSING_PARAMS',
+        message: 'Cần cung cấp code và lobbyId',
+      });
+      return;
+    }
+
+    const result = await validateVoucher(code, lobbyId);
+
+    if (!result.valid) {
+      res.status(400).json({
+        success: false,
+        error: 'INVALID_VOUCHER',
+        message: result.message,
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: result.message,
+      data: {
+        voucher: result.voucher,
+        discountAmount: result.discountAmount,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'SERVER_ERROR', message: error.message });
+  }
+}
