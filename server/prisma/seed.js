@@ -22,26 +22,28 @@ export const prisma = new PrismaClient();
 let cachedPasswordHash = null;
 
 export async function seed(opts) {
+  const client = opts?.client ?? prisma;
   const log = (...args) => {
     if (!opts?.silent) console.log(...args);
   };
   log('🌱 [SyncHub Seed] Bắt đầu khởi tạo dữ liệu mẫu...');
 
   // 1. Xóa dữ liệu cũ theo thứ tự quan hệ khóa ngoại (ngược chiều FK)
-  await prisma.auditLog.deleteMany({});
-  await prisma.dispute.deleteMany({});
-  await prisma.escrowTransaction.deleteMany({});
-  await prisma.splitBill.deleteMany({});
-  await prisma.cartItem.deleteMany({});
-  await prisma.lobbyMember.deleteMany({});
-  await prisma.groupLobby.deleteMany({});
-  await prisma.voucher.deleteMany({});
-  await prisma.menuItem.deleteMany({});
-  await prisma.slot.deleteMany({});
-  await prisma.provider.deleteMany({});
-  await prisma.user.deleteMany({});
-
-  log('  🧹 Đã dọn sạch dữ liệu cũ');
+  if (opts?.clearExisting !== false) {
+    await client.auditLog.deleteMany({});
+    await client.dispute.deleteMany({});
+    await client.escrowTransaction.deleteMany({});
+    await client.splitBill.deleteMany({});
+    await client.cartItem.deleteMany({});
+    await client.lobbyMember.deleteMany({});
+    await client.groupLobby.deleteMany({});
+    await client.voucher.deleteMany({});
+    await client.menuItem.deleteMany({});
+    await client.slot.deleteMany({});
+    await client.provider.deleteMany({});
+    await client.user.deleteMany({});
+    log('  🧹 Đã dọn sạch dữ liệu cũ');
+  }
 
   // Mật khẩu chung: Password123!
   const passwordHash = cachedPasswordHash || (cachedPasswordHash = await bcrypt.hash('Password123!', 10));
@@ -54,7 +56,7 @@ export async function seed(opts) {
       id: 'usr-host-01',
       email: 'dat.dt@synchub.vn',
       password_hash: passwordHash,
-      full_name: 'Đào Tiến Đạt (Host)',
+      full_name: 'Nguyễn Minh Phát',
       phone: '0901234567',
       role: Role.HOST,
       reputation_score: 98, // Hạng A: cọc 0%
@@ -64,7 +66,7 @@ export async function seed(opts) {
       id: 'usr-mem-02',
       email: 'minh.b@synchub.vn',
       password_hash: passwordHash,
-      full_name: 'Trần Quang Minh',
+      full_name: 'Khương Thảo Vy',
       phone: '0902234567',
       role: Role.MEMBER,
       reputation_score: 82, // Hạng B: cọc 30%
@@ -74,7 +76,7 @@ export async function seed(opts) {
       id: 'usr-mem-03',
       email: 'linh.c@synchub.vn',
       password_hash: passwordHash,
-      full_name: 'Lê Hoàng Linh',
+      full_name: 'Trần Minh Quang',
       phone: '0903234567',
       role: Role.MEMBER,
       reputation_score: 64, // Hạng C: cọc 100%
@@ -84,7 +86,7 @@ export async function seed(opts) {
       id: 'usr-mem-04',
       email: 'kiet.d@synchub.vn',
       password_hash: passwordHash,
-      full_name: 'Nguyễn Tuấn Kiệt',
+      full_name: 'Nguyễn Quang Bảo',
       phone: '0904234567',
       role: Role.MEMBER,
       reputation_score: 95, // Hạng A: cọc 0%
@@ -132,7 +134,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.user.createMany({ data: usersData });
+  await client.user.createMany({ data: usersData });
   log(`  👤 Đã tạo ${usersData.length} người dùng mẫu`);
 
   // ==========================================
@@ -282,7 +284,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.provider.createMany({ data: venuesData });
+  await client.provider.createMany({ data: venuesData });
   log(`  🏟️  Đã tạo ${venuesData.length} sân/phòng học (VENUE)`);
 
   // ==========================================
@@ -502,7 +504,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.provider.createMany({ data: fnbData });
+  await client.provider.createMany({ data: fnbData });
   log(`  🧋 Đã tạo ${fnbData.length} quán ăn/uống (FNB)`);
 
   // ==========================================
@@ -687,7 +689,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.menuItem.createMany({ data: menuItemsData });
+  await client.menuItem.createMany({ data: menuItemsData });
   log(`  📋 Đã tạo ${menuItemsData.length} món trong thực đơn FNB`);
 
   // ==========================================
@@ -800,7 +802,7 @@ export async function seed(opts) {
     }
   }
 
-  await prisma.slot.createMany({ data: slotsToCreate });
+  await client.slot.createMany({ data: slotsToCreate });
   log(`  ⏰ Đã tạo ${slotsToCreate.length} khung giờ slot trong ${maxDays} ngày tới cho 10 sân`);
 
   // ==========================================
@@ -868,7 +870,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.voucher.createMany({ data: vouchersData });
+  await client.voucher.createMany({ data: vouchersData });
   log(`  🎟️  Đã tạo ${vouchersData.length} mã voucher (có mã CROSS và FNB)`);
 
   // ==========================================
@@ -877,7 +879,7 @@ export async function seed(opts) {
   // Món: A 25k, B 30k, C 0k, D 45k -> Tổng món: 100k
   // Ship: 15k, Voucher FNB: -20k -> adj = -5.000
   // ==========================================
-  const lobby01 = await prisma.groupLobby.create({
+  const lobby01 = await client.groupLobby.create({
     data: {
       id: 'lob-01',
       host_id: 'usr-host-01',
@@ -927,7 +929,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.lobbyMember.createMany({ data: membersData });
+  await client.lobbyMember.createMany({ data: membersData });
 
   // Giỏ hàng cá nhân cho ca chia bill chuẩn 215.000 VND (BR-INT-02):
   // A: 25.000 (Trà đào cam sả)
@@ -961,7 +963,7 @@ export async function seed(opts) {
     },
   ];
 
-  await prisma.cartItem.createMany({ data: cartItemsData });
+  await client.cartItem.createMany({ data: cartItemsData });
   log(`  👥 Đã tạo Group Lobby mẫu (SYNC01) kèm 4 thành viên và giỏ hàng chuẩn 100k`);
 
   // ==========================================
@@ -969,7 +971,7 @@ export async function seed(opts) {
   // Kịch bản (a): Bùng kèo -15 điểm + mất cọc PENALTY
   // Kịch bản (b): Quán giao thiếu nước -> Admin hoàn tiền từ Escrow
   // ==========================================
-  const lobby00 = await prisma.groupLobby.create({
+  const lobby00 = await client.groupLobby.create({
     data: {
       id: 'lob-00-prev',
       host_id: 'usr-host-01',
@@ -983,7 +985,7 @@ export async function seed(opts) {
   });
 
   // Thành viên phòng cũ: có usr-flag-05 bị NO_SHOW
-  await prisma.lobbyMember.createMany({
+  await client.lobbyMember.createMany({
     data: [
       {
         lobby_id: lobby00.id,
@@ -1010,7 +1012,7 @@ export async function seed(opts) {
   });
 
   // Escrow transactions cho phòng cũ
-  await prisma.escrowTransaction.createMany({
+  await client.escrowTransaction.createMany({
     data: [
       {
         id: 'esc-tx-prev-venue',
@@ -1061,7 +1063,7 @@ export async function seed(opts) {
   });
 
   // Kịch bản (b): Khiếu nại quán giao thiếu nước -> Admin hoàn tiền
-  await prisma.dispute.create({
+  await client.dispute.create({
     data: {
       id: 'dsp-01',
       lobby_id: lobby00.id,
@@ -1081,7 +1083,7 @@ export async function seed(opts) {
   // ==========================================
   // 9. TẠO CÁC DÒNG AUDIT LOG MẪU (BR-DSP-01, BR-REP-02)
   // ==========================================
-  await prisma.auditLog.createMany({
+  await client.auditLog.createMany({
     data: [
       {
         actor_id: 'usr-host-01',

@@ -1,0 +1,14 @@
+**
+!server/
+!server/package.json
+!server/package-lock.json
+!server/prisma/
+!server/prisma/**
+!server/src/
+!server/src/**
+!server/Dockerfile.demo
+!client/
+!client/public/
+!client/public/**
+!client/vanilla/
+!client/vanilla/**

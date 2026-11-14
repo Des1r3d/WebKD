@@ -25,7 +25,21 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 
 ---
 
-## Hướng dẫn cài đặt & khởi chạy
+## Chạy demo bằng một lệnh
+
+Cài và mở Docker Desktop (hoặc dùng Docker Engine có Compose v2). Tại thư mục gốc của repo, chạy:
+
+```bash
+docker compose -p synchub-demo -f compose.demo.yml up --build --wait
+```
+
+Lần đầu Docker tải image, cài thư viện, tạo cơ sở dữ liệu demo, áp dụng migration và nạp dữ liệu mẫu. Khi web đã khởi động, mở [SyncHub](http://localhost:5000) và đăng nhập bằng `dat.dt@synchub.vn` / `Password123!`. Lệnh có thể chạy lại và giữ dữ liệu đã có trong cơ sở dữ liệu demo.
+
+- Xem tiến độ khởi động hoặc lỗi bằng `docker compose -p synchub-demo -f compose.demo.yml logs -f web`.
+- Dừng demo bằng `docker compose -p synchub-demo -f compose.demo.yml down`. Dữ liệu và ảnh tải lên vẫn được giữ trong các volume demo.
+- Demo dùng cổng `5000` trên máy. Nếu cổng đang được dùng, dừng ứng dụng đang chiếm cổng hoặc đổi cổng phía máy trong `compose.demo.yml`.
+
+## Hướng dẫn phát triển và kiểm thử
 
 ### 1. Yêu cầu môi trường
 - Node.js >= 24

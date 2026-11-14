@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: synchub_demo
+      POSTGRES_PASSWORD: synchub_demo
+      POSTGRES_DB: synchub_demo
+    volumes:
+      - demo_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U synchub_demo -d synchub_demo"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  web:
+    build:
+      context: .
+      dockerfile: server/Dockerfile.demo
+    environment:
+      DATABASE_URL: postgresql://synchub_demo:synchub_demo@db:5432/synchub_demo?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5000:5000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5000/api/health').then(response => { if (!response.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - demo_uploads:/app/server/uploads
+
+volumes:
+  demo_db:
+  demo_uploads:
