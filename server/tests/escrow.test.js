@@ -86,6 +86,22 @@ describe('Khối 5 — Escrow, Check-in, Webhook & Idempotency (BR-ESC-01..03, B
     });
   });
 
+  for (const [voucherId, venue, fnb] of [
+    ['vch-venue-10', 108000, 115000],
+    ['vch-cross-15', 102000, 115000],
+  ]) {
+    it(`releases the amounts locked into the split for ${voucherId}`, async () => {
+      await prisma.groupLobby.update({ where: { id: 'lob-01' }, data: { voucher_id: voucherId } });
+      const post = path => request(app).post(`/api${path}`).set('Authorization', `Bearer ${hostToken}`);
+      await post('/lobbies/lob-01/split').expect(200);
+      const bills = await prisma.splitBill.findMany({ where: { lobby_id: 'lob-01' } });
+      for (const bill of bills) await post('/payments/webhook-mock').send({ splitBillId: bill.id }).expect(200);
+      await prisma.voucher.update({ where: { id: voucherId }, data: { value: 1 } });
+      const release = await post('/lobbies/lob-01/checkin').send({}).expect(200);
+      assert.deepEqual(release.body.data.releasedTransactions.map(row => row.amount), [venue, fnb]);
+    });
+  }
+
   describe('2. Check-in & Giải Ngân Đa Bên (BR-ESC-02 & BR-ESC-03 Gate)', () => {
     beforeEach(async () => {
       await request(app)

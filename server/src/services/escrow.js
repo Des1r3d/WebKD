@@ -1,4 +1,5 @@
 import { Prisma, EscrowTxType, EscrowStatus, LobbyMemberStatus, LobbyStatus, SlotStatus, SplitBillStatus } from '@prisma/client';
+import { venueDiscount, voucherDiscount } from './pricing.js';
 import { lockLobbyRow } from './lobby.js';
 import { prisma } from '../prisma.js';
 import { applyNoShowPenalty, applyCheckInReward } from './reputation.js';
@@ -118,9 +119,6 @@ export async function checkInAndReleaseEscrow(
     throw duplicate();
   }
 
-  const currentMembers = await prisma.lobbyMember.findMany({ where: { lobby_id: lobby.id } });
-  const cartItems = fnbProvider ? await prisma.cartItem.findMany({ where: { lobby_id: lobby.id } }) : [];
-
   try {
     return await prisma.$transaction(async (tx) => {
       const current = await lockLobbyRow(tx, lobby.id);
@@ -128,6 +126,20 @@ export async function checkInAndReleaseEscrow(
       if (current.status !== LobbyStatus.PAID && current.status !== LobbyStatus.DISPUTED) {
         throw new Error('INVALID_STATUS');
       }
+      const bills = await tx.splitBill.findMany({ where: { lobby_id: lobby.id } });
+      if (!bills.length || bills.some(bill => bill.status !== SplitBillStatus.PAID)) throw new Error('INVALID_STATUS');
+      const pricing = await tx.auditLog.findFirst({
+        where: { entity: 'group_lobbies', entity_id: lobby.id, action: 'BILL_PRICING' },
+        orderBy: { created_at: 'desc' },
+      });
+      const voucher = !pricing && current.voucher_id
+        ? await tx.voucher.findUnique({ where: { id: current.voucher_id } })
+        : null;
+      const food = bills.reduce((sum, bill) => sum + bill.food_amount, 0);
+      const legacyFnb = food > 0
+        ? Math.max(0, food + current.ship_fee - (voucher?.scope === 'FNB' ? voucherDiscount(voucher, food) : 0))
+        : 0;
+      const currentMembers = await tx.lobbyMember.findMany({ where: { lobby_id: lobby.id, status: 'JOINED' } });
       const openDisputes = await tx.dispute.findMany({ where: { lobby_id: lobby.id, status: 'OPEN' } });
       const releasedTransactions = [];
 
@@ -137,7 +149,7 @@ export async function checkInAndReleaseEscrow(
       const venueStatus = isVenueDisputed ? EscrowStatus.FROZEN : EscrowStatus.RELEASED;
 
       // Tính slot_net
-      const slotNet = slot.price;
+      const slotNet = pricing?.after?.venueGross ?? Math.max(0, slot.price - venueDiscount(voucher, slot.price));
       const venueCommRate = venueProvider?.commission_rate ?? 0.08;
       const venuePlatformFee = Math.floor(slotNet * venueCommRate);
       const venueNetAmount = slotNet - venuePlatformFee;
@@ -163,12 +175,7 @@ export async function checkInAndReleaseEscrow(
         const isFnbDisputed = openDisputes.some((d) => d.target_provider_id === fnbProvider.id);
         const fnbStatus = isFnbDisputed ? EscrowStatus.FROZEN : EscrowStatus.RELEASED;
 
-        const foodTotal = cartItems.reduce((s, c) => s + c.qty * c.unit_price_snapshot, 0);
-
-        // Tính fnb_gross: foodTotal + ship_fee - fnb_discount
-        // Đối với vector mẫu: food 100k + ship 15k - voucher 20k = 95.000đ
-        const fnbDiscount = lobby.voucher_id ? 20000 : 0;
-        const fnbGross = Math.max(0, foodTotal + (foodTotal > 0 ? lobby.ship_fee : 0) - fnbDiscount);
+        const fnbGross = pricing?.after?.fnbGross ?? legacyFnb;
         const fnbCommRate = fnbProvider.commission_rate ?? 0.12;
         const fnbPlatformFee = Math.floor(fnbGross * fnbCommRate);
         const fnbNetAmount = fnbGross - fnbPlatformFee;
@@ -189,6 +196,12 @@ export async function checkInAndReleaseEscrow(
           })
         );
       }
+
+      // Retained deposits are already included in the venue payout above.
+      await tx.escrowTransaction.updateMany({
+        where: { lobby_id: lobby.id, type: 'PENALTY', status: 'HELD', idempotency_key: { startsWith: 'late-leave:' } },
+        data: { status: venueStatus, net_amount: 0 },
+      });
 
       // 2. Xử lý điểm danh thành viên & uy tín (BR-REP-02, BR-REP-03)
       const memberResults = [];

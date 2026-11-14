@@ -97,3 +97,22 @@ test('a cancelled lobby preserves its slot history and prevents rebooking', asyn
   assert.deepEqual(await lobby(), cancelled);
   assert.deepEqual(await transactions(), ledger);
 });
+
+test('leaving after lock retains the paid court share once and credits the remaining bills', async () => {
+  await post('/lobbies/lob-01/lock').expect(200);
+  await Promise.all([
+    post('/lobbies/lob-01/leave', member).expect(200),
+    post('/lobbies/lob-01/leave', member).expect(200),
+  ]);
+  const rows = await transactions();
+  assert.deepEqual(rows.map(({ type, status, amount }) => [type, status, amount]), [['PENALTY', 'HELD', 9000]]);
+  const departure = await prisma.lobbyMember.findUniqueOrThrow({
+    where: { lobby_id_user_id: { lobby_id: 'lob-01', user_id: 'usr-mem-02' } },
+  });
+  assert.equal(departure.deposit_paid, 0);
+  const split = await post('/lobbies/lob-01/split').expect(200);
+  assert.equal(split.body.data.slotNet, 111000);
+  assert.ok(split.body.data.bills.every(bill => bill.user_id !== 'usr-mem-02'));
+  await cancel().expect(200);
+  assert.equal((await transactions())[0].status, 'REFUNDED');
+});

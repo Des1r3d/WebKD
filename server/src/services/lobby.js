@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { prisma } from '../prisma.js';
+import { venueDiscount } from './pricing.js';
 import { calculateReputation } from '../utils/reputation.js';
 
 /**
@@ -303,9 +304,57 @@ export async function leaveLobby(lobbyId, userId) {
     throw new Error('HOST_CANNOT_LEAVE');
   }
 
-  const { count } = await prisma.lobbyMember.updateMany({
-    where: { lobby_id: lobby.id, user_id: userId },
-    data: { status: 'LEFT' },
+  return prisma.$transaction(async (tx) => {
+    const current = await lockLobbyRow(tx, lobby.id);
+    if (!['OPEN', 'LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(current.status)) return false;
+    const key = { lobby_id: current.id, user_id: userId };
+    const member = await tx.lobbyMember.findUnique({ where: { lobby_id_user_id: key } });
+    if (!member || !['JOINED', 'LEFT'].includes(member.status)) return false;
+    if (member.status === 'LEFT') return true;
+
+    let retained = 0;
+    if (current.status !== 'OPEN' && member.deposit_paid > 0) {
+      const slot = await tx.slot.findUniqueOrThrow({ where: { id: current.slot_id } });
+      const bill = await tx.splitBill.findUnique({ where: { lobby_id_user_id: key } });
+      const voucher = current.voucher_id
+        ? await tx.voucher.findUnique({ where: { id: current.voucher_id } })
+        : null;
+      const discount = venueDiscount(voucher, slot.price);
+      const members = await tx.lobbyMember.findMany({
+        where: { lobby_id: current.id, status: 'JOINED' },
+        orderBy: [{ joined_at: 'asc' }, { user_id: 'asc' }],
+      });
+      const ordered = [members.find(row => row.user_id === current.host_id), ...members.filter(row => row.user_id !== current.host_id)].filter(Boolean);
+      const court = Math.max(0, slot.price - discount);
+      const share = bill?.slot_share ?? (Math.floor(court / ordered.length) +
+        Number(ordered.findIndex(row => row.user_id === userId) < court % ordered.length));
+      retained = Math.min(share, bill ? bill.deposit_offset : member.deposit_paid);
+      if (retained > 0 && !bill) {
+        await tx.escrowTransaction.create({
+          data: {
+            lobby_id: current.id,
+            type: 'PENALTY',
+            status: 'HELD',
+            amount: retained,
+            net_amount: retained,
+            payee_provider_id: slot.provider_id,
+            idempotency_key: `late-leave:${current.id}:${userId}`,
+          },
+        });
+      }
+      // A generated bill already includes the deposit offset in the settled price.
+      await tx.auditLog.create({
+        data: {
+          actor_id: userId, action: 'LOBBY_LATE_LEAVE', entity: 'group_lobbies',
+          entity_id: current.id, after: { retained, split_bill_id: bill?.id ?? null },
+        },
+      });
+    }
+
+    await tx.lobbyMember.update({
+      where: { lobby_id_user_id: key },
+      data: { status: 'LEFT', deposit_paid: member.deposit_paid - retained },
+    });
+    return true;
   });
-  return count > 0;
 }

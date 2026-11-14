@@ -1,3 +1,4 @@
+import { venueDiscount, voucherDiscount } from './pricing.js';
 import { prisma } from '../prisma.js';
 import { findLobby, lockLobbyRow } from './lobby.js';
 
@@ -160,79 +161,74 @@ export function calculateSplitBills(
 export async function executeSplitBillForLobby(
   lobbyId
 ) {
-  const lobby = await findLobby(lobbyId);
-  if (!lobby) throw new Error('LOBBY_NOT_FOUND');
-  if (!['OPEN', 'LOCKED'].includes(lobby.status)) throw new Error('INVALID_STATUS');
+  const found = await findLobby(lobbyId);
+  if (!found) throw new Error('LOBBY_NOT_FOUND');
+  return prisma.$transaction(async (tx) => {
+    const lobby = await lockLobbyRow(tx, found.id);
+    if (!['OPEN', 'LOCKED'].includes(lobby.status)) throw new Error('INVALID_STATUS');
 
-  const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });
-  if (!slot) throw new Error('SLOT_NOT_FOUND');
+    const slot = await tx.slot.findUnique({ where: { id: lobby.slot_id } });
+    if (!slot) throw new Error('SLOT_NOT_FOUND');
 
-  // Lấy các thành viên JOINED
-  const members = (await prisma.lobbyMember.findMany({ where: { lobby_id: lobby.id, status: 'JOINED' } }))
-    .map((m) => ({
-      userId: m.user_id,
-      isHost: m.user_id === lobby.host_id,
-      joinedAt: m.joined_at,
-      depositPaid: m.deposit_paid,
+    // Lấy các thành viên JOINED
+    const members = (await tx.lobbyMember.findMany({ where: { lobby_id: lobby.id, status: 'JOINED' } }))
+      .map((m) => ({
+        userId: m.user_id,
+        isHost: m.user_id === lobby.host_id,
+        joinedAt: m.joined_at,
+        depositPaid: m.deposit_paid,
+      }));
+
+    if (members.length === 0) {
+      throw new Error('NO_ACTIVE_MEMBERS');
+    }
+
+    // Lấy cart items
+    const cartItems = (await tx.cartItem.findMany({
+      where: { lobby_id: lobby.id, user_id: { in: members.map(member => member.userId) } },
+    })).map((c) => ({
+      userId: c.user_id,
+      qty: c.qty,
+      unitPrice: c.unit_price_snapshot,
     }));
 
-  if (members.length === 0) {
-    throw new Error('NO_ACTIVE_MEMBERS');
-  }
+    const voucher = lobby.voucher_id
+      ? await tx.voucher.findUnique({ where: { id: lobby.voucher_id } })
+      : null;
+    const venueOrCrossDiscount = venueDiscount(voucher, slot.price);
+    const foodTotal = cartItems.reduce((sum, item) => sum + item.qty * item.unitPrice, 0);
+    const fnbDiscount = voucher?.scope === 'FNB'
+      ? Math.min(foodTotal + lobby.ship_fee, voucherDiscount(voucher, foodTotal))
+      : 0;
 
-  // Lấy cart items
-  const cartItems = (await prisma.cartItem.findMany({ where: { lobby_id: lobby.id } })).map((c) => ({
-    userId: c.user_id,
-    qty: c.qty,
-    unitPrice: c.unit_price_snapshot,
-  }));
+    const retained = await tx.escrowTransaction.aggregate({
+      where: { lobby_id: lobby.id, type: 'PENALTY', status: 'HELD' },
+      _sum: { amount: true },
+    });
+    const venueGross = Math.max(0, slot.price - venueOrCrossDiscount);
+    const retainedDeposit = Math.min(venueGross, retained._sum.amount ?? 0);
+    const result = calculateSplitBills({
+      lobbyId: lobby.id,
+      inviteCode: lobby.invite_code,
+      slotPrice: slot.price,
+      venueOrCrossDiscount: venueOrCrossDiscount + retainedDeposit,
+      shipFee: lobby.ship_fee,
+      fnbDiscount,
+      members,
+      cartItems,
+    });
 
-  // Voucher
-  let venueOrCrossDiscount = 0;
-  let fnbDiscount = 0;
-  if (lobby.voucher_id) {
-    const voucher = await prisma.voucher.findUnique({ where: { id: lobby.voucher_id } });
-    if (voucher) {
-      const foodTotal = cartItems.reduce((acc, c) => acc + c.qty * c.unitPrice, 0);
-      if (voucher.scope === 'VENUE') {
-        venueOrCrossDiscount =
-          voucher.discount_type === 'PERCENT'
-            ? Math.min(voucher.max_discount, Math.round((slot.price * voucher.value) / 100))
-            : Math.min(voucher.max_discount, voucher.value);
-      } else if (voucher.scope === 'FNB') {
-        fnbDiscount =
-          voucher.discount_type === 'PERCENT'
-            ? Math.min(voucher.max_discount, Math.round((foodTotal * voucher.value) / 100))
-            : Math.min(voucher.max_discount, voucher.value);
-      } else if (voucher.scope === 'CROSS') {
-        // Voucher CROSS trừ vào tiền sân chia đều theo BR-INT-02
-        venueOrCrossDiscount =
-          voucher.discount_type === 'PERCENT'
-            ? Math.min(voucher.max_discount, Math.round((slot.price * voucher.value) / 100))
-            : Math.min(voucher.max_discount, voucher.value);
-      }
-    }
-  }
-
-  const result = calculateSplitBills({
-    lobbyId: lobby.id,
-    inviteCode: lobby.invite_code,
-    slotPrice: slot.price,
-    venueOrCrossDiscount,
-    shipFee: lobby.ship_fee || 15000,
-    fnbDiscount,
-    members,
-    cartItems,
-  });
-
-  // Lưu split_bills (thay bill cũ của lobby) + chuyển lobby sang AWAITING_PAYMENT
-  await prisma.$transaction(async (tx) => {
-    const current = await lockLobbyRow(tx, lobby.id);
-    if (!['OPEN', 'LOCKED'].includes(current.status)) throw new Error('INVALID_STATUS');
     await tx.splitBill.deleteMany({ where: { lobby_id: lobby.id } });
     await tx.splitBill.createMany({ data: result.bills });
     await tx.groupLobby.update({ where: { id: lobby.id }, data: { status: 'AWAITING_PAYMENT' } });
+    await tx.auditLog.create({
+      data: {
+        action: 'BILL_PRICING',
+        entity: 'group_lobbies',
+        entity_id: lobby.id,
+        after: { venueGross, fnbGross: result.totalFood + result.adj, retainedDeposit },
+      },
+    });
+    return result;
   });
-
-  return result;
 }
