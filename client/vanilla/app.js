@@ -1,4 +1,5 @@
 import { Badge, Button, Card, CartRow, ChatBubble, createCountdown, createModal, EmptyState, formatVnd, MemberAvatar, MoneyText, PageHeader, QRCard, StatCard } from './components.js';
+import { beginPage, mountBusiness, renderBusiness } from './pages.js';
 
 const KEY = 'synchub.token';
 const roles = { HOST: 'Trưởng phòng', MEMBER: 'Thành viên', PROVIDER: 'Đối tác', ADMIN: 'Quản trị viên' };
@@ -11,8 +12,9 @@ const store = {
 };
 const app = document.querySelector('#app');
 let cleanups = [];
+let renderEpoch = 0;
 const cleanup = () => { cleanups.forEach((fn) => fn()); cleanups = []; };
-const navigate = (to, { replace = false } = {}) => { history[replace ? 'replaceState' : 'pushState']({}, '', to); render(); window.scrollTo(0, 0); };
+const navigate = (to, { replace = false, state = {} } = {}) => { history[replace ? 'replaceState' : 'pushState'](state, '', to); render(); window.scrollTo(0, 0); };
 const link = (to, label, active = false) => `<a href="${to}" data-link class="nav-link ${active ? 'active' : ''}"><span class="nav-dot" aria-hidden="true"></span>${label}</a>`;
 const routeLabel = (path) => path.startsWith('/login') ? 'Đăng nhập' : path.startsWith('/register') ? 'Đăng ký' : path.startsWith('/venues') ? 'Chi tiết sân' : path.startsWith('/lobby') ? 'Phòng ghép kèo' : path.startsWith('/join') ? 'Lời mời phòng' : path.startsWith('/wallet') ? 'Ví & Escrow' : path.startsWith('/disputes') ? 'Khiếu nại' : path.startsWith('/profile') ? 'Hồ sơ' : path.startsWith('/provider') ? 'Portal đối tác' : path.startsWith('/admin') ? 'Quản trị' : path === '/styleguide' ? 'Styleguide' : 'Khám phá';
 const qrDemo = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21"><rect width="21" height="21" fill="white"/><path fill="#0f172a" d="M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0zM9 2h2v2H9zM9 6h2v3H9zM8 11h3v2H8zM13 9h2v2h-2zM17 9h4v2h-4zM12 13h3v2h-3zM9 16h2v5H9zM13 17h2v4h-2zM17 14h4v2h-4zM17 18h4v3h-4z"/><path fill="white" d="M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2z"/></svg>')}`;
@@ -30,7 +32,8 @@ function shell(content, layout) {
   const navHtml = nav.map(([to, label]) => link(to, label, to === '/' ? path === '/' || path === '/discover' : path === to || path.startsWith(`${to}/`))).join('');
   const account = user ? `<div class="user-panel">${MemberAvatar({ name: user.full_name || 'SyncHub', score: user.reputation_score ?? 100 })}<div><strong>${escapeHtml(user.full_name || 'SyncHub')}</strong><small>${roles[user.role] || ''} · Hạng ${user.reputation_score >= 90 ? 'A' : user.reputation_score >= 70 ? 'B' : user.reputation_score >= 50 ? 'C' : '!'}</small></div></div>` : `<div class="auth-actions">${link('/login', 'Đăng nhập')}${link('/register', 'Đăng ký')}</div>`;
   const extra = user && ['HOST', 'MEMBER'].includes(user.role) ? '' : '';
-  return `<div class="app-shell layout-${layout}"><aside class="sidebar"><a class="brand" href="/" data-link><span class="brand-mark">S</span><span><strong>SyncHub</strong><small>Đặt sân & gọi đồ nhóm</small></span></a><p class="nav-caption">Điều hướng</p><nav aria-label="Điều hướng chính">${navHtml}${extra}</nav>${user ? `<button class="logout-link" type="button" data-logout>↪ Đăng xuất</button>` : ''}<div class="sidebar-bottom">${account}<span class="sidebar-foot">SyncHub · Làng Đại Học Thủ Đức</span></div></aside><div class="shell-main"><header class="topbar"><button class="icon-button mobile-menu" type="button" aria-label="Mở điều hướng" data-menu>☰</button><div class="breadcrumbs"><a href="/" data-link>SyncHub</a><span>/</span><span>${routeLabel(path)}</span></div><time class="today">${new Intl.DateTimeFormat('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }).format(new Date())}</time>${user ? `<span class="top-avatar">${escapeHtml((user.full_name || 'S').charAt(0))}</span>` : ''}</header><main id="main-content" tabindex="-1">${content}</main><nav class="bottom-nav" aria-label="Điều hướng di động">${nav.slice(0, 4).map(([to, label]) => link(to, label, path === to)).join('')}</nav></div></div>`;
+  const authTop = user ? `<span class="top-avatar">${escapeHtml((user.full_name || 'S').charAt(0))}</span>` : `<a class="btn btn-primary btn-sm auth-top-link" href="${path==='/register'?'/register':'/login'}" data-link>${path==='/register'?'Đăng ký':'Đăng nhập'}</a>`;
+  return `<div class="app-shell layout-${layout}"><aside class="sidebar"><a class="brand" href="/" data-link><span class="brand-mark">S</span><span><strong>SyncHub</strong><small>Đặt sân & gọi đồ nhóm</small></span></a><p class="nav-caption">Điều hướng</p><nav aria-label="Điều hướng chính">${navHtml}${extra}</nav>${user ? `<button class="logout-link" type="button" data-logout>↪ Đăng xuất</button>` : ''}<div class="sidebar-bottom">${account}<span class="sidebar-foot">SyncHub · Làng Đại Học Thủ Đức</span></div></aside><div class="shell-main"><header class="topbar"><button class="icon-button mobile-menu" type="button" aria-label="Mở điều hướng" data-menu>☰</button><div class="breadcrumbs"><a href="/" data-link>SyncHub</a><span>/</span><span>${routeLabel(path)}</span></div><time class="today">${new Intl.DateTimeFormat('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }).format(new Date())}</time>${authTop}</header><main id="main-content" tabindex="-1">${content}</main><nav class="bottom-nav" aria-label="Điều hướng di động">${nav.slice(0, 4).map(([to, label]) => link(to, label, path === to)).join('')}</nav></div></div>`;
 }
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -50,12 +53,18 @@ function shellPreview(layout) {
 
 function authPage(register = false) {
   const title = register ? 'Tạo tài khoản SyncHub' : 'Đăng nhập SyncHub';
-  const form = `<section class="auth-page"><div class="auth-copy"><span class="eyebrow">${register ? 'BẮT ĐẦU CÙNG NHÓM' : 'CHÀO MỪNG TRỞ LẠI'}</span><h1>${title}</h1><p>Đặt sân, lập phòng ghép kèo, gọi đồ FNB chung và chia bill tự động cùng nhóm của bạn.</p></div><form class="auth-form card" data-auth-form data-register="${register}"><label>Email<input name="email" type="email" autocomplete="email" required></label>${register ? '<label>Họ và tên<input name="full_name" autocomplete="name" required></label><label>Số điện thoại<input name="phone" autocomplete="tel" required></label>' : ''}<label>Mật khẩu<input name="password" type="password" autocomplete="${register ? 'new-password' : 'current-password'}" required minlength="6"></label><p class="form-error" role="alert" hidden></p><button class="btn btn-primary btn-md btn-block" type="submit">${register ? 'Tạo tài khoản' : 'Đăng nhập'}</button><p class="auth-switch">${register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'} <a href="${register ? '/login' : '/register'}" data-link>${register ? 'Đăng nhập' : 'Đăng ký ngay'}</a></p><p class="form-note">Xác thực qua API hiện tại · Khóa token: <code>synchub.token</code></p></form></section>`;
+  const seedUsers = [['Host Hạng A (98đ)','dat.dt@synchub.vn'],['Member Hạng B (82đ, cọc 30%)','minh.b@synchub.vn'],['Member Hạng C (64đ, cọc 100%)','linh.c@synchub.vn'],['Member FLAGGED (42đ, bị chặn)','hung.flag@synchub.vn'],['Provider (Chủ sân)','thang.venue@synchub.vn'],['Admin hệ thống','admin@synchub.vn']];
+  const heroImage = register ? '/images/study-room.jpg' : '/images/badminton.jpg';
+  const points = register ? [['Khởi tạo 100 điểm','Tài khoản mới vào thẳng Hạng A — miễn đặt cọc.'],['Ghép kèo cùng bạn học','Mở phòng, chia sẻ mã mời và chốt sĩ số nhanh.'],['Uy tín minh bạch','Check-in đúng giờ cộng điểm, bùng kèo trừ điểm.']] : [['Khoá slot 10 phút','Giữ chỗ tức thì, hết hạn tự nhả cho người khác.'],['Chia bill tự động','Largest Remainder — không lệch một đồng nào.'],['Escrow bảo vệ cọc','Tiền chỉ giải ngân khi buổi chơi hoàn tất.']];
+  const hero = `<aside class="auth-cover" style="--auth-cover:url('${heroImage}')"><span class="auth-brand-pill">${register?'Tham gia cộng đồng SyncHub':'SyncHub · Làng Đại Học Thủ Đức'}</span><p class="auth-cover-lead">${register?'Học nhóm, chơi thể thao, gọi đồ ăn — tất cả trong một phòng.':'Một buổi chơi trọn vẹn — từ giữ sân đến chia tiền.'}</p><ul>${points.map(([label,desc],i)=>`<li><span aria-hidden="true">${['◷','▤','✓'][i]}</span><div><b>${label}</b><small>${desc}</small></div></li>`).join('')}</ul><small class="auth-credit">Ảnh: ${register?'Libr · Wikimedia Commons (CC BY 3.0)':'Itsn4kul10 · Wikimedia Commons (CC BY-SA 4.0)'}</small></aside>`;
+  const seedPanel = !register ? `<div class="seed-accounts"><p>Tài khoản seed kiểm thử (điền vào form, vẫn xác thực qua /api/auth/login):</p>${seedUsers.map(([label,email])=>`<button type="button" data-seed-email="${email}">${label}</button>`).join('')}</div>` : '';
+  const form = `<section class="auth-page">${hero}<div class="auth-column"><div class="auth-copy"><span class="eyebrow">${register ? 'BẮT ĐẦU TRONG 1 PHÚT' : 'CHÀO MỪNG TRỞ LẠI'}</span><h1>${title}</h1><p>${register?'Tài khoản mới khởi tạo với 100 điểm uy tín (Hạng A — miễn đặt cọc khi vào phòng ghép kèo).':'Đặt sân, lập phòng ghép kèo, gọi đồ FNB chung và chia bill tự động cùng nhóm của bạn.'}</p></div><form class="auth-form card" data-auth-form data-register="${register}"><label>Email<input name="email" type="email" autocomplete="email" value="${register?'':'dat.dt@synchub.vn'}" required></label>${register ? '<label>Họ và tên<input name="full_name" autocomplete="name" required></label><label>Số điện thoại<input name="phone" autocomplete="tel" required></label>' : ''}<label>${register?'Mật khẩu (tối thiểu 6 ký tự)':'Mật khẩu'}<input name="password" type="password" autocomplete="${register ? 'new-password' : 'current-password'}" value="${register?'':'Password123!'}" required ${register?'minlength="6"':''}></label><p class="form-error" role="alert" hidden></p><button class="btn btn-primary btn-md btn-block" type="submit">${register ? 'Đăng ký' : 'Đăng nhập'}</button><p class="auth-switch">${register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'} <a href="${register ? '/login' : '/register'}" data-link>${register ? 'Đăng nhập' : 'Đăng ký ngay'}</a></p></form>${seedPanel}</div></section>`;
   return shell(form, 'public');
 }
 
 function layoutFor(path) { if (path.startsWith('/provider')) return 'provider'; if (path.startsWith('/admin')) return 'admin'; if (/^\/(wallet|disputes|profile|lobby)(\/|$)/.test(path)) return 'member'; return 'public'; }
 async function render() {
+  const thisRender = ++renderEpoch;
   cleanup();
   let path = location.pathname;
   if (path === '/join' || path === '/join/') { navigate('/', { replace: true }); return; }
@@ -70,15 +79,19 @@ async function render() {
   if (memberOnly && store.user && !['HOST', 'MEMBER'].includes(store.user.role)) { navigate(homeFor(store.user.role), { replace: true }); return; }
   if (path === '/styleguide') app.innerHTML = styleguide();
   else if (path === '/login' || path === '/register') app.innerHTML = authPage(path === '/register');
-  else if (path.startsWith('/provider')) app.innerHTML = shellPreview('provider');
-  else if (path.startsWith('/admin')) app.innerHTML = shellPreview('admin');
-  else if (guarded) app.innerHTML = shellPreview('member');
-  else app.innerHTML = shellPreview('public');
+  else {
+    cleanups.push(beginPage());
+    app.innerHTML = shell('<p role="status" class="business-card">Đang tải dữ liệu…</p>', layout);
+    const content = await renderBusiness(path, store.user);
+    if (thisRender !== renderEpoch) return;
+    app.innerHTML = shell(content, layout);
+    cleanups.push(mountBusiness(path, store.user, navigate));
+  }
   bindInteractions();
 }
 
 function bindInteractions() {
-  document.querySelectorAll('[data-link]').forEach((anchor) => anchor.addEventListener('click', (event) => { if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigate(anchor.getAttribute('href')); }));
+  document.querySelectorAll('[data-link]').forEach((anchor) => anchor.addEventListener('click', (event) => { if (event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigate(anchor.getAttribute('href')); }));
   document.querySelector('[data-open-modal]')?.addEventListener('click', () => createModal({ title: 'Modal', content: '<p class="text-secondary">ESC, click vào nền hoặc nút đóng để thoát. Tab và Shift+Tab giữ focus bên trong hộp thoại.</p><button class="btn btn-outline btn-md" type="button">Nút trong modal</button>' }));
   document.querySelectorAll('[data-qr]').forEach((image) => image.addEventListener('error', () => { image.hidden = true; image.nextElementSibling.hidden = false; }));
   document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => { try { await navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'Đã sao chép'; setTimeout(() => { button.textContent = button.dataset.copy === '0123456789' ? 'Sao chép STK' : 'Sao chép'; }, 2000); } catch { button.textContent = 'Không thể sao chép'; } }));
@@ -86,6 +99,7 @@ function bindInteractions() {
   document.querySelectorAll('[data-qty]').forEach((button) => button.addEventListener('click', () => { const value = button.parentElement.querySelector('span'); value.textContent = Math.max(0, Number(value.textContent) + (button.dataset.qty === '+' ? 1 : -1)); }));
   document.querySelector('[data-logout]')?.addEventListener('click', () => { store.clear(); store.user = null; navigate('/'); });
   document.querySelector('[data-menu]')?.addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('sidebar-open'));
+  document.querySelectorAll('[data-seed-email]').forEach((button) => button.addEventListener('click', () => { const form = document.querySelector('[data-auth-form]'); form.elements.email.value = button.dataset.seedEmail; form.elements.password.value = 'Password123!'; }));
   document.querySelector('[data-auth-form]')?.addEventListener('submit', async (event) => {
     event.preventDefault(); const form = event.currentTarget, error = form.querySelector('.form-error'), data = Object.fromEntries(new FormData(form)); error.hidden = true;
     try { const response = await fetch(`/api/auth/${form.dataset.register === 'true' ? 'register' : 'login'}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); const result = await response.json(); if (!response.ok) throw new Error(result.message || result.error || 'Không thể xác thực'); store.setToken(result.token); store.user = result.user; const next = history.state?.from || homeFor(store.user.role); navigate(next, { replace: true }); }

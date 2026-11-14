@@ -22,7 +22,7 @@ export const createCountdown = (until) => {
   const node = document.createElement('span'); node.className = 'countdown'; node.setAttribute('role', 'timer');
   let timer;
   const tick = () => { const seconds = Math.max(0, Math.ceil((end - Date.now()) / 1000)); node.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`; node.classList.toggle('countdown-warning', seconds < 180 && seconds >= 60); node.classList.toggle('countdown-critical', seconds < 60); if (seconds === 0) clearInterval(timer); };
-  tick(); timer = setInterval(tick, 1000); return node;
+  tick(); timer = setInterval(tick, 1000); node.destroy = () => clearInterval(timer); return node;
 };
 
 export const createModal = ({ title, content, close }) => {

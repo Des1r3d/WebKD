@@ -1,0 +1,47 @@
+Giai đoạn 3 — log build và browser
+Ngày: 14/11/2026
+
+Syntax:
+- node --check client/vanilla/app.js — PASS
+- node --check client/vanilla/pages.js — PASS
+- node --check client/vanilla/components.js — PASS
+- python -m py_compile scripts/capture_phase3_scenarios.py scripts/verify_phase3_browser.py — PASS
+
+Build:
+- npm run build:vanilla --prefix client — PASS (Vite 8.3.6, HTML/CSS/JS và Leaflet bundle)
+- npm run build --prefix client — PASS (tsc -b + Vite React)
+- Các lệnh React hiện có vẫn được giữ nguyên.
+
+Playwright screenshots:
+- Lệnh: $env:SYNCHUB_SEED_PASSWORD='<seed>'; python -u scripts/capture_phase3_scenarios.py
+- Preview: http://127.0.0.1:5180 (Vite vanilla, proxy API tới backend đang chạy)
+- Kết quả: 87 ảnh, 29 trường hợp ở mỗi viewport 390x844, 768x1024, 1440x900.
+- 0/87 tràn ngang; 0 font lỗi; 0 request tài nguyên lỗi; 0 ảnh chưa tải; 0 page error trong capture cuối.
+- 404 `providers/no-such-provider` và 401 `auth/login` chỉ xuất hiện trong hai scenario lỗi chủ đích ở mỗi viewport.
+- Chi tiết route, kích thước, `scrollWidth`, API/resource errors và page errors trong screenshots/phase-3/capture-results.json.
+
+Playwright smoke:
+- Lệnh: $env:SYNCHUB_SEED_PASSWORD='<seed>'; python -u scripts/verify_phase3_browser.py
+- 10 pass: login redirect; login trả về `from`; Back/Forward và deep-link reload; role guard MEMBER/PROVIDER/ADMIN/HOST; modal Escape và focus return; register native validation; socket cleanup.
+- 1 fail: kết nối lobby có nhận `cart:updated`, không nhận `lobby:members` (websocketCount=2). Cần xác minh lại event trên phiên service/client; không sửa backend trong migration UI.
+- Chi tiết từng kiểm tra ngay dưới đây.
+
+[
+  {"check":"login redirect","pass":true},
+  {"check":"login returns to from route","pass":true},
+  {"check":"Back/Forward + deep-link reload","pass":true},
+  {"check":"role guard MEMBER → /provider","pass":true},
+  {"check":"role guard PROVIDER → /admin","pass":true},
+  {"check":"role guard ADMIN → /provider","pass":true},
+  {"check":"role guard HOST → /profile","pass":true},
+  {"check":"modal Escape and focus return","pass":true},
+  {"check":"register native form validation","pass":true},
+  {"check":"Socket.IO lobby join initial state","pass":false,"receivedCartUpdated":true,"receivedMembers":false},
+  {"check":"socket cleanup on route change","pass":true}
+]
+
+Backend suite:
+- npm test — NOT RUN.
+- TEST_DATABASE_URL không được cấu hình trong môi trường thực thi; tuyệt đối không chạy vào DB demo/dev.
+- Giai đoạn 1/2 đã ghi 65/65 pass; kết quả cũ không được coi là tái xác nhận Giai đoạn 3.
+- BR-SLT-01/02, BR-INT-02 và BR-ESC-03 chưa được chạy lại trong lượt này.

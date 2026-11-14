@@ -9,7 +9,9 @@
     "dev": "node scripts/dev.js",
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
+    "dev:vanilla": "npm run dev:vanilla --prefix client",
     "test": "npm run test --prefix server",
-    "build": "npm run build --prefix client"
+    "build": "npm run build --prefix client",
+    "build:vanilla": "npm run build:vanilla --prefix client"
   }
 }

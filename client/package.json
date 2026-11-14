@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:phase2": "vite --config vanilla/vite.config.js",
     "build:phase2": "vite build --config vanilla/vite.config.js",
+    "dev:vanilla": "vite --config vanilla/vite.config.js",
+    "build:vanilla": "vite build --config vanilla/vite.config.js",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
