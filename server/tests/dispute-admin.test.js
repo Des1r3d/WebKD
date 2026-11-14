@@ -135,12 +135,15 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
       assert.strictEqual(resolveRes.body.data.dispute.status, DisputeStatus.RESOLVED);
       assert.strictEqual(resolveRes.body.data.dispute.resolved_by, 'usr-adm-01');
 
-      const refundTx = await prisma.escrowTransaction.findUnique({
-        where: { idempotency_key: `refund:lob-01:${disputeId}` },
-      });
-      assert.notStrictEqual(refundTx, undefined);
-      assert.strictEqual(refundTx?.amount, 25000);
-      assert.strictEqual(refundTx?.status, EscrowStatus.REFUNDED);
+      const refunds = await prisma.escrowTransaction.findMany({ where: { lobby_id: 'lob-01', type: 'REFUND' } });
+      assert.ok(refunds.length > 0);
+      assert.equal(refunds.reduce((sum, refund) => sum + refund.amount, 0), 25000);
+      for (const refund of refunds) {
+        const bill = await prisma.splitBill.findUniqueOrThrow({ where: { id: refund.split_bill_id } });
+        assert.equal(refund.idempotency_key, `refund:lob-01:${bill.id}`);
+        assert.equal(refund.status, EscrowStatus.REFUNDED);
+        assert.ok(refund.amount > 0 && refund.amount <= bill.total);
+      }
 
       const fnbTx = await prisma.escrowTransaction.findUnique({
         where: { idempotency_key: 'release:lob-01:prv-fnb-01' },
@@ -152,6 +155,37 @@ describe('Khối 5 — Khiếu nại (BR-ESC-04), Phân xử Admin (BR-DSP-01) &
         where: { entity: 'disputes', entity_id: disputeId, action: 'DISPUTE_RESOLVE' },
       });
       assert.ok(auditLogs.length > 0);
+    });
+
+    const resolve = (refundAmount) => request(app)
+      .patch(`/api/admin/disputes/${disputeId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'RESOLVED', refundAmount });
+
+    it('commits one refund effect for concurrent and repeated decisions', async () => {
+      const responses = await Promise.all([resolve(25001), resolve(25001)]);
+      assert.deepEqual(responses.map(({ status }) => status).sort(), [200, 400]);
+      await resolve(25001).expect(400);
+      const records = await prisma.escrowTransaction.findMany({ where: { lobby_id: 'lob-01', type: 'REFUND' } });
+      assert.equal(records.reduce((sum, row) => sum + row.amount, 0), 25001);
+      assert.ok(records.every(row => row.split_bill_id));
+      assert.equal(await prisma.auditLog.count({ where: { entity_id: disputeId, action: 'DISPUTE_RESOLVE' } }), 1);
+    });
+
+    it('rejects decisions over available frozen funds without moving money', async () => {
+      await resolve(83601).expect(409);
+      assert.equal((await prisma.dispute.findUniqueOrThrow({ where: { id: disputeId } })).status, 'OPEN');
+      assert.equal(await prisma.escrowTransaction.count({ where: { lobby_id: 'lob-01', type: 'REFUND' } }), 0);
+    });
+
+    it('does not create a second refund when the old dispute key exists', async () => {
+      await prisma.escrowTransaction.create({ data: {
+        lobby_id: 'lob-01', type: 'REFUND', amount: 25000, net_amount: 25000,
+        status: 'REFUNDED', idempotency_key: `refund:lob-01:${disputeId}`,
+      } });
+      await resolve(25000).expect(409);
+      assert.equal(await prisma.escrowTransaction.count({ where: { lobby_id: 'lob-01', type: 'REFUND' } }), 1);
+      assert.equal((await prisma.dispute.findUniqueOrThrow({ where: { id: disputeId } })).status, 'OPEN');
     });
 
     it('người dùng thường không có quyền phân xử khiếu nại (chỉ ADMIN)', async () => {

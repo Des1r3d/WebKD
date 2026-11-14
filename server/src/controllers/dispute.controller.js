@@ -178,6 +178,16 @@ export async function handleResolveDispute(req, res) {
       res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy khiếu nại' });
       return;
     }
+    const refundErrors = {
+      INVALID_REFUND_AMOUNT: [400, 'Số tiền hoàn phải là số nguyên không âm'],
+      REFUND_EXCEEDS_AVAILABLE: [409, 'Số tiền hoàn vượt khoản ký quỹ có thể hoàn'],
+      REFUND_REQUIRES_REVIEW: [409, 'Phòng đã có giao dịch hoàn tiền cần đối chiếu'],
+    };
+    if (refundErrors[error.message]) {
+      const [status, message] = refundErrors[error.message];
+      res.status(status).json({ error: error.message, message });
+      return;
+    }
     if (error.message === 'DISPUTE_ALREADY_RESOLVED') {
       res.status(400).json({
         error: 'ALREADY_RESOLVED',
