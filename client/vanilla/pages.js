@@ -12,7 +12,14 @@ const alert = msg => `<p class="form-error" role="alert">${esc(msg)}</p>`;
 const section = (title, body) => `<section class="business-card"><h2>${title}</h2>${body}</section>`;
 const empty = (title, text) => EmptyState({title,description:text});
 const imgFor = p => ({badminton:'/images/badminton.jpg',study_room:'/images/study-room.jpg',football:'/images/futsal.jpg',coffee:'/images/coffee.jpg',milk_tea:'/images/coffee.jpg',snack:'/images/coffee.jpg'}[p?.category] || '/images/badminton.jpg');
-const date = d => d ? new Date(d).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}) : '—';
+const VENUE_TIME_ZONE = 'Asia/Ho_Chi_Minh';
+const date = d => d ? new Date(d).toLocaleString('vi-VN',{timeZone:VENUE_TIME_ZONE}) : '—';
+const slotDay = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: VENUE_TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit',
+});
+const slotTime = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: VENUE_TIME_ZONE, hour: '2-digit', minute: '2-digit',
+});
 
 export async function renderBusiness(path, user) {
   try {
@@ -29,19 +36,104 @@ export async function renderBusiness(path, user) {
   return page('Không tìm thấy trang','Đường dẫn không tồn tại.',`<a data-link href="/">Về khám phá</a>`);
 }
 
+const DISCOVER_PAGE_SIZE = 6;
+
+function paginationNav(current, total, label, hrefForPage, labelForPage = number => `Trang ${number}`) {
+  if (total <= 1) return '';
+
+  const control = (number, label, accessibleLabel) => {
+    const content = `<span aria-hidden="true">${label}</span>`;
+    if (number < 1 || number > total) {
+      return `<span class="pagination-control" role="link" aria-disabled="true" aria-label="${accessibleLabel}">${content}</span>`;
+    }
+    if (number === current) {
+      return `<span class="pagination-control" aria-current="page" aria-label="${accessibleLabel}">${number}</span>`;
+    }
+
+    return `<a class="pagination-control" href="${esc(hrefForPage(number))}" data-link data-page-link aria-label="${accessibleLabel}">${content}</a>`;
+  };
+
+  const first = Math.min(Math.max(current - 2, 1), Math.max(total - 4, 1));
+  const last = Math.min(first + 4, total);
+  const numbers = Array.from({ length: last - first + 1 }, (_, index) => {
+    const number = first + index;
+    return control(number, number, esc(labelForPage(number)));
+  });
+  return `<nav class="pagination" aria-label="${label}">
+    ${control(current - 1, '‹', 'Trang trước')}
+    ${numbers.join('')}
+    ${control(current + 1, '›', 'Trang sau')}
+  </nav>`;
+}
+
 async function discover() {
   const params = new URLSearchParams(location.search); const type=params.get('type')||'ALL', category=params.get('category')||'ALL', radius=params.get('radius')||'3000', search=params.get('search')||'';
   const qs=new URLSearchParams(); if(type!=='ALL')qs.set('type',type); if(category!=='ALL')qs.set('category',category); qs.set('radius',radius); if(search)qs.set('search',search);
   const res=await api(`/api/providers?${qs}`); const providers=dataOf(res)||[];
+  const totalPages = Math.ceil(providers.length / DISCOVER_PAGE_SIZE);
+  const requestedPage = Number(params.get('page'));
+  const currentPage = Number.isSafeInteger(requestedPage) && requestedPage > 0
+    ? Math.min(requestedPage, totalPages || 1)
+    : 1;
+  const offset = (currentPage - 1) * DISCOVER_PAGE_SIZE;
+  const visibleProviders = providers.slice(offset, offset + DISCOVER_PAGE_SIZE);
+  const pagination = paginationNav(currentPage, totalPages, 'Phân trang địa điểm', number => {
+    const query = new URLSearchParams(params);
+    if (number === 1) query.delete('page');
+    else query.set('page', number);
+    return query.size ? `?${query}` : location.pathname;
+  });
+  const mapProviders = esc(JSON.stringify(providers.map(({ id, lat, lng, name, address }) => ({ id, lat, lng, name, address }))));
   const categories=[['ALL','Tất cả danh mục'],['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['milk_tea','Trà sữa'],['coffee','Cà phê'],['snack','Ăn vặt']];
-  const cards=providers.map(p=>`<article class="business-card provider-card" data-provider-lat="${Number(p.lat)}" data-provider-lng="${Number(p.lng)}" data-provider-name="${esc(p.name)}" data-provider-address="${esc(p.address)}" data-provider-id="${esc(p.id)}"><a href="/venues/${encodeURIComponent(p.id)}" data-link><img src="${imgFor(p)}" alt=""><span class="badge">${p.type==='VENUE'?'Sân / Phòng':'Quán F&B'} · ${esc(p.category)}</span></a><h3><a href="/venues/${encodeURIComponent(p.id)}" data-link>${esc(p.name)}</a></h3><p>${esc(p.address)}</p><small>${esc(p.open_hours||'')} · ${p.distance_m??'—'} m</small><div class="business-row"><b>${p.min_price!=null?`Giá từ ${formatVnd(p.min_price)}`:'Xem bảng giá'}</b><a class="btn btn-primary btn-sm" href="/venues/${encodeURIComponent(p.id)}" data-link>${p.type==='VENUE'?'Chọn giờ':'Xem menu'}</a></div></article>`).join('');
+  const cards=visibleProviders.map(p=>`<article class="business-card provider-card"><a href="/venues/${encodeURIComponent(p.id)}" data-link><img src="${imgFor(p)}" alt=""><span class="badge">${p.type==='VENUE'?'Sân / Phòng':'Quán F&B'} · ${esc(p.category)}</span></a><h3><a href="/venues/${encodeURIComponent(p.id)}" data-link>${esc(p.name)}</a></h3><p>${esc(p.address)}</p><small>${esc(p.open_hours||'')} · ${p.distance_m??'—'} m</small><div class="business-row"><b>${p.min_price!=null?`Giá từ ${formatVnd(p.min_price)}`:'Xem bảng giá'}</b><a class="btn btn-primary btn-sm" href="/venues/${encodeURIComponent(p.id)}" data-link>${p.type==='VENUE'?'Chọn giờ':'Xem menu'}</a></div></article>`).join('');
   const filters=`<form class="business-card filter-form" data-discover><div class="business-row">${['ALL','VENUE','FNB'].map(x=>`<label class="radio-pill"><input type="radio" name="type" value="${x}" ${type===x?'checked':''}>${x==='ALL'?'Tất cả':x==='VENUE'?'Sân & Phòng':'Quán F&B'}</label>`).join('')}<select name="category" aria-label="Danh mục">${categories.map(([v,l])=>`<option value="${v}" ${category===v?'selected':''}>${l}</option>`).join('')}</select><select name="radius" aria-label="Bán kính">${[1000,2000,3000,5000].map(x=>`<option value="${x}" ${Number(radius)===x?'selected':''}>≤ ${x/1000} km</option>`).join('')}</select><input name="search" type="search" value="${esc(search)}" placeholder="Tìm tên hoặc địa chỉ"><button class="btn btn-primary btn-sm">Tìm</button><button type="button" class="btn btn-outline btn-sm" data-reset-filters>Đặt lại</button></div></form>`;
-  return page('Khám phá Làng Đại Học Thủ Đức','Chọn sân thể thao hoặc phòng học nhóm, khoá slot 10 phút và mở phòng ghép kèo cùng bạn bè.',`<form class="business-card join-code" data-join-code><label>Mã phòng<input name="code" placeholder="Nhập mã phòng (VD: SYNC01)" required></label><button class="btn btn-secondary">Vào phòng</button></form><div class="quick-picks">${[['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['coffee','Cà phê & nước uống']].map(([id,l])=>`<button class="quick-pick" data-pick="${id}"><img src="${imgFor({category:id})}" alt=""><b>${l}</b></button>`).join('')}</div>${filters}<div class="discover-grid"><section><h2>${providers.length} địa điểm trong bán kính ${Number(radius)/1000} km</h2>${providers.length?`<div class="provider-grid">${cards}</div>`:empty('Không tìm thấy địa điểm nào','Thử mở rộng bán kính hoặc đặt lại bộ lọc.')}</section><section class="business-card"><h2>Bản đồ địa điểm</h2><div id="provider-map" class="map-placeholder" aria-label="Bản đồ địa điểm"></div><small>Hiển thị ${providers.length} địa điểm · bán kính ${Number(radius)/1000} km</small></section></div>`, `<a class="btn btn-outline btn-sm" href="/join" data-link>Tham gia phòng</a>`);
+  return page('Khám phá Làng Đại Học Thủ Đức','Chọn sân thể thao hoặc phòng học nhóm, khoá slot 10 phút và mở phòng ghép kèo cùng bạn bè.',`<form class="business-card join-code" data-join-code><label>Mã phòng<input name="code" placeholder="Nhập mã phòng (VD: SYNC01)" required></label><button class="btn btn-secondary">Vào phòng</button></form><div class="quick-picks">${[['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['coffee','Cà phê & nước uống']].map(([id,l])=>`<button class="quick-pick" data-pick="${id}"><img src="${imgFor({category:id})}" alt=""><b>${l}</b></button>`).join('')}</div>${filters}<div class="discover-grid"><section><h2 id="discover-results" tabindex="-1">${providers.length} địa điểm trong bán kính ${Number(radius)/1000} km</h2>${providers.length?`<div class="provider-grid">${cards}</div>${pagination}`:empty('Không tìm thấy địa điểm nào','Thử mở rộng bán kính hoặc đặt lại bộ lọc.')}</section><section class="business-card"><h2>Bản đồ địa điểm</h2><div id="provider-map" data-providers="${mapProviders}" class="map-placeholder" aria-label="Bản đồ địa điểm"></div><small>Hiển thị ${providers.length} địa điểm · bán kính ${Number(radius)/1000} km</small></section></div>`, `<a class="btn btn-outline btn-sm" href="/join" data-link>Tham gia phòng</a>`);
 }
 
-async function venue(id,user) { const p=dataOf(await api(`/api/providers/${encodeURIComponent(id)}`)); const slots=p.slots||[]; const menu=p.menu_items||[];
-  const body=`<div class="venue-hero"><img src="${imgFor(p)}" alt=""><div><span class="badge">${esc(p.type)} · ${esc(p.category)}</span><h2>${esc(p.name)}</h2><p>${esc(p.address)}</p><p>${esc(p.open_hours||'')}</p></div></div>${p.type==='VENUE'?section('Khung giờ',slots.length?`<div class="slot-list">${slots.map(s=>`<article class="slot-item"><div><b>${date(s.start_at)}</b><small>${formatVnd(s.price)} · ${Badge(s.status)}</small>${s.locked_until?`<small>Giữ chỗ còn <span data-countdown-until="${esc(s.locked_until)}">--:--</span></small>`:''}</div>${s.status==='AVAILABLE'?`<button class="btn btn-primary btn-sm" data-lock-slot="${esc(s.id)}">Giữ slot 10 phút</button>`:s.status==='LOCKED'&&s.locked_by===user?.id?`<button class="btn btn-secondary btn-sm" data-create-lobby="${esc(s.id)}">Mở phòng ghép kèo</button><button class="btn btn-outline btn-sm" data-release-slot="${esc(s.id)}">Nhả slot</button>`:`<button class="btn btn-outline btn-sm" disabled>${s.status==='LOCKED'?'Đang có người giữ':'Đã đặt'}</button>`}</article>`).join('')}</div>`:empty('Chưa có khung giờ','Đối tác chưa mở slot đặt sân.')):section('Thực đơn',menu.length?menu.map(m=>`<div class="slot-item"><div><b>${esc(m.name)}</b><small>${formatVnd(m.price)} · ${m.is_available?'Đang bán':'Tạm hết'}</small></div></div>`).join(''):empty('Chưa có món','Thực đơn chưa được cập nhật.'))}<p data-action-message role="status"></p>`;
-  return page(esc(p.name),'Thông tin địa điểm, lịch slot và tình trạng còn chỗ.',body,'<a class="btn btn-outline btn-sm" href="/" data-link>← Khám phá</a>'); }
+const slotDayKey = new Intl.DateTimeFormat('sv-SE', {
+  timeZone: VENUE_TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit',
+});
+
+function venueSchedule(slots, params) {
+  const days = new Map();
+  for (const slot of slots) {
+    const key = slotDayKey.format(new Date(slot.start_at));
+    if (!days.has(key)) days.set(key, []);
+    days.get(key).push(slot);
+  }
+
+  const dates = [...days.keys()].sort();
+  const current = Math.max(0, dates.indexOf(params.get('date')));
+  const visibleSlots = days.get(dates[current]) || [];
+  const dayLabel = key => slotDay.format(new Date(days.get(key)[0].start_at));
+  const heading = visibleSlots.length ? `Khung giờ · ${dayLabel(dates[current])}` : 'Khung giờ';
+  const pagination = paginationNav(current + 1, dates.length, 'Phân trang lịch đặt sân', number => {
+    const query = new URLSearchParams(params);
+    query.set('date', dates[number - 1]);
+    return `?${query}`;
+  }, number => `Ngày ${dayLabel(dates[number - 1])}`);
+
+  return { heading, visibleSlots, pagination };
+}
+
+async function venue(id, user) {
+  const params = new URLSearchParams(location.search);
+  const p = dataOf(await api(`/api/providers/${encodeURIComponent(id)}`));
+  const menu = p.menu_items || [];
+  const hero = `<div class="venue-hero"><img src="${imgFor(p)}" alt=""><div><span class="badge">${esc(p.type)} · ${esc(p.category)}</span><h2>${esc(p.name)}</h2><p>${esc(p.address)}</p><p>${esc(p.open_hours||'')}</p></div></div>`;
+  let details;
+  if (p.type === 'VENUE') {
+    const { heading, visibleSlots, pagination } = venueSchedule(p.slots || [], params);
+    const rows = visibleSlots.map(s => `<article class="slot-item"><div><b>${slotTime.format(new Date(s.start_at))}</b><small>${formatVnd(s.price)} · ${Badge(s.status)}</small>${s.locked_until?`<small>Giữ chỗ còn <span data-countdown-until="${esc(s.locked_until)}">--:--</span></small>`:''}</div>${s.status==='AVAILABLE'?`<button class="btn btn-primary btn-sm" data-lock-slot="${esc(s.id)}">Giữ slot 10 phút</button>`:s.status==='LOCKED'&&s.locked_by===user?.id?`<button class="btn btn-secondary btn-sm" data-create-lobby="${esc(s.id)}">Mở phòng ghép kèo</button><button class="btn btn-outline btn-sm" data-release-slot="${esc(s.id)}">Nhả slot</button>`:`<button class="btn btn-outline btn-sm" disabled>${s.status==='LOCKED'?'Đang có người giữ':'Đã đặt'}</button>`}</article>`).join('');
+    details = `<section class="business-card"><h2 id="venue-schedule" tabindex="-1">${heading}</h2>${rows ? `<div class="slot-list">${rows}</div>${pagination}` : empty('Chưa có khung giờ', 'Đối tác chưa mở slot đặt sân.')}</section>`;
+  } else {
+    details = section('Thực đơn', menu.length?menu.map(m=>`<div class="slot-item"><div><b>${esc(m.name)}</b><small>${formatVnd(m.price)} · ${m.is_available?'Đang bán':'Tạm hết'}</small></div></div>`).join(''):empty('Chưa có món','Thực đơn chưa được cập nhật.'));
+  }
+
+  const body = `${hero}${details}<p data-action-message role="status"></p>`;
+  return page(esc(p.name), 'Thông tin địa điểm, lịch slot và tình trạng còn chỗ.', body,
+    '<a class="btn btn-outline btn-sm" href="/" data-link>← Khám phá</a>');
+}
 
 async function join(code,user) { if(!user)return page(`Bạn được mời vào phòng ${esc(code)}`,'Đăng nhập để kiểm tra điểm uy tín, tiền cọc và xác nhận tham gia.',`<div class="business-card invite-card"><p>Phòng mời: <b>#${esc(code)}</b></p><a class="btn btn-primary" href="/login" data-link data-login-from="/join/${esc(code)}">Đăng nhập để tiếp tục</a><a class="btn btn-outline" href="/" data-link>Về trang khám phá</a></div>`); const info=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=info.lobby||info; const provider=info.slot?.provider||l.slot?.provider; const members=info.members||[]; const est=Math.floor((info.slot?.price||120000)/4); const score=user?.reputation_score??100; const deposit=score>=90?0:score>=70?Math.round(est*.3):score>=50?est:0;
  return page(`Lời mời phòng #${esc(code)}`,'Kiểm tra sân, thời gian và mức cọc trước khi tham gia.',`<div class="split-grid"><div>${section('Thông tin buổi chơi',`<h3>${esc(provider?.name||'SyncHub')}</h3><p>${esc(provider?.address||'')}</p><p>Trạng thái: ${Badge(l.status||'OPEN')} · Thành viên: ${members.length}</p><p>Hạn tham gia: ${date(l.deadline_at)}</p>`)}${section('Uy tín & cọc',`<p>Điểm uy tín: <b>${score}/100</b> · Hạng ${score>=90?'A':score>=70?'B':score>=50?'C':'FLAGGED'}</p><p>Tiền cọc dự kiến: <b>${formatVnd(deposit)}</b></p>${score<50?alert('Điểm uy tín dưới 50, tài khoản không thể tham gia phòng.'):''}<button class="btn btn-primary" data-join-lobby="${esc(code)}" ${score<50?'disabled':''}>Xác nhận tham gia</button><p data-action-message role="status"></p>`)}</div><aside>${section('Thành viên',members.length?members.map(m=>`<p>${esc(m.full_name)} · ${m.status}</p>`).join(''):empty('Chưa có thành viên','Bạn có thể là người đầu tiên tham gia.'))}</aside></div>`); }
@@ -308,7 +400,7 @@ export function mountBusiness(path,user,navigate) {
   }
   let disposed=false;
   document.querySelectorAll('[data-countdown-until]').forEach(el=>{const timer=createCountdown(el.dataset.countdownUntil);el.replaceWith(timer);cleanups.push(()=>timer.destroy?.());});
-  if(path==='/'||path==='/discover') import('/assets/leaflet/leaflet-src.esm.js').then(L=>{const el=document.querySelector('#provider-map');if(disposed||!el)return;const map=L.map(el).setView([10.8752,106.8007],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const layer=L.layerGroup().addTo(map);document.querySelectorAll('[data-provider-lat]').forEach(card=>{const marker=L.circleMarker([Number(card.dataset.providerLat),Number(card.dataset.providerLng)],{radius:8,fillColor:'#059669',color:'#fff',weight:2,fillOpacity:.95}).addTo(layer);const popup=document.createElement('div');const strong=document.createElement('strong');strong.textContent=card.dataset.providerName;const address=document.createElement('p');address.textContent=card.dataset.providerAddress;const a=document.createElement('a');a.href=`/venues/${encodeURIComponent(card.dataset.providerId)}`;a.dataset.link='';a.textContent='Xem chi tiết →';popup.append(strong,address,a);marker.bindPopup(popup);});cleanups.push(()=>map.remove());}).catch(()=>{});
+  if(path==='/'||path==='/discover') import('/assets/leaflet/leaflet-src.esm.js').then(L=>{const el=document.querySelector('#provider-map');if(disposed||!el)return;const map=L.map(el).setView([10.8752,106.8007],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const layer=L.layerGroup().addTo(map);JSON.parse(el.dataset.providers).forEach(provider=>{const marker=L.circleMarker([Number(provider.lat),Number(provider.lng)],{radius:8,fillColor:'#059669',color:'#fff',weight:2,fillOpacity:.95}).addTo(layer);const popup=document.createElement('div');const strong=document.createElement('strong');strong.textContent=provider.name;const address=document.createElement('p');address.textContent=provider.address;const a=document.createElement('a');a.href=`/venues/${encodeURIComponent(provider.id)}`;a.dataset.link='';a.textContent='Xem chi tiết →';popup.append(strong,address,a);marker.bindPopup(popup);});cleanups.push(()=>map.remove());}).catch(()=>{});
   cleanups.push(()=>{disposed=true;});
   return ()=>cleanups.forEach(fn=>fn());
 }

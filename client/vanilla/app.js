@@ -14,7 +14,11 @@ const app = document.querySelector('#app');
 let cleanups = [];
 let renderEpoch = 0;
 const cleanup = () => { cleanups.forEach((fn) => fn()); cleanups = []; };
-const navigate = (to, { replace = false, state = {} } = {}) => { history[replace ? 'replaceState' : 'pushState'](state, '', to); render(); window.scrollTo(0, 0); };
+const navigate = (to, { replace = false, state = {}, focusResults = false } = {}) => {
+  history[replace ? 'replaceState' : 'pushState'](state, '', to);
+  render({ focusResults });
+  if (!focusResults) window.scrollTo(0, 0);
+};
 const link = (to, label, active = false) => `<a href="${to}" data-link class="nav-link ${active ? 'active' : ''}"><span class="nav-dot" aria-hidden="true"></span>${label}</a>`;
 const lobbyNavIcons = {'/': 'Compass', '/wallet': 'Wallet', '/disputes': 'ShieldAlert', '/profile': 'UserRound'};
 const routeLabel = (path) => path.startsWith('/login') ? 'Đăng nhập' : path.startsWith('/register') ? 'Đăng ký' : path.startsWith('/venues') ? 'Chi tiết sân' : path.startsWith('/lobby') ? 'Phòng ghép kèo' : path.startsWith('/join') ? 'Lời mời phòng' : path.startsWith('/wallet') ? 'Ví & Escrow' : path.startsWith('/disputes') ? 'Khiếu nại' : path.startsWith('/profile') ? 'Hồ sơ' : path.startsWith('/provider') ? 'Portal đối tác' : path.startsWith('/admin') ? 'Quản trị' : path === '/styleguide' ? 'Styleguide' : 'Khám phá';
@@ -64,7 +68,7 @@ function authPage(register = false) {
 }
 
 function layoutFor(path) { if (path.startsWith('/provider')) return 'provider'; if (path.startsWith('/admin')) return 'admin'; if (/^\/(wallet|disputes|profile|lobby)(\/|$)/.test(path)) return 'member'; return 'public'; }
-async function render() {
+async function render({ focusResults = false } = {}) {
   const thisRender = ++renderEpoch;
   cleanup();
   let path = location.pathname;
@@ -87,12 +91,17 @@ async function render() {
     if (thisRender !== renderEpoch) return;
     app.innerHTML = shell(content, layout);
     cleanups.push(mountBusiness(path, store.user, navigate));
+    if (focusResults) {
+      const results = document.querySelector('#discover-results, #venue-schedule') || document.querySelector('#main-content');
+      results.focus({ preventScroll: true });
+      results.scrollIntoView();
+    }
   }
   bindInteractions();
 }
 
 function bindInteractions() {
-  document.querySelectorAll('[data-link]').forEach((anchor) => anchor.addEventListener('click', (event) => { if (event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigate(anchor.getAttribute('href')); }));
+  document.querySelectorAll('[data-link]').forEach((anchor) => anchor.addEventListener('click', (event) => { if (event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); navigate(anchor.getAttribute('href'), { focusResults: anchor.hasAttribute('data-page-link') }); }));
   document.querySelector('[data-open-modal]')?.addEventListener('click', () => createModal({ title: 'Modal', content: '<p class="text-secondary">ESC, click vào nền hoặc nút đóng để thoát. Tab và Shift+Tab giữ focus bên trong hộp thoại.</p><button class="btn btn-outline btn-md" type="button">Nút trong modal</button>' }));
   document.querySelectorAll('[data-qr]').forEach((image) => image.addEventListener('error', () => { image.hidden = true; image.nextElementSibling.hidden = false; }));
   document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => { try { await navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'Đã sao chép'; setTimeout(() => { button.textContent = button.dataset.copy === '0123456789' ? 'Sao chép STK' : 'Sao chép'; }, 2000); } catch { button.textContent = 'Không thể sao chép'; } }));
