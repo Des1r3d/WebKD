@@ -1,9 +1,21 @@
+# Dependencies & build
 node_modules/
 dist/
 build/
+
+# Environment & logs
 .env
+.env.*
+!.env.example
 *.log
+
+# Runtime uploads
 server/uploads/*
 !server/uploads/.gitkeep
+
+# OS, local tooling & artifacts
 .DS_Store
+Thumbs.db
 .agents/
+.synchub-report-work/
+outputs/
