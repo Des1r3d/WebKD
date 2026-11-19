@@ -1,8 +1,16 @@
 import { prisma } from '../prisma.js';
-import { findLobby, lockLobbyRow } from '../services/lobby.js';
+import { findLobby, getFormattedLobbyMembers, isActiveLobbyMember, lockLobbyRow } from '../services/lobby.js';
 
 // Chat trong phòng lưu tạm trong RAM (12 bảng DB đã khóa theo AGENTS.md, không có bảng chat)
 const chatMessages = new Map();
+const actorOf = (socket, fallbackUserId) => socket.data?.user?.userId || fallbackUserId;
+
+async function ensureActiveMember(socket, lobby, userId) {
+  const actorId = actorOf(socket, userId);
+  if (await isActiveLobbyMember(lobby, actorId)) return actorId;
+  socket.emit('notify', { type: 'ERROR', message: 'Bạn cần tham gia phòng trước khi thao tác' });
+  return null;
+}
 
 async function loadFormattedCart(lobbyId) {
   const dbCart = await prisma.cartItem.findMany({
@@ -38,21 +46,7 @@ export function setupLobbySocket(io) {
       socket.join(`lobby:${lobby.id}`);
       socket.join(`lobby:${lobby.invite_code}`);
 
-      const dbMembers = await prisma.lobbyMember.findMany({
-        where: { lobby_id: lobby.id },
-        include: { user: true },
-        orderBy: { joined_at: 'asc' },
-      });
-      const members = dbMembers.map((m) => ({
-        user_id: m.user_id,
-        full_name: m.user?.full_name || 'Thành viên',
-        role: m.user?.role,
-        reputation_score: m.user?.reputation_score,
-        deposit_required: m.deposit_required,
-        deposit_paid: m.deposit_paid,
-        status: m.status,
-        is_host: m.user_id === lobby.host_id,
-      }));
+      const members = await getFormattedLobbyMembers(lobby.id, lobby.host_id);
       socket.emit('lobby:members', { members });
 
       const { items, subtotal } = await loadFormattedCart(lobby.id);
@@ -106,6 +100,9 @@ export function setupLobbySocket(io) {
           return;
         }
 
+        const actorId = await ensureActiveMember(socket, lobby, userId);
+        if (!actorId) return;
+
         const menuItem = await prisma.menuItem.findUnique({ where: { id: menuItemId } });
         if (!menuItem) {
           socket.emit('notify', { type: 'ERROR', message: 'Món ăn không tồn tại' });
@@ -125,7 +122,7 @@ export function setupLobbySocket(io) {
           }
 
           const existing = await tx.cartItem.findFirst({
-            where: { lobby_id: lobby.id, user_id: userId, menu_item_id: menuItemId },
+            where: { lobby_id: lobby.id, user_id: actorId, menu_item_id: menuItemId },
           });
           if (existing) {
             await tx.cartItem.update({
@@ -136,7 +133,7 @@ export function setupLobbySocket(io) {
             await tx.cartItem.create({
               data: {
                 lobby_id: lobby.id,
-                user_id: userId,
+                user_id: actorId,
                 menu_item_id: menuItemId,
                 qty: Number(qty),
                 unit_price_snapshot: menuItem.price,
@@ -167,7 +164,7 @@ export function setupLobbySocket(io) {
     socket.on(
       'cart:update',
       async (data) => {
-        const { lobbyId, cartItemId, qty } = data || {};
+        const { lobbyId, cartItemId, qty, userId } = data || {};
         const lobby = await findLobby(lobbyId);
 
         if (!lobby || lobby.status !== 'OPEN') {
@@ -177,6 +174,8 @@ export function setupLobbySocket(io) {
           });
           return;
         }
+
+        if (!(await ensureActiveMember(socket, lobby, userId))) return;
 
         if (qty <= 0) {
           await prisma.cartItem.deleteMany({ where: { id: cartItemId, lobby_id: lobby.id } });
@@ -199,7 +198,7 @@ export function setupLobbySocket(io) {
     socket.on(
       'cart:remove',
       async (data) => {
-        const { lobbyId, cartItemId } = data || {};
+        const { lobbyId, cartItemId, userId } = data || {};
         const lobby = await findLobby(lobbyId);
 
         if (!lobby || lobby.status !== 'OPEN') {
@@ -209,6 +208,8 @@ export function setupLobbySocket(io) {
           });
           return;
         }
+
+        if (!(await ensureActiveMember(socket, lobby, userId))) return;
 
         await prisma.cartItem.deleteMany({ where: { id: cartItemId, lobby_id: lobby.id } });
 
@@ -233,13 +234,16 @@ export function setupLobbySocket(io) {
         const lobby = await findLobby(lobbyId);
         if (!lobby) return;
 
-        const user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
+        const actorId = await ensureActiveMember(socket, lobby, userId);
+        if (!actorId) return;
+
+        const user = actorId ? await prisma.user.findUnique({ where: { id: actorId } }) : null;
         const fullName = user?.full_name || 'Thành viên';
 
         const msg = {
           id: `msg-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
           lobby_id: lobby.id,
-          user_id: userId,
+          user_id: actorId,
           full_name: fullName,
           text: text.trim(),
           created_at: new Date(),

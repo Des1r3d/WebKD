@@ -1,6 +1,16 @@
 import { LobbyStatus } from '@prisma/client';
 import { prisma } from '../prisma.js';
-import { cancelLobby, createLobby, findLobby, getLobbyDetail, joinLobby, leaveLobby, lockLobbyRow } from '../services/lobby.js';
+import {
+  cancelLobby,
+  createLobby,
+  findLobby,
+  getFormattedLobbyMembers,
+  getLobbyDetail,
+  isActiveLobbyMember,
+  joinLobby,
+  leaveLobby,
+  lockLobbyRow,
+} from '../services/lobby.js';
 
 /**
  * POST /api/lobbies
@@ -85,6 +95,16 @@ export async function handleGetLobby(req, res) {
   }
 }
 
+async function emitLobbyMembers(req, lobbyIdOrCode) {
+  const io = req.app.get('io');
+  if (!io) return;
+  const lobby = await findLobby(lobbyIdOrCode);
+  if (!lobby) return;
+  io.to(`lobby:${lobby.id}`).emit('lobby:members', {
+    members: await getFormattedLobbyMembers(lobby.id, lobby.host_id),
+  });
+}
+
 /**
  * POST /api/lobbies/:id/join
  * Tham gia phòng ghép kèo, kiểm tra uy tín & mức cọc (BR-REP-01)
@@ -99,6 +119,7 @@ export async function handleJoinLobby(req, res) {
 
     const id = String(req.params.id);
     const result = await joinLobby(id, userId);
+    await emitLobbyMembers(req, result.member.lobby_id);
 
     res.status(200).json({
       success: true,
@@ -153,6 +174,8 @@ export async function handleLeaveLobby(req, res) {
       });
       return;
     }
+
+    await emitLobbyMembers(req, id);
 
     res.status(200).json({
       success: true,
@@ -355,6 +378,14 @@ export async function handleCartAdd(req, res) {
       res.status(403).json({
         error: 'LOBBY_LOCKED',
         message: 'Phòng đã khóa, không thể thêm món (BR-INT-04)',
+      });
+      return;
+    }
+
+    if (!(await isActiveLobbyMember(lobby, userId))) {
+      res.status(403).json({
+        error: 'NOT_A_MEMBER',
+        message: 'Bạn cần tham gia phòng trước khi thêm món',
       });
       return;
     }

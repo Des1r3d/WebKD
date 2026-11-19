@@ -21,12 +21,27 @@ const slotTime = new Intl.DateTimeFormat('vi-VN', {
   timeZone: VENUE_TIME_ZONE, hour: '2-digit', minute: '2-digit',
 });
 
+const extractInviteCode = (raw) => {
+  const value = String(raw || '').trim();
+  const match = value.match(/\/(?:join|lobby)\/([^/?#]+)/i);
+  if (match) {
+    try { return decodeURIComponent(match[1]).trim().toUpperCase(); }
+    catch { return match[1].trim().toUpperCase(); }
+  }
+  return value.replace(/^#+/, '').trim().toUpperCase();
+};
+
 export async function renderBusiness(path, user) {
   try {
     if (path === '/' || path === '/discover') return await discover();
     if (path.startsWith('/venues/')) return await venue(path.split('/')[2], user);
-    if (path.startsWith('/join/')) return await join(path.split('/')[2], user);
-    if (path.startsWith('/lobby/')) return path.endsWith('/split') ? await split(path.split('/')[2], user) : await lobbyFull(path.split('/')[2], user);
+    if (path === '/join' || path === '/join/') return await joinIndex(user);
+    if (path.startsWith('/join/')) return await join(decodeURIComponent(path.split('/')[2]), user);
+    if (path === '/lobbies') return await myLobbies(user);
+    if (path.startsWith('/lobby/')) {
+      const code = decodeURIComponent(path.split('/')[2]);
+      return path.endsWith('/split') ? await split(code, user) : await lobbyFull(code, user);
+    }
     if (path === '/profile') return profile(user);
     if (path === '/wallet') return await wallet();
     if (path === '/disputes') return await disputes(user);
@@ -87,7 +102,7 @@ async function discover() {
   const categories=[['ALL','Tất cả danh mục'],['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['milk_tea','Trà sữa'],['coffee','Cà phê'],['snack','Ăn vặt']];
   const cards=visibleProviders.map(p=>`<article class="business-card provider-card"><a href="/venues/${encodeURIComponent(p.id)}" data-link><img src="${imgFor(p)}" alt=""><span class="badge">${p.type==='VENUE'?'Sân / Phòng':'Quán F&B'} · ${esc(p.category)}</span></a><h3><a href="/venues/${encodeURIComponent(p.id)}" data-link>${esc(p.name)}</a></h3><p>${esc(p.address)}</p><small>${esc(p.open_hours||'')} · ${p.distance_m??'—'} m</small><div class="business-row"><b>${p.min_price!=null?`Giá từ ${formatVnd(p.min_price)}`:'Xem bảng giá'}</b><a class="btn btn-primary btn-sm" href="/venues/${encodeURIComponent(p.id)}" data-link>${p.type==='VENUE'?'Chọn giờ':'Xem menu'}</a></div></article>`).join('');
   const filters=`<form class="business-card filter-form" data-discover><div class="business-row">${['ALL','VENUE','FNB'].map(x=>`<label class="radio-pill"><input type="radio" name="type" value="${x}" ${type===x?'checked':''}>${x==='ALL'?'Tất cả':x==='VENUE'?'Sân & Phòng':'Quán F&B'}</label>`).join('')}<select name="category" aria-label="Danh mục">${categories.map(([v,l])=>`<option value="${v}" ${category===v?'selected':''}>${l}</option>`).join('')}</select><select name="radius" aria-label="Bán kính">${[1000,2000,3000,5000].map(x=>`<option value="${x}" ${Number(radius)===x?'selected':''}>≤ ${x/1000} km</option>`).join('')}</select><input name="search" type="search" value="${esc(search)}" placeholder="Tìm tên hoặc địa chỉ"><button class="btn btn-primary btn-sm">Tìm</button><button type="button" class="btn btn-outline btn-sm" data-reset-filters>Đặt lại</button></div></form>`;
-  return page('Khám phá Làng Đại Học Thủ Đức','Chọn sân thể thao hoặc phòng học nhóm, khoá slot 10 phút và mở phòng ghép kèo cùng bạn bè.',`<form class="business-card join-code" data-join-code><label>Mã phòng<input name="code" placeholder="Nhập mã phòng (VD: SYNC01)" required></label><button class="btn btn-secondary">Vào phòng</button></form><div class="quick-picks">${[['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['coffee','Cà phê & nước uống']].map(([id,l])=>`<button class="quick-pick" data-pick="${id}"><img src="${imgFor({category:id})}" alt=""><b>${l}</b></button>`).join('')}</div>${filters}<div class="discover-grid"><section><h2 id="discover-results" tabindex="-1">${providers.length} địa điểm trong bán kính ${Number(radius)/1000} km</h2>${providers.length?`<div class="provider-grid">${cards}</div>${pagination}`:empty('Không tìm thấy địa điểm nào','Thử mở rộng bán kính hoặc đặt lại bộ lọc.')}</section><section class="business-card"><h2>Bản đồ địa điểm</h2><div id="provider-map" data-providers="${mapProviders}" class="map-placeholder" aria-label="Bản đồ địa điểm"></div><small>Hiển thị ${providers.length} địa điểm · bán kính ${Number(radius)/1000} km</small></section></div>`, `<a class="btn btn-outline btn-sm" href="/join" data-link>Tham gia phòng</a>`);
+  return page('Khám phá Làng Đại Học Thủ Đức','Chọn sân thể thao hoặc phòng học nhóm, khoá slot 10 phút và mở phòng ghép kèo cùng bạn bè.',`<div class="quick-picks">${[['badminton','Cầu lông'],['study_room','Phòng học nhóm'],['football','Bóng đá'],['coffee','Cà phê & nước uống']].map(([id,l])=>`<button class="quick-pick" data-pick="${id}"><img src="${imgFor({category:id})}" alt=""><b>${l}</b></button>`).join('')}</div>${filters}<div class="discover-grid"><section><h2 id="discover-results" tabindex="-1">${providers.length} địa điểm trong bán kính ${Number(radius)/1000} km</h2>${providers.length?`<div class="provider-grid">${cards}</div>${pagination}`:empty('Không tìm thấy địa điểm nào','Thử mở rộng bán kính hoặc đặt lại bộ lọc.')}</section><section class="business-card"><h2>Bản đồ địa điểm</h2><div id="provider-map" data-providers="${mapProviders}" class="map-placeholder" aria-label="Bản đồ địa điểm"></div><small>Hiển thị ${providers.length} địa điểm · bán kính ${Number(radius)/1000} km</small></section></div>`, `<a class="btn btn-outline btn-sm" href="/join" data-link>Tham gia phòng</a>`);
 }
 
 const slotDayKey = new Intl.DateTimeFormat('sv-SE', {
@@ -118,13 +133,33 @@ function venueSchedule(slots, params) {
 
 async function venue(id, user) {
   const params = new URLSearchParams(location.search);
-  const p = dataOf(await api(`/api/providers/${encodeURIComponent(id)}`));
+  const canLoadLobbies = user && ['HOST', 'MEMBER'].includes(user.role);
+  const [providerRes, lobbiesRes] = await Promise.all([
+    api(`/api/providers/${encodeURIComponent(id)}`),
+    canLoadLobbies ? api('/api/lobbies').catch(() => ({ data: [] })) : Promise.resolve({ data: [] }),
+  ]);
+  const p = dataOf(providerRes);
+  const lobbyBySlot = new Map(
+    (dataOf(lobbiesRes) || [])
+      .filter(l => l.status !== 'CANCELLED')
+      .map(l => [l.slot_id, l])
+  );
   const menu = p.menu_items || [];
   const hero = `<div class="venue-hero"><img src="${imgFor(p)}" alt=""><div><span class="badge">${esc(p.type)} · ${esc(p.category)}</span><h2>${esc(p.name)}</h2><p>${esc(p.address)}</p><p>${esc(p.open_hours||'')}</p></div></div>`;
   let details;
   if (p.type === 'VENUE') {
     const { heading, visibleSlots, pagination } = venueSchedule(p.slots || [], params);
-    const rows = visibleSlots.map(s => `<article class="slot-item"><div><b>${slotTime.format(new Date(s.start_at))}</b><small>${formatVnd(s.price)} · ${Badge(s.status)}</small>${s.locked_until?`<small>Giữ chỗ còn <span data-countdown-until="${esc(s.locked_until)}">--:--</span></small>`:''}</div>${s.status==='AVAILABLE'?`<button class="btn btn-primary btn-sm" data-lock-slot="${esc(s.id)}">Giữ slot 10 phút</button>`:s.status==='LOCKED'&&s.locked_by===user?.id?`<button class="btn btn-secondary btn-sm" data-create-lobby="${esc(s.id)}">Mở phòng ghép kèo</button><button class="btn btn-outline btn-sm" data-release-slot="${esc(s.id)}">Nhả slot</button>`:`<button class="btn btn-outline btn-sm" disabled>${s.status==='LOCKED'?'Đang có người giữ':'Đã đặt'}</button>`}</article>`).join('');
+    const rows = visibleSlots.map(s => {
+      const ownLobby = lobbyBySlot.get(s.id);
+      const action = ownLobby
+        ? `<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(ownLobby.invite_code)}" data-link>Vào phòng #${esc(ownLobby.invite_code)}</a>`
+        : s.status === 'AVAILABLE'
+          ? `<button class="btn btn-primary btn-sm" data-lock-slot="${esc(s.id)}">Giữ slot 10 phút</button>`
+          : s.status === 'LOCKED' && s.locked_by === user?.id
+            ? `<button class="btn btn-secondary btn-sm" data-create-lobby="${esc(s.id)}">Mở phòng ghép kèo</button><button class="btn btn-outline btn-sm" data-release-slot="${esc(s.id)}">Nhả slot</button>`
+            : `<button class="btn btn-outline btn-sm" disabled>${s.status === 'LOCKED' ? 'Đang có người giữ' : 'Đã đặt'}</button>`;
+      return `<article class="slot-item"><div><b>${slotTime.format(new Date(s.start_at))}</b><small>${formatVnd(s.price)} · ${Badge(s.status)}</small>${s.locked_until?`<small>Giữ chỗ còn <span data-countdown-until="${esc(s.locked_until)}">--:--</span></small>`:''}</div><span class="business-row">${action}</span></article>`;
+    }).join('');
     details = `<section class="business-card"><h2 id="venue-schedule" tabindex="-1">${heading}</h2>${rows ? `<div class="slot-list">${rows}</div>${pagination}` : empty('Chưa có khung giờ', 'Đối tác chưa mở slot đặt sân.')}</section>`;
   } else {
     details = section('Thực đơn', menu.length?menu.map(m=>`<div class="slot-item"><div><b>${esc(m.name)}</b><small>${formatVnd(m.price)} · ${m.is_available?'Đang bán':'Tạm hết'}</small></div></div>`).join(''):empty('Chưa có món','Thực đơn chưa được cập nhật.'));
@@ -135,39 +170,164 @@ async function venue(id, user) {
     '<a class="btn btn-outline btn-sm" href="/" data-link>← Khám phá</a>');
 }
 
-async function join(code,user) { if(!user)return page(`Bạn được mời vào phòng ${esc(code)}`,'Đăng nhập để kiểm tra điểm uy tín, tiền cọc và xác nhận tham gia.',`<div class="business-card invite-card"><p>Phòng mời: <b>#${esc(code)}</b></p><a class="btn btn-primary" href="/login" data-link data-login-from="/join/${esc(code)}">Đăng nhập để tiếp tục</a><a class="btn btn-outline" href="/" data-link>Về trang khám phá</a></div>`); const info=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=info.lobby||info; const provider=info.slot?.provider||l.slot?.provider; const members=info.members||[]; const est=Math.floor((info.slot?.price||120000)/4); const score=user?.reputation_score??100; const deposit=score>=90?0:score>=70?Math.round(est*.3):score>=50?est:0;
- return page(`Lời mời phòng #${esc(code)}`,'Kiểm tra sân, thời gian và mức cọc trước khi tham gia.',`<div class="split-grid"><div>${section('Thông tin buổi chơi',`<h3>${esc(provider?.name||'SyncHub')}</h3><p>${esc(provider?.address||'')}</p><p>Trạng thái: ${Badge(l.status||'OPEN')} · Thành viên: ${members.length}</p><p>Hạn tham gia: ${date(l.deadline_at)}</p>`)}${section('Uy tín & cọc',`<p>Điểm uy tín: <b>${score}/100</b> · Hạng ${score>=90?'A':score>=70?'B':score>=50?'C':'FLAGGED'}</p><p>Tiền cọc dự kiến: <b>${formatVnd(deposit)}</b></p>${score<50?alert('Điểm uy tín dưới 50, tài khoản không thể tham gia phòng.'):''}<button class="btn btn-primary" data-join-lobby="${esc(code)}" ${score<50?'disabled':''}>Xác nhận tham gia</button><p data-action-message role="status"></p>`)}</div><aside>${section('Thành viên',members.length?members.map(m=>`<p>${esc(m.full_name)} · ${m.status}</p>`).join(''):empty('Chưa có thành viên','Bạn có thể là người đầu tiên tham gia.'))}</aside></div>`); }
+function lobbyRow(l, user, { actionLabel = 'Vào phòng', showSplit = false } = {}) {
+  const code = l.invite_code;
+  const activeMembers = (l.members || []).filter(m => m.status !== 'LEFT').length;
+  const roleLabel = l.host_id === user?.id ? 'Trưởng phòng' : 'Thành viên';
+  const splitBtn = showSplit && ['LOCKED', 'AWAITING_PAYMENT', 'PAID', 'COMPLETED'].includes(l.status)
+    ? `<a class="btn btn-outline btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Chia bill</a>`
+    : '';
+  return `<div class="slot-item"><div><b>#${esc(code)} · ${esc(l.slot?.provider?.name || 'SyncHub')}</b><small>${date(l.slot?.start_at)} · ${roleLabel} · ${activeMembers} thành viên</small></div><span class="business-row">${Badge(l.status)}<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}" data-link>${actionLabel}</a>${splitBtn}</span></div>`;
+}
 
-async function lobbyFull(code,user) {
-  const detail=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=detail.lobby||detail; const slot=detail.slot||{}; const members=detail.members||[]; const items=detail.cart_items||[]; const rec=dataOf(await api(`/api/recommend?lobbyId=${encodeURIComponent(l.id)}`).catch(()=>({data:[]})))||[]; const host=user?.id===l.host_id; const isMember=members.some(m=>m.user_id===user?.id&&m.status!=='LEFT'); const provider=slot.provider||{}; const inviteUrl=`${location.origin}/join/${encodeURIComponent(code)}`; const qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(inviteUrl)}`;
-  const picks=rec.slice(0,5).map((x,i)=>`<article class="recommendation"><div class="recommendation-head"><span class="rank">#${i+1}</span><strong>${esc(x.name)}</strong></div><p>${esc(x.address)}</p><small>Điểm ${x.score} · Cách sân ${x.distance_m} m · ${x.is_open?'Đang mở cửa':'Đóng cửa trong giờ chơi'}</small><div class="recommendation-tags">${(x.reasons||[]).map(r=>`<span>${esc(r)}</span>`).join('')}</div>${x.voucher_code?`<button class="btn btn-secondary btn-sm" data-apply-voucher-code="${esc(x.voucher_code)}">Áp mã ${esc(x.voucher_code)}</button>`:''}<div class="menu-picks">${(x.popular_items||[]).map(m=>`<div class="menu-pick"><div><b>${esc(m.name)}</b><small>${m.order_count} lượt đặt</small></div><div class="menu-pick-actions"><strong>${formatVnd(m.price)}</strong><button class="btn btn-primary btn-sm" data-cart-add="${esc(m.id)}" ${l.status!=='OPEN'?'disabled':''}>+ Thêm</button></div></div>`).join('')}</div></article>`).join('');
+async function joinIndex(user) {
+  const form = `<form class="business-card join-code" data-join-code><label>Mã phòng hoặc liên kết mời<input name="code" placeholder="VD: SYNC01 hoặc dán link mời" required></label><button class="btn btn-primary" type="submit">Tiếp tục</button></form>`;
+  let extra = '';
+  if (user && ['HOST', 'MEMBER'].includes(user.role)) {
+    const active = (dataOf(await api('/api/lobbies').catch(() => ({ data: [] }))) || [])
+      .filter(l => !['COMPLETED', 'CANCELLED'].includes(l.status));
+    extra = section(
+      'Phòng bạn đang tham gia',
+      active.length
+        ? `<div class="slot-list">${active.map(l => lobbyRow(l, user)).join('')}</div>`
+        : empty('Chưa có phòng đang mở', 'Nhập mã mời từ Trưởng phòng hoặc đặt sân để mở phòng mới.')
+    );
+  } else if (!user) {
+    extra = `<div class="business-card"><p>Đăng nhập để xem danh sách phòng bạn đang tham gia hoặc kiểm tra điểm uy tín khi vào phòng.</p><a class="btn btn-primary btn-sm" href="/login" data-link data-login-from="/join">Đăng nhập</a></div>`;
+  }
+  return page(
+    'Tham gia phòng ghép kèo',
+    'Nhập mã mời 6 ký tự hoặc dán liên kết phòng từ Trưởng phòng.',
+    `${form}${extra}`,
+    '<a class="btn btn-outline btn-sm" href="/" data-link>← Khám phá</a>'
+  );
+}
+
+async function myLobbies(user) {
+  const lobbies = dataOf(await api('/api/lobbies')) || [];
+  const active = lobbies.filter(l => !['COMPLETED', 'CANCELLED'].includes(l.status));
+  const history = lobbies.filter(l => ['COMPLETED', 'CANCELLED'].includes(l.status));
+  return page(
+    'Phòng của tôi',
+    'Quay lại các phòng ghép kèo đang mở, đặt đồ ăn chung, trò chuyện hoặc chia bill.',
+    `${section('Đang hoạt động', active.length ? `<div class="slot-list">${active.map(l => lobbyRow(l, user, { showSplit: true })).join('')}</div>` : empty('Chưa có phòng đang mở', 'Chọn sân từ Khám phá để giữ slot và mở phòng, hoặc nhập mã mời để tham gia.'))}${history.length ? section('Lịch sử phòng', `<div class="slot-list">${history.map(l => lobbyRow(l, user, { actionLabel: 'Xem phòng', showSplit: true })).join('')}</div>`) : ''}`,
+    '<a class="btn btn-outline btn-sm" href="/join" data-link>Tham gia bằng mã</a>'
+  );
+}
+
+async function join(code, user) {
+  if (!user) {
+    return page(
+      `Bạn được mời vào phòng ${esc(code)}`,
+      'Đăng nhập để kiểm tra điểm uy tín, tiền cọc và xác nhận tham gia.',
+      `<div class="business-card invite-card"><p>Phòng mời: <b>#${esc(code)}</b></p><a class="btn btn-primary" href="/login" data-link data-login-from="/join/${esc(code)}">Đăng nhập để tiếp tục</a><a class="btn btn-outline" href="/" data-link>Về trang khám phá</a></div>`
+    );
+  }
+  const info = dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`));
+  const l = info.lobby || info;
+  const inviteCode = l.invite_code || code;
+  const members = info.members || [];
+  const isActiveMember = l.host_id === user.id || members.some(m => m.user_id === user.id && m.status !== 'LEFT');
+  if (isActiveMember) {
+    return { redirect: `/lobby/${encodeURIComponent(inviteCode)}` };
+  }
+  const provider = info.slot?.provider || l.slot?.provider;
+  const otherJoined = members.filter(m => m.status === 'JOINED' && m.user_id !== user.id).length;
+  const est = Math.floor((info.slot?.price || 120000) / Math.max(4, otherJoined + 1));
+  const score = user?.reputation_score ?? 100;
+  const deposit = score >= 90 ? 0 : score >= 70 ? Math.round(est * 0.3) : score >= 50 ? est : 0;
+  const wrongRole = !['HOST', 'MEMBER'].includes(user.role);
+  const blocked = score < 50 || user.status === 'FLAGGED';
+  const closed = l.status !== 'OPEN';
+  const blockReason = wrongRole
+    ? 'Tài khoản đối tác/quản trị không thể tham gia phòng ghép kèo.'
+    : blocked
+      ? 'Điểm uy tín dưới 50 hoặc bị gắn cờ FLAGGED, tài khoản không thể tham gia phòng.'
+      : closed
+        ? 'Phòng đã khóa hoặc không còn mở để tham gia.'
+        : '';
+  return page(
+    `Lời mời phòng #${esc(inviteCode)}`,
+    'Kiểm tra sân, thời gian và mức cọc trước khi tham gia.',
+    `<div class="split-grid"><div>${section('Thông tin buổi chơi', `<h3>${esc(provider?.name || 'SyncHub')}</h3><p>${esc(provider?.address || '')}</p><p>Trạng thái: ${Badge(l.status || 'OPEN')} · Thành viên: ${members.filter(m => m.status !== 'LEFT').length}</p><p>Hạn tham gia: ${date(l.deadline_at)}</p>`)}${section('Uy tín & cọc', `<p>Điểm uy tín: <b>${score}/100</b> · Hạng ${score >= 90 ? 'A' : score >= 70 ? 'B' : score >= 50 ? 'C' : 'FLAGGED'}</p><p>Tiền cọc dự kiến: <b>${formatVnd(deposit)}</b></p>${blockReason ? alert(blockReason) : ''}<button class="btn btn-primary" data-join-lobby="${esc(inviteCode)}" ${blockReason ? 'disabled' : ''}>Xác nhận tham gia</button><p data-action-message role="status"></p>`)}</div><aside>${section('Thành viên', members.length ? members.map(m => `<p>${esc(m.full_name)} · ${m.status}</p>`).join('') : empty('Chưa có thành viên', 'Bạn có thể là người đầu tiên tham gia.'))}</aside></div>`
+  );
+}
+
+function renderLobbyActions({ lobbyId, inviteCode, status, isHost, isMember, canCancel }) {
+  const encoded = encodeURIComponent(inviteCode);
+  const cancelAction = canCancel && isHost && ['OPEN', 'LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(status)
+    ? `<button class="btn btn-outline btn-sm" data-cancel-lobby="${esc(lobbyId)}">Hủy phòng</button>`
+    : '';
+  const joinAction = !isMember && status === 'OPEN'
+    ? `<a class="btn btn-primary btn-sm" href="/join/${encoded}" data-link>Tham gia phòng</a>`
+    : '';
+  const leaveAction = isMember && !isHost && status === 'OPEN'
+    ? `<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(lobbyId)}">Rời phòng</button>`
+    : '';
+  const hostOpenActions = isHost && status === 'OPEN'
+    ? `<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(lobbyId)}">${LobbyIcon('Lock')}Khóa giỏ hàng (BR-INT-04)</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(lobbyId)}" data-code="${esc(inviteCode)}">${LobbyIcon('Calculator')}Chốt &amp; Chia Bill</button>`
+    : '';
+  const canViewSplit = (isHost && ['LOCKED', 'AWAITING_PAYMENT', 'PAID', 'COMPLETED'].includes(status))
+    || (isMember && ['AWAITING_PAYMENT', 'PAID', 'COMPLETED'].includes(status));
+  const splitAction = canViewSplit
+    ? `<a class="btn btn-primary btn-sm" href="/lobby/${encoded}/split" data-link>Xem bảng chia bill</a>`
+    : '';
+  return `${cancelAction}${joinAction}${leaveAction}${hostOpenActions}${splitAction}`;
+}
+
+async function lobbyFull(code, user) {
+  const detail = dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`));
+  const l = detail.lobby || detail;
+  const inviteCode = l.invite_code || code;
+  const slot = detail.slot || {};
+  const members = detail.members || [];
+  const items = detail.cart_items || [];
+  const rec = dataOf(await api(`/api/recommend?lobbyId=${encodeURIComponent(l.id)}`).catch(() => ({ data: [] }))) || [];
+  const host = user?.id === l.host_id;
+  const isMember = host || members.some(m => m.user_id === user?.id && m.status !== 'LEFT');
+  const canInteract = isMember && l.status === 'OPEN';
+  const provider = slot.provider || {};
+  const inviteUrl = `${location.origin}/join/${encodeURIComponent(inviteCode)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(inviteUrl)}`;
+  const picks = rec.slice(0, 5).map((x, i) => `<article class="recommendation"><div class="recommendation-head"><span class="rank">#${i + 1}</span><strong>${esc(x.name)}</strong></div><p>${esc(x.address)}</p><small>Điểm ${x.score} · Cách sân ${x.distance_m} m · ${x.is_open ? 'Đang mở cửa' : 'Đóng cửa trong giờ chơi'}</small><div class="recommendation-tags">${(x.reasons || []).map(r => `<span>${esc(r)}</span>`).join('')}</div>${x.voucher_code ? `<button class="btn btn-secondary btn-sm" data-apply-voucher-code="${esc(x.voucher_code)}" ${!canInteract ? 'disabled' : ''}>Áp mã ${esc(x.voucher_code)}</button>` : ''}<div class="menu-picks">${(x.popular_items || []).map(m => `<div class="menu-pick"><div><b>${esc(m.name)}</b><small>${m.order_count} lượt đặt</small></div><div class="menu-pick-actions"><strong>${formatVnd(m.price)}</strong><button class="btn btn-primary btn-sm" data-cart-add="${esc(m.id)}" ${!canInteract ? 'disabled' : ''}>+ Thêm</button></div></div>`).join('')}</div></article>`).join('');
   const cartSubtotal = items.reduce((total, item) => total + item.qty * item.unit_price_snapshot, 0);
   const locked = l.status !== 'OPEN';
-  const cartSection = `<section class="business-card lobby-cart" data-lobby-cart data-status="${esc(l.status)}">
+  const noticeText = l.status === 'CANCELLED'
+    ? 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.'
+    : locked
+      ? 'Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.'
+      : !isMember
+        ? 'Bạn chưa tham gia phòng này. Hãy bấm "Tham gia phòng" để gọi đồ ăn, áp mã giảm giá và trò chuyện.'
+        : '';
+  const cartSection = `<section class="business-card lobby-cart" data-lobby-cart data-status="${esc(l.status)}" data-is-member="${isMember}">
     <div class="lobby-cart-heading"><h2>Giỏ hàng GroupOrder</h2><div class="lobby-cart-totals">
       <span>Tổng đồ uống: <b data-cart-subtotal>${formatVnd(cartSubtotal)}</b></span>
       <span>Ship: <b>${formatVnd(l.ship_fee || 0)}</b></span><span>Món: <b data-cart-count>${items.length}</b></span>
     </div></div>
-    <div class="lobby-lock-notice" data-lobby-lock-notice ${locked ? '' : 'hidden'}>${l.status === 'CANCELLED' ? 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.' : 'Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.'}</div>
-    <div data-cart-rows>${renderLobbyCart(items, members, locked)}</div>
-    <form data-voucher-form class="lobby-voucher" ${l.status === 'CANCELLED' ? 'hidden' : ''}>${LobbyIcon('Tag')}<input name="code" aria-label="Mã voucher" placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)" required><button class="btn btn-secondary btn-sm">Áp dụng</button></form>
+    <div class="lobby-lock-notice" data-lobby-lock-notice ${noticeText ? '' : 'hidden'}>${noticeText}</div>
+    <div data-cart-rows>${renderLobbyCart(items, members, !canInteract)}</div>
+    <form data-voucher-form class="lobby-voucher" ${l.status === 'CANCELLED' ? 'hidden' : ''}>${LobbyIcon('Tag')}<input name="code" aria-label="Mã voucher" placeholder="Mã voucher (VD: SYNCHUBCROSS15, FNBLANGDH20K)" required ${!canInteract ? 'disabled' : ''}><button class="btn btn-secondary btn-sm" ${!canInteract ? 'disabled' : ''}>Áp dụng</button></form>
   </section>`;
-  const cancelAction = user?.role === 'HOST' && host && ['OPEN', 'LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(l.status)
-    ? `<button class="btn btn-outline btn-sm" data-cancel-lobby="${esc(l.id)}">Hủy phòng</button>`
-    : '';
-  const actions=`${cancelAction}${!isMember&&l.status==='OPEN'?`<a class="btn btn-primary btn-sm" href="/join/${encodeURIComponent(code)}" data-link>Tham gia phòng</a>`:''}${isMember&&!host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-leave-lobby="${esc(l.id)}">Rời phòng</button>`:''}${host&&l.status==='OPEN'?`<button class="btn btn-outline btn-sm" data-lock-lobby="${esc(l.id)}">${LobbyIcon('Lock')}Khóa giỏ hàng (BR-INT-04)</button><button class="btn btn-primary btn-sm" data-lock-and-split="${esc(l.id)}" data-code="${esc(code)}">${LobbyIcon('Calculator')}Chốt &amp; Chia Bill</button>`:''}${host&&['LOCKED','AWAITING_PAYMENT'].includes(l.status)?`<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`:''}`;
-  const summary = `<div class="lobby-summary"><div><b>MÃ PHÒNG: ${esc(code)}</b><span>Khung giờ: ${date(slot.start_at)}</span><span>Giá sân: <strong>${formatVnd(slot.price || 0)}</strong></span></div><div><small>Hạn chốt kèo</small><span data-countdown-until="${esc(l.deadline_at)}"></span><span data-lobby-status>${Badge(l.status)}</span>${detail.voucher ? `<span class="badge lobby-voucher-badge">Voucher ${esc(detail.voucher.code)}</span>` : ''}</div></div>`;
+  const actions = renderLobbyActions({
+    lobbyId: l.id,
+    inviteCode,
+    status: l.status,
+    isHost: host,
+    isMember,
+    canCancel: user?.role === 'HOST',
+  });
+  const summary = `<div class="lobby-summary"><div><b>MÃ PHÒNG: ${esc(inviteCode)}</b><span>Khung giờ: ${date(slot.start_at)}</span><span>Giá sân: <strong>${formatVnd(slot.price || 0)}</strong></span></div><div><small>Hạn chốt kèo</small><span data-countdown-until="${esc(l.deadline_at)}"></span><span data-lobby-status>${Badge(l.status)}</span>${detail.voucher ? `<span class="badge lobby-voucher-badge">Voucher ${esc(detail.voucher.code)}</span>` : ''}</div></div>`;
   const body = `<div class="lobby-grid">
     <div class="lobby-main">${cartSection}
-      <section class="lobby-recommendations"><div class="lobby-section-heading"><h2>${LobbyIcon('Sparkles')} Gợi ý quán F&B</h2><small>Rule-based scoring · WBS-4.2</small></div>${picks || '<p class="business-card">Không có quán gợi ý trong bán kính 3 km.</p>'}</section>
+      <section class="lobby-recommendations"><div class="lobby-section-heading"><h2>${LobbyIcon('Sparkles')} Gợi ý quán F&B</h2></div>${picks || '<p class="business-card">Không có quán gợi ý trong bán kính 3 km.</p>'}</section>
       <p data-action-message role="status"></p>
     </div>
     <aside class="lobby-aside">
-      <section class="business-card"><div class="lobby-section-heading"><h2>${LobbyIcon('Users')} Thành viên</h2><span data-member-count>${members.length}</span></div><div data-member-rows data-host-id="${esc(l.host_id)}">${renderLobbyMembers(members,l.host_id)}</div></section>
-      ${section(`Mời bạn vào phòng #${esc(code)}`,QRCard({title:'Mã QR lời mời',imageUrl:qrUrl,copyText:inviteUrl,copyLabel:'Sao chép link mời',hint:'Bạn bè quét mã để xem thông tin phòng.'}))}
-      ${section('Trò chuyện trong phòng',`<div class="chat-messages lobby-chat" data-chat-messages>${ChatBubble({kind:'system',text:'Bắt đầu thảo luận chọn nước & chốt kèo'})}</div><form data-chat-form class="chat-form"><input name="text" aria-label="Tin nhắn" required maxlength="500" placeholder="Nhắn cho cả nhóm…"><button class="btn btn-primary btn-sm">Gửi</button></form>`)}
+      <section class="business-card"><div class="lobby-section-heading"><h2>${LobbyIcon('Users')} Thành viên</h2><span data-member-count>${members.length}</span></div><div data-member-rows data-host-id="${esc(l.host_id)}">${renderLobbyMembers(members, l.host_id)}</div></section>
+      ${section(`Mời bạn vào phòng #${esc(inviteCode)}`, QRCard({ title: 'Mã QR lời mời', imageUrl: qrUrl, copyText: inviteUrl, copyLabel: 'Sao chép link mời', hint: 'Bạn bè quét mã để xem thông tin phòng.' }))}
+      ${section('Trò chuyện trong phòng', `<div class="chat-messages lobby-chat" data-chat-messages>${ChatBubble({ kind: 'system', text: 'Bắt đầu thảo luận chọn nước & chốt kèo' })}</div><form data-chat-form class="chat-form"><input name="text" aria-label="Tin nhắn" required maxlength="500" placeholder="${isMember ? 'Nhắn cho cả nhóm…' : 'Tham gia phòng để trò chuyện…'}" ${!isMember ? 'disabled' : ''}><button class="btn btn-primary btn-sm" ${!isMember ? 'disabled' : ''}>Gửi</button></form>`)}
     </aside></div>`;
-  return `<div class="business-page lobby-page"><header class="page-header"><div><h1>${esc(provider.name || `Phòng #${code}`)}</h1>${summary}</div><div class="page-actions" data-lobby-actions>${actions}</div></header>${body}</div>`;
+  return `<div class="business-page lobby-page"><header class="page-header"><div><h1>${esc(provider.name || `Phòng #${inviteCode}`)}</h1>${summary}</div><div class="page-actions" data-lobby-actions data-lobby-id="${esc(l.id)}" data-invite-code="${esc(inviteCode)}" data-is-host="${host}" data-is-member="${isMember}">${actions}</div></header>${body}</div>`;
 }
 
 function renderLobbyMembers(members, hostId) {
@@ -179,14 +339,19 @@ function renderLobbyCart(items, members, locked) {
   return items.map(i=>`<div class="cart-item"><span class="food-icon" aria-hidden="true">${LobbyIcon('UtensilsCrossed')}</span><div><b>${esc(i.name)}</b><small>${esc(members.find(m=>m.user_id===i.user_id)?.full_name||'Thành viên')}</small><strong>${formatVnd(i.unit_price_snapshot)}</strong></div><div class="cart-controls"><button type="button" data-cart-qty="-1" data-cart-id="${esc(i.id)}" aria-label="Giảm ${esc(i.name)}" ${locked?'disabled':''}>${LobbyIcon('Minus')}</button><span>${i.qty}</span><button type="button" data-cart-qty="1" data-cart-id="${esc(i.id)}" aria-label="Tăng ${esc(i.name)}" ${locked?'disabled':''}>${LobbyIcon('Plus')}</button></div></div>`).join('');
 }
 
-async function split(code,user) { const r=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=r.lobby||r; let bills=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/bills`).catch(()=>({data:[]})))||[]; if(!bills.length&&l.status==='LOCKED'&&user?.id===l.host_id){const s=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/split`,{method:'POST'})); bills=s.bills||[];}
+async function split(code,user) { const r=dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`)); const l=r.lobby||r; const inviteCode=l.invite_code||code; let bills=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/bills`).catch(()=>({data:[]})))||[]; if(!bills.length&&l.status==='LOCKED'&&user?.id===l.host_id){const s=dataOf(await api(`/api/lobbies/${encodeURIComponent(l.id)}/split`,{method:'POST'})); bills=s.bills||[];}
  const mine=bills.find(b=>b.user_id===user?.id); const rows=bills.map(b=>`<tr><td>${esc(b.full_name||b.user?.full_name||b.user_id)}</td><td>${formatVnd(b.slot_share)}</td><td>${formatVnd(b.food_amount)}</td><td>${formatVnd(b.ship_share-b.discount_share)}</td><td><b>${formatVnd(b.total)}</b></td><td>${Badge(b.status)} ${l.status!=='CANCELLED'&&b.status==='PENDING'?`<button class="btn btn-outline btn-sm" data-pay-bill="${esc(b.id)}">Giả lập thanh toán</button>`:''}</td></tr>`).join('');
- const qr=l.status==='CANCELLED'?'<p>Phòng đã hủy.</p>':mine?QRCard({title:'VietQR thanh toán',imageUrl:mine.vietqr_url,copyText:`SYNCHUB ${code} ${mine.user_id}`,copyLabel:'Sao chép nội dung CK',hint:`Số tiền: ${formatVnd(mine.total)}`}):`<p>Chưa có hóa đơn VietQR.</p>`;
- return page(`Chia bill #${esc(code)}`,'Chia tiền theo dữ liệu máy chủ; mỗi thành viên thanh toán phần của mình.',`${bills.length?section('Hóa đơn thành viên',`<div class="table-scroll"><table><thead><tr><th>Thành viên</th><th>Sân</th><th>Món</th><th>Ship/Voucher</th><th>Tổng</th><th>Trạng thái</th></tr></thead><tbody>${rows}</tbody></table></div>`):section('Hóa đơn',empty('Chưa có hóa đơn','Host cần chốt phòng để tạo bill.'))}<div class="split-grid">${section('Hóa đơn của bạn',qr)}${user?.id===l.host_id&&l.status!=='CANCELLED'?section('Điểm danh & giải ngân',`${(r.members||[]).map(m=>`<label>${esc(m.full_name)}<select data-attendance="${esc(m.user_id)}"><option value="CHECKED_IN">Có mặt (+2)</option><option value="NO_SHOW">Bùng kèo (-15, mất cọc)</option></select></label>`).join('')}<button class="btn btn-primary" data-release="${esc(l.id)}">Xác nhận check-in & giải ngân</button>`):''}</div><p data-action-message role="status"></p>`); }
+ const qr=l.status==='CANCELLED'?'<p>Phòng đã hủy.</p>':mine?QRCard({title:'VietQR thanh toán',imageUrl:mine.vietqr_url,copyText:`SYNCHUB ${inviteCode} ${mine.user_id}`,copyLabel:'Sao chép nội dung CK',hint:`Số tiền: ${formatVnd(mine.total)}`}):`<p>Chưa có hóa đơn VietQR.</p>`;
+ return page(`Chia bill #${esc(inviteCode)}`,'Chia tiền theo dữ liệu máy chủ; mỗi thành viên thanh toán phần của mình.',`${bills.length?section('Hóa đơn thành viên',`<div class="table-scroll"><table><thead><tr><th>Thành viên</th><th>Sân</th><th>Món</th><th>Ship/Voucher</th><th>Tổng</th><th>Trạng thái</th></tr></thead><tbody>${rows}</tbody></table></div>`):section('Hóa đơn',empty('Chưa có hóa đơn','Host cần chốt phòng để tạo bill.'))}<div class="split-grid">${section('Hóa đơn của bạn',qr)}${user?.id===l.host_id&&l.status!=='CANCELLED'?section('Điểm danh & giải ngân',`${(r.members||[]).map(m=>`<label>${esc(m.full_name)}<select data-attendance="${esc(m.user_id)}"><option value="CHECKED_IN">Có mặt (+2)</option><option value="NO_SHOW">Bùng kèo (-15, mất cọc)</option></select></label>`).join('')}<button class="btn btn-primary" data-release="${esc(l.id)}">Xác nhận check-in & giải ngân</button>`):''}</div><p data-action-message role="status"></p>`, `<a class="btn btn-outline btn-sm" href="/lobby/${encodeURIComponent(inviteCode)}" data-link>← Quay lại phòng</a>`); }
 
 function profile(user) { const score=user?.reputation_score??0, grade=score>=90?'A':score>=70?'B':score>=50?'C':'FLAGGED'; return page('Hồ sơ & hạng uy tín','Điểm uy tín quyết định mức đặt cọc khi vào phòng ghép kèo.',`<div class="split-grid">${section(esc(user?.full_name),`<p>${esc(user?.email)} · ${esc(user?.phone)}</p><p>${esc(user?.role)} · ${Badge(user?.status||'ACTIVE')}</p><p>Điểm uy tín: <b>${score}/100</b> · ${Badge(grade)}</p><progress max="100" value="${score}"></progress>`)}${section('Quyền lợi theo hạng',`<p>A · 90–100: Miễn cọc</p><p>B · 70–89: Cọc 30% sân</p><p>C · 50–69: Cọc 100% sân</p><p>FLAGGED · dưới 50: Chặn tham gia</p><p>Check-in +2 · NO_SHOW -15</p>`)}</div>`); }
 
-async function wallet() { const ls=dataOf(await api('/api/lobbies'))||[]; const tx=ls.flatMap(l=>(l.escrow_transactions||[]).map(t=>({...t,code:l.invite_code}))); const sums=['HELD','RELEASED','FROZEN','REFUNDED'].map(s=>StatCard({label:s,value:formatVnd(tx.filter(x=>x.status===s).reduce((n,x)=>n+x.amount,0))})).join(''); return page('Ví & sổ cái Escrow','Theo dõi dòng tiền tạm giữ, giải ngân, đóng băng và hoàn tiền.',`<div class="stat-grid">${sums}</div>${section('Phòng ghép kèo của bạn',ls.length?ls.map(l=>`<div class="slot-item"><b>#${esc(l.invite_code)} · ${esc(l.slot?.provider?.name)}</b><span>${Badge(l.status)}</span><a href="/lobby/${esc(l.invite_code)}/split" data-link>Chia bill</a></div>`).join(''):empty('Bạn chưa tham gia phòng nào','Khám phá địa điểm để bắt đầu.'))}${section('Lịch sử giao dịch',tx.length?`<div class="table-scroll"><table><thead><tr><th>Phòng</th><th>Loại</th><th>Key</th><th>Số tiền</th><th>Phí</th><th>Thực nhận</th><th>Trạng thái</th></tr></thead><tbody>${tx.map(t=>`<tr><td>#${esc(t.code)}</td><td>${esc(t.type)}</td><td>${esc(t.idempotency_key)}</td><td>${formatVnd(t.amount)}</td><td>${formatVnd(t.platform_fee)}</td><td>${formatVnd(t.net_amount)}</td><td>${esc(t.status)}</td></tr>`).join('')}</tbody></table></div>`:empty('Chưa phát sinh giao dịch','Giao dịch sẽ xuất hiện khi phòng bắt đầu giữ tiền.'))}`); }
+async function wallet() {
+  const escrowStatusLabels = { HELD: 'Tạm giữ', RELEASED: 'Đã giải ngân', FROZEN: 'Đóng băng', REFUNDED: 'Đã hoàn tiền' };
+  const ls=dataOf(await api('/api/lobbies'))||[]; const tx=ls.flatMap(l=>(l.escrow_transactions||[]).map(t=>({...t,code:l.invite_code})));
+  const sums=['HELD','RELEASED','FROZEN','REFUNDED'].map(s=>StatCard({label:escrowStatusLabels[s]||s,value:formatVnd(tx.filter(x=>x.status===s).reduce((n,x)=>n+x.amount,0))})).join('');
+  return page('Ví & sổ cái Escrow','Theo dõi dòng tiền tạm giữ, giải ngân, đóng băng và hoàn tiền.',`<div class="stat-grid">${sums}</div>${section('Phòng ghép kèo của bạn',ls.length?`<div class="slot-list">${ls.map(l=>`<div class="slot-item"><div><b>#${esc(l.invite_code)} · ${esc(l.slot?.provider?.name)}</b><small>${Badge(l.status)}</small></div><span class="business-row"><a class="btn btn-primary btn-sm" href="/lobby/${esc(l.invite_code)}" data-link>Vào phòng</a><a class="btn btn-outline btn-sm" href="/lobby/${esc(l.invite_code)}/split" data-link>Chia bill</a></span></div>`).join('')}</div>`:empty('Bạn chưa tham gia phòng nào','Khám phá địa điểm để bắt đầu.'))}${section('Lịch sử giao dịch',tx.length?`<div class="table-scroll"><table><thead><tr><th>Phòng</th><th>Loại</th><th>Key</th><th>Số tiền</th><th>Phí</th><th>Thực nhận</th><th>Trạng thái</th></tr></thead><tbody>${tx.map(t=>`<tr><td>#${esc(t.code)}</td><td>${esc(t.type)}</td><td>${esc(t.idempotency_key)}</td><td>${formatVnd(t.amount)}</td><td>${formatVnd(t.platform_fee)}</td><td>${formatVnd(t.net_amount)}</td><td>${esc(escrowStatusLabels[t.status]||t.status)}</td></tr>`).join('')}</tbody></table></div>`:empty('Chưa phát sinh giao dịch','Giao dịch sẽ xuất hiện khi phòng bắt đầu giữ tiền.'))}`);
+}
 
 async function disputes(user) { const [dr,lr]=await Promise.all([api('/api/disputes'),api('/api/lobbies').catch(()=>({data:[]}))]); const ds=dataOf(dr)||[], ls=dataOf(lr)||[]; return page('Khiếu nại dịch vụ & hoàn tiền','Gửi bằng chứng và theo dõi trạng thái xử lý khiếu nại.',`${section('Gửi khiếu nại mới',`<form data-dispute-form class="form-grid"><label>Phòng<select name="lobbyId" required>${ls.map(l=>`<option value="${esc(l.id)}">#${esc(l.invite_code)} — ${esc(l.slot?.provider?.name)}</option>`).join('')}</select></label>${field('Provider ID bị khiếu nại','targetProviderId','text','required')}${field('Số tiền yêu cầu hoàn (VND)','refundAmount','number','min="0" value="25000" required')}<label>Lý do<textarea name="reason" required rows="3"></textarea></label>${field('Link ảnh bằng chứng','evidenceUrl','url')}<label>Tải ảnh bằng chứng (tối đa 5 ảnh)<input name="evidence" type="file" accept="image/*" multiple></label><button class="btn btn-primary">Gửi khiếu nại</button><p data-action-message role="status"></p></form>`)}${section('Khiếu nại của bạn',ds.length?ds.map(d=>`<article class="business-card"><b>${esc(d.target_provider_name)}</b> · ${Badge(d.status)}<p>${esc(d.reason)}</p><small>Phòng #${esc(d.lobby_invite_code||d.lobby_id)} · yêu cầu ${formatVnd(d.refund_amount)}</small>${(d.evidence_urls||[]).map(x=>`<p><a href="${esc(x)}" target="_blank" rel="noopener">Xem bằng chứng</a></p>`).join('')}</article>`).join(''):empty('Chưa có khiếu nại nào','Khi có sự cố, gửi khiếu nại kèm liên kết bằng chứng.'))}`); }
 
@@ -198,9 +363,13 @@ async function admin(user) { const [sr,dr]=await Promise.all([api('/api/admin/st
 
 function mountLobbySocket(root, code, user, navigate, status) {
   const cart = root.querySelector('[data-lobby-cart]');
+  const actionsEl = root.querySelector('[data-lobby-actions]');
   const rows = root.querySelector('[data-cart-rows]');
   const memberRows = root.querySelector('[data-member-rows]');
   const chat = root.querySelector('[data-chat-messages]');
+  const canonicalCode = actionsEl?.dataset.inviteCode || code;
+  const isHost = actionsEl?.dataset.isHost === 'true';
+  const isMember = cart.dataset.isMember === 'true';
   const lifetime = new AbortController();
   const seenMessages = new Set();
   let members = [];
@@ -208,12 +377,15 @@ function mountLobbySocket(root, code, user, navigate, status) {
   let connection = 0;
   let ready = false;
   let synchronized = false;
-  const identity = { lobbyId: code, userId: user?.id };
+  const identity = { lobbyId: canonicalCode, userId: user?.id };
   const socket = io({ autoConnect: false, auth: { token: localStorage.getItem('synchub.token') } });
 
   const updateControls = () => {
-    const disabled = !ready || cart.dataset.status !== 'OPEN';
-    root.querySelectorAll('[data-cart-add], [data-cart-qty]').forEach(button => { button.disabled = disabled; });
+    const canEdit = ready && isMember && cart.dataset.status === 'OPEN';
+    root.querySelectorAll('[data-cart-add], [data-cart-qty], [data-apply-voucher-code], [data-voucher-form] input, [data-voucher-form] button')
+      .forEach(button => { button.disabled = !canEdit; });
+    root.querySelectorAll('[data-chat-form] input, [data-chat-form] button')
+      .forEach(control => { control.disabled = !isMember; });
   };
   const finishSync = () => {
     ready = synchronized && Boolean(cartSnapshot);
@@ -223,7 +395,7 @@ function mountLobbySocket(root, code, user, navigate, status) {
     if (!cartSnapshot) return;
     const focused = rows.contains(document.activeElement) ? document.activeElement.dataset : null;
     const { items, subtotal } = cartSnapshot;
-    rows.innerHTML = renderLobbyCart(items, members, !ready || cart.dataset.status !== 'OPEN');
+    rows.innerHTML = renderLobbyCart(items, members, !ready || !isMember || cart.dataset.status !== 'OPEN');
     root.querySelector('[data-cart-subtotal]').textContent = formatVnd(subtotal);
     root.querySelector('[data-cart-count]').textContent = items.length;
     if (focused) {
@@ -236,16 +408,22 @@ function mountLobbySocket(root, code, user, navigate, status) {
     if (next === 'OPEN' || next === cart.dataset.status || cart.dataset.status === 'CANCELLED') return;
     cart.dataset.status = next;
     root.querySelector('[data-lobby-status]').innerHTML = Badge(next);
-    root.querySelector('[data-lobby-lock-notice]').hidden = false;
-    const actions = root.querySelector('[data-lobby-actions]');
-    const canSplit = actions.querySelector('[data-lock-and-split]');
-    const cancel = actions.querySelector('[data-cancel-lobby]');
-    actions.innerHTML = canSplit && ['LOCKED', 'AWAITING_PAYMENT'].includes(next)
-      ? `<a class="btn btn-primary btn-sm" href="/lobby/${encodeURIComponent(code)}/split" data-link>Xem bảng chia bill</a>`
-      : '';
-    if (cancel && ['LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(next)) actions.prepend(cancel);
+    const notice = root.querySelector('[data-lobby-lock-notice]');
+    notice.hidden = false;
+    notice.textContent = next === 'CANCELLED'
+      ? 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.'
+      : 'Phòng đã khóa giỏ hàng (BR-INT-04) — không thể thêm hoặc sửa món.';
+    const cancel = actionsEl.querySelector('[data-cancel-lobby]');
+    actionsEl.innerHTML = renderLobbyActions({
+      lobbyId: actionsEl.dataset.lobbyId,
+      inviteCode: canonicalCode,
+      status: next,
+      isHost,
+      isMember,
+      canCancel: false,
+    });
+    if (cancel && ['LOCKED', 'AWAITING_PAYMENT', 'PAID'].includes(next)) actionsEl.prepend(cancel);
     if (next === 'CANCELLED') {
-      root.querySelector('[data-lobby-lock-notice]').textContent = 'Phòng đã hủy. Đơn F&B đã hủy và các khoản đang giữ đã được hoàn.';
       root.querySelector('[data-voucher-form]').hidden = true;
       cartSnapshot = { items: [], subtotal: 0 };
       renderCart();
@@ -257,7 +435,7 @@ function mountLobbySocket(root, code, user, navigate, status) {
     const current = ++connection;
     socket.emit('lobby:join', identity);
     try {
-      const detail = dataOf(await api(`/api/lobbies/${encodeURIComponent(code)}`, { signal: lifetime.signal }));
+      const detail = dataOf(await api(`/api/lobbies/${encodeURIComponent(canonicalCode)}`, { signal: lifetime.signal }));
       if (current !== connection || lifetime.signal.aborted) return;
       setStatus((detail.lobby || detail).status);
       synchronized = true;
@@ -288,7 +466,7 @@ function mountLobbySocket(root, code, user, navigate, status) {
   });
   socket.on('lobby:locked', () => setStatus('LOCKED'));
   socket.on('bill:ready', () => {
-    if (cart.dataset.status !== 'CANCELLED') navigate(`/lobby/${encodeURIComponent(code)}/split`);
+    if (cart.dataset.status !== 'CANCELLED') navigate(`/lobby/${encodeURIComponent(canonicalCode)}/split`);
   });
   socket.on('notify', message => {
     status(message.message);
@@ -309,7 +487,7 @@ function mountLobbySocket(root, code, user, navigate, status) {
 
   root.addEventListener('click', event => {
     const button = event.target.closest('[data-cart-add], [data-cart-qty]');
-    if (!button || button.disabled || !ready || cart.dataset.status !== 'OPEN') return;
+    if (!button || button.disabled || !ready || !isMember || cart.dataset.status !== 'OPEN') return;
     if (button.dataset.cartAdd) {
       socket.emit('cart:add', { ...identity, menuItemId: button.dataset.cartAdd, qty: 1 });
       return;
@@ -322,6 +500,7 @@ function mountLobbySocket(root, code, user, navigate, status) {
   const form = root.querySelector('[data-chat-form]');
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if (!isMember) return;
     const text = new FormData(form).get('text').trim();
     if (!text || !socket.connected) return;
     socket.emit('chat:send', { ...identity, text });
@@ -343,12 +522,12 @@ export function mountBusiness(path,user,navigate) {
   on('[data-discover]','submit',e=>{e.preventDefault();const f=new FormData(e.currentTarget),q=new URLSearchParams();for(const [k,v] of f)if(v&&!(k==='type'&&v==='ALL')&&!(k==='category'&&v==='ALL'))q.set(k,v);navigate(`/?${q}`);});
   on('[data-reset-filters]','click',()=>navigate('/'));
   on('[data-pick]','click',e=>{const id=e.currentTarget.dataset.pick;const type=['coffee','milk_tea','snack'].includes(id)?'FNB':'VENUE';navigate(`/?category=${id}&type=${type}&radius=3000`);});
-  on('[data-join-code]','submit',e=>{e.preventDefault();navigate(`/join/${encodeURIComponent(new FormData(e.currentTarget).get('code').trim().toUpperCase())}`);});
+  on('[data-join-code]','submit',e=>{e.preventDefault();const code=extractInviteCode(new FormData(e.currentTarget).get('code'));if(code)navigate(`/join/${encodeURIComponent(code)}`);});
   on('[data-login-from]','click',e=>{e.preventDefault();navigate('/login',{state:{from:e.currentTarget.dataset.loginFrom}});});
   on('[data-lock-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.lockSlot}/lock`));
   on('[data-release-slot]','click',e=>call(`/api/slots/${e.currentTarget.dataset.releaseSlot}/release`));
-  on('[data-create-lobby]','click',async e=>{try{const r=dataOf(await api('/api/lobbies',{method:'POST',body:{slotId:e.currentTarget.dataset.createLobby}}));navigate(`/lobby/${r.lobby.invite_code}`);}catch(x){status(`Không thể mở phòng: ${x.message}`);}});
-  on('[data-join-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.joinLobby}/join`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.joinLobby}`);}catch(x){status(`Không thể tham gia: ${x.message}`);}});
+  on('[data-create-lobby]','click',async e=>{const b=e.currentTarget;const slotId=b.dataset.createLobby;b.disabled=true;try{const r=dataOf(await api('/api/lobbies',{method:'POST',body:{slotId}}));navigate(`/lobby/${encodeURIComponent(r.lobby.invite_code)}`);}catch(x){b.disabled=false;status(`Không thể mở phòng: ${x.message}`);}});
+  on('[data-join-lobby]','click',async e=>{const b=e.currentTarget;const code=b.dataset.joinLobby;b.disabled=true;try{await api(`/api/lobbies/${encodeURIComponent(code)}/join`,{method:'POST'});navigate(`/lobby/${encodeURIComponent(code)}`);}catch(x){b.disabled=false;status(`Không thể tham gia: ${x.message}`);}});
   on('[data-cancel-lobby]', 'click', async event => {
     const button = event.currentTarget;
     if (!window.confirm('Hủy phòng và hoàn các khoản đang giữ?')) return;
@@ -371,11 +550,11 @@ export function mountBusiness(path,user,navigate) {
       button.disabled = false;
     }
   });
-  on('[data-lock-and-split]','click',async e=>{const b=e.currentTarget;b.disabled=true;try{await api(`/api/lobbies/${b.dataset.lockAndSplit}/lock`,{method:'POST'});await api(`/api/lobbies/${b.dataset.lockAndSplit}/split`,{method:'POST'});navigate(`/lobby/${b.dataset.code}/split`);}catch(x){status(`Không thể chốt phòng: ${x.message}`);b.disabled=false;}});
-  on('[data-create-split]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.createSplit}/split`,{method:'POST'});navigate(`/lobby/${e.currentTarget.dataset.code}/split`);}catch(x){status(`Không thể tạo bill: ${x.message}`);}});
-  on('[data-leave-lobby]','click',async e=>{try{await api(`/api/lobbies/${e.currentTarget.dataset.leaveLobby}/leave`,{method:'POST'});navigate('/');}catch(x){status(`Không thể rời phòng: ${x.message}`);}});
-  on('[data-voucher-form]','submit',async e=>{e.preventDefault();const code=new FormData(e.currentTarget).get('code')?.trim();const lobbyId=location.pathname.split('/')[2];try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng voucher${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
-  on('[data-apply-voucher-code]','click',async e=>{const code=e.currentTarget.dataset.applyVoucherCode,lobbyId=location.pathname.split('/')[2];try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng ${code}${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
+  on('[data-lock-and-split]','click',async e=>{const b=e.currentTarget;b.disabled=true;try{await api(`/api/lobbies/${b.dataset.lockAndSplit}/lock`,{method:'POST'});await api(`/api/lobbies/${b.dataset.lockAndSplit}/split`,{method:'POST'});navigate(`/lobby/${encodeURIComponent(b.dataset.code)}/split`);}catch(x){status(`Không thể chốt phòng: ${x.message}`);b.disabled=false;}});
+  on('[data-create-split]','click',async e=>{const b=e.currentTarget;const id=b.dataset.createSplit;const code=b.dataset.code;b.disabled=true;try{await api(`/api/lobbies/${encodeURIComponent(id)}/split`,{method:'POST'});navigate(`/lobby/${encodeURIComponent(code)}/split`);}catch(x){b.disabled=false;status(`Không thể tạo bill: ${x.message}`);}});
+  on('[data-leave-lobby]','click',async e=>{const b=e.currentTarget;const id=b.dataset.leaveLobby;b.disabled=true;try{await api(`/api/lobbies/${encodeURIComponent(id)}/leave`,{method:'POST'});navigate('/');}catch(x){b.disabled=false;status(`Không thể rời phòng: ${x.message}`);}});
+  on('[data-voucher-form]','submit',async e=>{e.preventDefault();const code=new FormData(e.currentTarget).get('code')?.trim();const lobbyId=decodeURIComponent(location.pathname.split('/')[2]);try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng voucher${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
+  on('[data-apply-voucher-code]','click',async e=>{const code=e.currentTarget.dataset.applyVoucherCode,lobbyId=decodeURIComponent(location.pathname.split('/')[2]);try{const result=dataOf(await api('/api/vouchers/validate',{method:'POST',body:{code,lobbyId}}));status(`Đã áp dụng ${code}${result?.discountAmount!=null?` · giảm ${formatVnd(result.discountAmount)}`:''}.`);setTimeout(()=>location.reload(),300);}catch(x){status(`Voucher lỗi: ${x.message}`);}});
   on('[data-pay-bill]','click',e=>call('/api/payments/webhook-mock','POST',{splitBillId:e.currentTarget.dataset.payBill}));
   on('[data-release]','click',()=>{const members=[...document.querySelectorAll('[data-attendance]')].map(x=>({userId:x.dataset.attendance,status:x.value}));call(`/api/lobbies/${document.querySelector('[data-release]').dataset.release}/checkin`,'POST',{members});});
   on('[data-copy]','click',async e=>{try{await navigator.clipboard.writeText(e.currentTarget.dataset.copy);status('Đã sao chép liên kết.');}catch{status('Không thể sao chép trên thiết bị này.');}});

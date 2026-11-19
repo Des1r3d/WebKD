@@ -20,6 +20,35 @@ export function generateInviteCode() {
 export const findLobby = (codeOrId) =>
   prisma.groupLobby.findFirst({ where: { OR: [{ id: codeOrId }, { invite_code: codeOrId.toUpperCase() }] } });
 
+export async function getFormattedLobbyMembers(lobbyId, hostId) {
+  const dbMembers = await prisma.lobbyMember.findMany({
+    where: { lobby_id: lobbyId },
+    include: { user: true },
+    orderBy: { joined_at: 'asc' },
+  });
+  return dbMembers.map((m) => ({
+    user_id: m.user_id,
+    full_name: m.user?.full_name || 'Thành viên',
+    role: m.user?.role,
+    reputation_score: m.user?.reputation_score,
+    deposit_required: m.deposit_required,
+    deposit_paid: m.deposit_paid,
+    status: m.status,
+    is_host: m.user_id === hostId,
+  }));
+}
+
+export async function isActiveLobbyMember(lobby, userId) {
+  if (!lobby || !userId) return false;
+  if (lobby.host_id === userId) return true;
+  return Boolean(
+    await prisma.lobbyMember.findFirst({
+      where: { lobby_id: lobby.id, user_id: userId, status: 'JOINED' },
+      select: { user_id: true },
+    })
+  );
+}
+
 // Serialize lifecycle changes before reading state or modifying escrow.
 export async function lockLobbyRow(tx, lobbyId) {
   await tx.$queryRaw`SELECT id FROM group_lobbies WHERE id = ${lobbyId} FOR UPDATE`;
@@ -249,6 +278,19 @@ export async function joinLobby(lobbyId, userId)
   const repSummary = calculateReputation(user.reputation_score);
   if (!repSummary.canJoinLobby || user.status === 'FLAGGED') {
     throw new Error('REPUTATION_TOO_LOW');
+  }
+
+  const existing = await prisma.lobbyMember.findUnique({
+    where: { lobby_id_user_id: { lobby_id: lobby.id, user_id: userId } },
+  });
+  if (existing?.status === 'JOINED') {
+    return {
+      success: true,
+      member: existing,
+      reputation: repSummary,
+      depositRequired: existing.deposit_required,
+      depositPaid: existing.deposit_paid,
+    };
   }
 
   const slot = await prisma.slot.findUnique({ where: { id: lobby.slot_id } });

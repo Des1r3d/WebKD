@@ -60,12 +60,23 @@ export async function lockSlot(slotId, userId) {
  * Giải phóng slot đang giữ về AVAILABLE
  */
 export async function releaseSlot(slotId, userId) {
-  const existingSlot = await prisma.slot.findUnique({ where: { id: slotId } });
+  const existingSlot = await prisma.slot.findUnique({
+    where: { id: slotId },
+    include: { lobby: { select: { id: true, status: true } } },
+  });
   if (!existingSlot) {
     return {
       success: false,
       error: 'NOT_FOUND',
       message: 'Không tìm thấy slot cần giải phóng',
+    };
+  }
+
+  if (existingSlot.lobby && existingSlot.lobby.status !== 'CANCELLED') {
+    return {
+      success: false,
+      error: 'SLOT_HAS_LOBBY',
+      message: 'Slot đã gắn phòng ghép kèo đang hoạt động. Hãy hủy phòng nếu muốn giải phóng slot.',
     };
   }
 
@@ -79,7 +90,12 @@ export async function releaseSlot(slotId, userId) {
 
   // Chỉ người đang giữ (hoặc khóa đã hết hạn) mới được giải phóng
   const { count } = await prisma.slot.updateMany({
-    where: { id: slotId, status: 'LOCKED', OR: [{ locked_by: userId }, { locked_until: { lt: new Date() } }] },
+    where: {
+      id: slotId,
+      status: 'LOCKED',
+      NOT: { lobby: { is: { status: { not: 'CANCELLED' } } } },
+      OR: [{ locked_by: userId }, { locked_until: { lt: new Date() } }],
+    },
     data: { status: 'AVAILABLE', locked_by: null, locked_until: null },
   });
   if (count === 0) {

@@ -23,7 +23,7 @@ io.use((socket, next) => {
   const { token } = socket.handshake.auth;
   if (typeof token === 'string' && token) {
     try {
-      verifyJwt(token);
+      socket.data.user = verifyJwt(token);
       return next();
     } catch {
       return next(new Error('INVALID_TOKEN'));
