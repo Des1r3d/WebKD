@@ -16,7 +16,7 @@ Nền tảng đặt sân thể thao, phòng học nhóm kết hợp gọi đồ 
 
 ## Kiến trúc & Sơ đồ
 
-Một tiến trình Node.js/Express duy nhất phục vụ đồng thời giao diện SPA, tài nguyên tĩnh, REST API và Socket.io (cùng origin):
+Một tiến trình Node.js/Expresst phục vụ giao diện SPA, tài nguyên tĩnh, REST API và Socket.io:
 
 ```
 Trình duyệt ──HTTP──▶ Express (server/src/app.js)
@@ -29,8 +29,8 @@ Trình duyệt ──HTTP──▶ Express (server/src/app.js)
                                      Prisma ORM ──▶ PostgreSQL 16 (12 bảng)
 ```
 
-- [ERD của 12 bảng PostgreSQL](docs/diagrams/ERD.drawio)
-- [BPMN luồng giữ chỗ, tạo phòng, chia bill và thanh toán giả lập](docs/diagrams/BPMN_tobe.drawio)
+- [ERD của 12 bảng PostgreSQL](docs/Bao_cao_SyncHub/Drawio/ERD/ERD.drawio)
+- [BPMN luồng giữ chỗ, tạo phòng, chia bill và thanh toán giả lập](docs/Bao_cao_SyncHub/Drawio/BPMN/BPMN_tobe.drawio)
 
 ---
 
@@ -45,8 +45,7 @@ Trình duyệt ──HTTP──▶ Express (server/src/app.js)
 
 ---
 
-## Chạy demo bằng một lệnh
-
+## Chạy web
 Mở Docker Desktop (hoặc Docker Engine có Compose v2), tại thư mục gốc của repo chạy:
 
 ```bash
@@ -54,37 +53,7 @@ docker compose -p synchub-demo -f compose.demo.yml up --build --wait
 ```
 
 Lần đầu Docker tải image, cài dependency, tạo DB demo, chạy migration và nạp dữ liệu mẫu. Khi hoàn tất, mở [http://localhost:5000](http://localhost:5000) và đăng nhập bằng `nguyen.minh.phat@synchub.vn` / `Password123!`.
-
-- Theo dõi log: `docker compose -p synchub-demo -f compose.demo.yml logs -f web`
-- Dừng demo (giữ dữ liệu trong volume): `docker compose -p synchub-demo -f compose.demo.yml down`
 - Cổng mặc định `5000`; nếu bị chiếm, đổi cổng host trong `compose.demo.yml`.
-
----
-
-## Kiểm thử backend
-
-Cài đặt dependency và sinh Prisma Client:
-
-```powershell
-npm ci --prefix server
-npm run prisma:generate
-```
-
-Tạo một database PostgreSQL riêng cho kiểm thử, áp migration và chạy test (PowerShell):
-
-```powershell
-$env:TEST_DATABASE_URL = '<URL của database test riêng>'
-$previousDatabaseUrl = $env:DATABASE_URL
-try {
-  $env:DATABASE_URL = $env:TEST_DATABASE_URL
-  npm run prisma:deploy --prefix server
-} finally {
-  $env:DATABASE_URL = $previousDatabaseUrl
-}
-npm test
-```
-
-Các test tích hợp nạp lại fixture trên `TEST_DATABASE_URL` trước mỗi ca và chạy tuần tự (`--test-concurrency=1`).
 
 ---
 
@@ -115,7 +84,7 @@ WebKD/
 │   ├── src/         # Routes, controllers, services, middlewares, sockets, utils
 │   └── tests/       # Kiểm thử tích hợp & đơn vị
 ├── compose.demo.yml # Demo một lệnh (app + PostgreSQL)
-└── docs/diagrams/   # Sơ đồ Draw.io
+└── docs/Bao_cao_SyncHub/Drawio/ # Sơ đồ Draw.io
 ```
 
 ---
@@ -123,4 +92,3 @@ WebKD/
 ## License & Credits
 
 - Ảnh minh họa danh mục sân và F&B lấy từ **Wikimedia Commons** (CC BY, CC BY-SA).
-- Bản quyền dự án thuộc về nhóm phát triển **SyncHub (WebKD)**.
